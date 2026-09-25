@@ -10,7 +10,8 @@ $data = Get-Content -Raw -Encoding UTF8 $dataFile | ConvertFrom-Json
 $today = $data.today
 
 $picks = New-Object System.Collections.ArrayList
-if (Test-Path $picksFile) { foreach ($p in @(Get-Content -Raw -Encoding UTF8 $picksFile | ConvertFrom-Json)) { if ($p -and $p.date -ne $today) { [void]$picks.Add($p) } } }
+if (Test-Path $picksFile) { foreach ($p in @(Get-Content -Raw -Encoding UTF8 $picksFile | ConvertFrom-Json)) { if ($p) { [void]$picks.Add($p) } } }
+$picksLocked = @($picks | Where-Object { $_.date -eq $today }).Count -gt 0   # prvo (jutarnje) pokretanje zakljucava danasnje tipove
 $results = @{}
 if (Test-Path $resFile) { (Get-Content -Raw -Encoding UTF8 $resFile | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $results[$_.Name] = $_.Value } }
 
@@ -38,7 +39,7 @@ if ($calib.Count) {
 # 1) danasnje top 3 po opciji (isto kao na stranici)
 $lists = @{ football = @(($data.days | Where-Object { $_.date -eq $today }).matches) }
 foreach ($p in $data.sports.PSObject.Properties) { $lists[$p.Name] = @(($p.Value.days | Where-Object { $_.date -eq $today }).matches) }
-foreach ($sport in $lists.Keys) {
+foreach ($sport in @(if ($picksLocked) { } else { $lists.Keys })) {
   $ms = @($lists[$sport] | Where-Object { $_ })
   if (-not $ms.Count) { continue }
   $markets = @($ms | ForEach-Object { $_.p.PSObject.Properties.Name } | Sort-Object -Unique)
@@ -94,8 +95,10 @@ foreach ($l in ($legs | Sort-Object @{ e = { $_.score }; Descending = $true }, @
   if ($used.ContainsKey($l.key)) { continue }; $used[$l.key] = 1; [void]$ticket.Add($l); if ($ticket.Count -ge 3) { break } }
 $tFile = Join-Path $root 'cache\tickets.json'
 $tickets = New-Object System.Collections.ArrayList
-if (Test-Path $tFile) { foreach ($t in @(Get-Content -Raw -Encoding UTF8 $tFile | ConvertFrom-Json)) { if ($t -and $t.date -ne $today) { [void]$tickets.Add($t) } } }
-if ($ticket.Count -ge 2) {
+if (Test-Path $tFile) { foreach ($t in @(Get-Content -Raw -Encoding UTF8 $tFile | ConvertFrom-Json)) { if ($t) { [void]$tickets.Add($t) } } }
+$tkToday = @($tickets | Where-Object { $_.date -eq $today })[0]
+if ($tkToday) { $data | Add-Member -NotePropertyName ticket -NotePropertyValue $tkToday -Force }   # jutarnji tiket ostaje cijeli dan
+elseif ($ticket.Count -ge 2) {
   $odd = 1.0; $pp = 1.0; foreach ($l in $ticket) { $odd *= $l.o; $pp *= $l.p / 100 }
   $tk = [ordered]@{ date = $today; odd = [math]::Round($odd, 2); p = [int][math]::Round($pp * 100); legs = @($ticket); hit = $null }
   $data | Add-Member -NotePropertyName ticket -NotePropertyValue $tk -Force
