@@ -21,16 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Kljucevi iz GitHub Secrets
+      - name: Kljucevi iz GitHub Secrets (cijeli config.json u jednom secretu CONFIG_JSON)
         shell: powershell
         env:
-          FD: ${{ secrets.FOOTBALL_DATA_TOKEN }}
-          BDL: ${{ secrets.BALLDONTLIE_KEY }}
-          APIS: ${{ secrets.API_SPORTS_KEY }}
-          ODDS: ${{ secrets.ODDS_API_KEY }}
+          CFG: ${{ secrets.CONFIG_JSON }}
         run: |
-          [ordered]@{ footballDataToken = $env:FD; balldontlieKey = $env:BDL; apiSportsKey = $env:APIS; oddsApiKey = $env:ODDS } | ConvertTo-Json | Set-Content -Encoding ascii config.json
-
+          $env:CFG | Set-Content -Encoding ascii config.json
       - name: Osvjezi podatke (svi sportovi, kvote, pracenje pogodaka, grbovi)
         shell: powershell
         run: .\update.ps1
