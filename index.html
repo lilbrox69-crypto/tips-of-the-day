@@ -137,6 +137,9 @@ body[data-m="w2"]  .decor{--pat:repeating-linear-gradient(-60deg, rgba(255,255,2
 .side:hover{background:rgba(255,255,255,.18);transform:translateY(-50%) scale(1.06)}
 .side.l{left:-78px}.side.r{right:-78px}
 @media (min-width:760px) and (hover:hover){.side{display:grid;place-items:center}}
+.about{margin:2px 16px 6px;padding:8px 12px 8px 34px;position:relative;font-size:12px;line-height:1.4;color:var(--ink);opacity:.85;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px}
+.about::before{content:"";position:absolute;left:11px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--gold) 0 3px,transparent 3.5px),conic-gradient(var(--green) 0 75%,rgba(255,255,255,.2) 0)}
+.about b{color:var(--gold);font-weight:700}
 .foot{font-size:11px;color:var(--muted);text-align:center;padding:0 16px 6px}
 .track{margin:0 16px 6px;align-self:flex-start;background:rgba(61,214,140,.14);border:1px solid rgba(61,214,140,.4);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
 .track b{color:var(--green);font-family:var(--display);font-size:16px}
@@ -170,7 +173,8 @@ body[data-m="w2"]  .decor{--pat:repeating-linear-gradient(-60deg, rgba(255,255,2
   <div class="track" id="track" hidden></div>
   <div class="days" id="days"></div>
   <div class="bottom"><div class="dots" id="dots"></div></div>
-  <div class="foot"><span id="footl">Statistika zadnjih 10 utakmica, ne garancija · 18+ · osvježeno</span> <span id="gen">—</span> · football-data.org, football-data.co.uk, balldontlie.io</div>
+  <p class="about" id="about"></p>
+  <div class="foot"><span id="footl">Statistika zadnjih 10 utakmica, ne garancija · 18+ · osvježeno</span> <span id="gen">—</span> · API-Football, balldontlie.io, NHL, The Odds API</div>
   <button class="side l" id="prev" type="button" aria-label="Prethodna opcija">←</button>
   <button class="side r" id="next" type="button" aria-label="Sljedeća opcija">→</button>
 </div>
@@ -456,6 +460,24 @@ const TRK = {bs:'Pogođeno zadnjih 30 dana', en:'Hit rate, last 30 days', de:'Tr
   es:'Acertados, últimos 30 días', fr:'Réussite, 30 derniers jours', pt:'Acertos nos últimos 30 dias', tr:'Son 30 günde tutan',
   sq:'Të qëlluara, 30 ditët e fundit', pl:'Trafione, ostatnie 30 dni', ro:'Reușite, ultimele 30 de zile', el:'Επιτυχία, τελευταίες 30 ημέρες',
   ru:'Зашло за 30 дней', nl:'Raak, laatste 30 dagen', ar:'نسبة النجاح آخر 30 يومًا'};
+/* kratko objašnjenje kako se biraju tipovi (dno stranice) */
+const ABOUT = {
+  bs:'Svaki tip je izabran <b>statističkom analizom</b> forme, rezultata i detaljne statistike zadnjih 10 utakmica. Od svih današnjih utakmica prikazujemo samo <b>tri sa najvećom šansom za prolaz</b>.',
+  en:'Every pick is chosen by <b>statistical analysis</b> of form, results and detailed stats from the last 10 games. Out of all of today’s matches, we show only <b>the three with the highest chance to land</b>.',
+  de:'Jeder Tipp entsteht durch <b>statistische Analyse</b> von Form, Ergebnissen und Detailstatistiken der letzten 10 Spiele. Von allen heutigen Spielen zeigen wir nur <b>die drei mit der höchsten Trefferchance</b>.',
+  it:'Ogni pronostico nasce da un’<b>analisi statistica</b> di forma, risultati e statistiche dettagliate delle ultime 10 partite. Tra tutte le partite di oggi mostriamo solo <b>le tre con la più alta probabilità di successo</b>.',
+  es:'Cada pronóstico sale de un <b>análisis estadístico</b> de forma, resultados y estadísticas detalladas de los últimos 10 partidos. De todos los partidos de hoy mostramos solo <b>los tres con mayor probabilidad de acierto</b>.',
+  fr:'Chaque pronostic repose sur une <b>analyse statistique</b> de la forme, des résultats et des stats détaillées des 10 derniers matchs. Parmi tous les matchs du jour, nous ne montrons que <b>les trois avec la plus forte probabilité de réussite</b>.',
+  pt:'Cada palpite vem de uma <b>análise estatística</b> de forma, resultados e estatísticas detalhadas dos últimos 10 jogos. De todos os jogos de hoje, mostramos só <b>os três com maior chance de acerto</b>.',
+  tr:'Her tahmin, son 10 maçtaki form, sonuçlar ve detaylı istatistiklerin <b>istatistiksel analiziyle</b> seçilir. Bugünün tüm maçları arasından yalnızca <b>tutma ihtimali en yüksek üç maçı</b> gösteriyoruz.',
+  sq:'Çdo parashikim zgjidhet me <b>analizë statistikore</b> të formës, rezultateve dhe statistikave të detajuara nga 10 ndeshjet e fundit. Nga të gjitha ndeshjet e sotme tregojmë vetëm <b>tri me shansin më të lartë për të kaluar</b>.',
+  pl:'Każdy typ wybieramy dzięki <b>analizie statystycznej</b> formy, wyników i szczegółowych statystyk z ostatnich 10 meczów. Ze wszystkich dzisiejszych meczów pokazujemy tylko <b>trzy z największą szansą na wejście</b>.',
+  ro:'Fiecare pont este ales prin <b>analiză statistică</b> a formei, rezultatelor și statisticilor detaliate din ultimele 10 meciuri. Din toate meciurile de azi afișăm doar <b>cele trei cu cea mai mare șansă de reușită</b>.',
+  el:'Κάθε πρόβλεψη επιλέγεται με <b>στατιστική ανάλυση</b> της φόρμας, των αποτελεσμάτων και αναλυτικών στατιστικών των τελευταίων 10 αγώνων. Από όλους τους σημερινούς αγώνες δείχνουμε μόνο <b>τους τρεις με τη μεγαλύτερη πιθανότητα επιτυχίας</b>.',
+  ru:'Каждый прогноз выбран с помощью <b>статистического анализа</b> формы, результатов и подробной статистики последних 10 матчей. Из всех сегодняшних матчей мы показываем только <b>три с наибольшим шансом на проход</b>.',
+  nl:'Elke tip is gekozen met <b>statistische analyse</b> van vorm, uitslagen en gedetailleerde statistieken uit de laatste 10 wedstrijden. Van alle wedstrijden van vandaag tonen we alleen <b>de drie met de grootste kans op succes</b>.',
+  ar:'كل توقع مختار عبر <b>تحليل إحصائي</b> للأداء والنتائج والإحصائيات التفصيلية لآخر 10 مباريات. من بين كل مباريات اليوم نعرض فقط <b>الثلاث الأعلى فرصة للنجاح</b>.'
+};
 function showTrack(){
   const el = $('track'), s = DATA && DATA.track && DATA.track.sports && DATA.track.sports[SPORT];
   if (!s || s.n < 10) { el.hidden = true; return; }
@@ -805,6 +827,7 @@ function applyLangChrome(){
   $('langmenu').innerHTML = LANGS.map(l => `<button type="button" data-l="${l.k}" aria-pressed="${l.k === LANG}"><b>${l.k.toUpperCase()}</b>${l.n}</button>`).join('');
   $('langmenu').querySelectorAll('button').forEach(b => b.onclick = e => { e.stopPropagation(); langMenu(false); setLang(b.dataset.l); });
   $('footl').textContent = L().foot;
+  $('about').innerHTML = ABOUT[LANG] || loc(ABOUT.bs);
   $('sportbtn').setAttribute('aria-label', L().pick);
 }
 function langMenu(open){
