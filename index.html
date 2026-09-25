@@ -283,7 +283,32 @@ const SPORTS = [
 let MARKETS = FOOTBALL, DATA = null, SPORT = 'football';
 /* ---------- jezici / languages ---------- */
 const LANGS = [{k:'bs', n:'Bosanski'}, {k:'hr', n:'Hrvatski'}, {k:'sr', n:'Српски'}, {k:'en', n:'English'}, {k:'de', n:'Deutsch'}, {k:'it', n:'Italiano'}, {k:'es', n:'Español'}, {k:'fr', n:'Français'}, {k:'pt', n:'Português'}, {k:'tr', n:'Türkçe'}, {k:'sq', n:'Shqip'}, {k:'pl', n:'Polski'}, {k:'ro', n:'Română'}, {k:'el', n:'Ελληνικά'}, {k:'ru', n:'Русский'}, {k:'nl', n:'Nederlands'}, {k:'ar', n:'العربية'}];
-let LANG = 'bs'; try { const s = localStorage.getItem('totd-lang'); if (LANGS.some(l => l.k === s)) LANG = s; } catch(e) {}
+/* jezik pri prvom ulasku: 1) ono što je posjetilac ranije izabrao, 2) jezik telefona/računara,
+   3) zemlja po vremenskoj zoni (npr. engleski telefon u Turskoj -> turski), 4) engleski */
+const TZ_LANG = {
+  'Europe/Sarajevo':'bs', 'Europe/Zagreb':'hr', 'Europe/Belgrade':'sr', 'Europe/Podgorica':'sr', 'Europe/Tirane':'sq', 'Europe/Istanbul':'tr', 'Asia/Istanbul':'tr',
+  'Europe/Berlin':'de', 'Europe/Vienna':'de', 'Europe/Zurich':'de', 'Europe/Busingen':'de', 'Europe/Rome':'it', 'Europe/San_Marino':'it', 'Europe/Madrid':'es',
+  'Europe/Paris':'fr', 'Europe/Monaco':'fr', 'Europe/Luxembourg':'fr', 'Europe/Lisbon':'pt', 'Atlantic/Madeira':'pt', 'Atlantic/Azores':'pt',
+  'Europe/Warsaw':'pl', 'Europe/Bucharest':'ro', 'Europe/Chisinau':'ro', 'Europe/Athens':'el', 'Asia/Nicosia':'el', 'Europe/Moscow':'ru', 'Europe/Minsk':'ru',
+  'Europe/Amsterdam':'nl', 'Europe/Brussels':'nl', 'America/Sao_Paulo':'pt', 'America/Bahia':'pt', 'America/Fortaleza':'pt', 'America/Recife':'pt', 'America/Manaus':'pt',
+  'America/Mexico_City':'es', 'America/Bogota':'es', 'America/Lima':'es', 'America/Santiago':'es', 'America/Caracas':'es', 'America/Argentina/Buenos_Aires':'es', 'America/Montevideo':'es',
+  'Asia/Riyadh':'ar', 'Asia/Dubai':'ar', 'Asia/Qatar':'ar', 'Asia/Kuwait':'ar', 'Asia/Baghdad':'ar', 'Asia/Amman':'ar', 'Asia/Beirut':'ar', 'Africa/Cairo':'ar',
+  'Africa/Casablanca':'ar', 'Africa/Algiers':'ar', 'Africa/Tunis':'ar', 'Africa/Tripoli':'ar'
+};
+function detectLang(){
+  const ok = k => LANGS.some(l => l.k === k);
+  for (const raw of (navigator.languages || [navigator.language || ''])) {
+    const t = String(raw).toLowerCase(), b = t.split('-')[0];
+    if (b === 'en') break;                                   // engleski telefon: pitaj vremensku zonu
+    if (b === 'sr') return t.includes('latn') ? 'bs' : 'sr';  // srpski latinica -> bosanski tekst, ćirilica -> srpski
+    if (b === 'sh' || b === 'cnr') return 'bs';
+    if (ok(b)) return b;
+  }
+  try { const z = Intl.DateTimeFormat().resolvedOptions().timeZone; if (TZ_LANG[z]) return TZ_LANG[z]; } catch(e) {}
+  return 'en';
+}
+let LANG = 'en';
+try { const s = localStorage.getItem('totd-lang'); LANG = LANGS.some(l => l.k === s) ? s : detectLang(); } catch(e) { LANG = detectLang(); }
 const T = {
   bs: { today:'Danas', games:'utak.', none:'Nema utakmica za ovaj dan.', hint:'← prevuci za drugu opciju · dodirni utakmicu za detalje', noneToday:'Danas nema utakmica u pokrivenim ligama. Nove utakmice stižu svako jutro.', noGames:'danas nema',
     pick:'Izaberi sport', soon:'uskoro', noneLeagues:'Trenutno nema utakmica u pokrivenim ligama.',
