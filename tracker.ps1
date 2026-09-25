@@ -10,7 +10,7 @@ $data = Get-Content -Raw -Encoding UTF8 $dataFile | ConvertFrom-Json
 $today = $data.today
 
 $picks = New-Object System.Collections.ArrayList
-if (Test-Path $picksFile) { foreach ($p in @(Get-Content -Raw -Encoding UTF8 $picksFile | ConvertFrom-Json)) { if ($p) { [void]$picks.Add($p) } } }
+if (Test-Path $picksFile) { $arr = Get-Content -Raw -Encoding UTF8 $picksFile | ConvertFrom-Json; foreach ($p in $arr) { if ($p -and $p.date) { [void]$picks.Add($p) } } }
 $picksLocked = @($picks | Where-Object { $_.date -eq $today }).Count -gt 0   # prvo (jutarnje) pokretanje zakljucava danasnje tipove
 $results = @{}
 if (Test-Path $resFile) { (Get-Content -Raw -Encoding UTF8 $resFile | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $results[$_.Name] = $_.Value } }
@@ -95,7 +95,7 @@ foreach ($l in ($legs | Sort-Object @{ e = { $_.score }; Descending = $true }, @
   if ($used.ContainsKey($l.key)) { continue }; $used[$l.key] = 1; [void]$ticket.Add($l); if ($ticket.Count -ge 3) { break } }
 $tFile = Join-Path $root 'cache\tickets.json'
 $tickets = New-Object System.Collections.ArrayList
-if (Test-Path $tFile) { foreach ($t in @(Get-Content -Raw -Encoding UTF8 $tFile | ConvertFrom-Json)) { if ($t) { [void]$tickets.Add($t) } } }
+if (Test-Path $tFile) { $arr = Get-Content -Raw -Encoding UTF8 $tFile | ConvertFrom-Json; foreach ($t in $arr) { if ($t -and $t.date) { [void]$tickets.Add($t) } } }
 $tkToday = @($tickets | Where-Object { $_.date -eq $today })[0]
 if ($tkToday) { $data | Add-Member -NotePropertyName ticket -NotePropertyValue $tkToday -Force }   # jutarnji tiket ostaje cijeli dan
 elseif ($ticket.Count -ge 2) {
@@ -107,12 +107,12 @@ elseif ($ticket.Count -ge 2) {
 # provjera starih tiketa: prolazi samo ako su prosli svi tipovi
 foreach ($t in $tickets) {
   if ($t.hit -ne $null -or $t.date -ge $today) { continue }
-  $vals = @($t.legs | ForEach-Object { $r = $results[$_.key]; if ($r) { Judge $_.sport $_.mk $r } else { $null } })
+  $vals = @($t.legs | ForEach-Object { $r = if ($_.key) { $results[[string]$_.key] } else { $null }; if ($r) { Judge $_.sport $_.mk $r } else { $null } })
   if (@($vals | Where-Object { $_ -eq $false }).Count) { $t.hit = $false }
   elseif (@($vals | Where-Object { $_ -eq $true }).Count -eq $vals.Count) { $t.hit = $true }
   elseif (([datetime]::ParseExact($t.date, 'yyyy-MM-dd', $null)) -lt $todayD0.AddDays(-10)) { $t.hit = 'void' }
 }
-[IO.File]::WriteAllText($tFile, (ConvertTo-Json @($tickets | Select-Object -Last 90) -Depth 5 -Compress), $enc)
+[IO.File]::WriteAllText($tFile, ('[' + ((@($tickets | Select-Object -Last 90) | ForEach-Object { $_ | ConvertTo-Json -Depth 5 -Compress }) -join ',') + ']'), $enc)
 $tw = @($tickets | Where-Object { $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD0.AddDays(-30) })
 $ticketTrack = [ordered]@{ n = $tw.Count; hit = @($tw | Where-Object { $_.hit }).Count }
 
@@ -126,7 +126,7 @@ $track = [ordered]@{ days = 30; n = $win.Count; hit = @($win | Where-Object { $_
 $data | Add-Member -NotePropertyName track -NotePropertyValue $track -Force
 
 # 4) istorija za stranicu "Rezultati" (zadnjih 30 dana): history.json
-function ScoreOf($key) { $r = $results[$key]; if ($r) { "$([int]$r.h)-$([int]$r.a)" } else { '' } }
+function ScoreOf($key) { $r = if ($key) { $results[[string]$key] } else { $null }; if ($r) { "$([int]$r.h)-$([int]$r.a)" } else { '' } }
 function HitVal($v) { if ($v -is [bool]) { return [int]$v } ; return $null }   # 1 proslo, 0 palo, null ceka
 $hdays = New-Object System.Collections.ArrayList
 for ($i = 0; $i -le 30; $i++) {
@@ -137,7 +137,7 @@ for ($i = 0; $i -le 30; $i++) {
   $day = [ordered]@{ date = $ds }
   if ($tk) {
     $day.t = [ordered]@{ odd = $tk.odd; p = $tk.p; r = (HitVal $tk.hit); legs = @($tk.legs | ForEach-Object {
-      $rr = $results[$_.key]; $v = if ($rr) { Judge $_.sport $_.mk $rr } else { $null }
+      $rr = if ($_.key) { $results[[string]$_.key] } else { $null }; $v = if ($rr) { Judge $_.sport $_.mk $rr } else { $null }
       [ordered]@{ s = $_.sport; m = $_.mk; h = $_.home; a = $_.away; hl = $_.hl; al = $_.al; o = $_.o; p = $_.p; r = (HitVal $v); sc = (ScoreOf $_.key) } }) }
   }
   $day.k = @($dp | ForEach-Object { [ordered]@{ s = $_.sport; m = $_.mk; h = $_.home; a = $_.away; p = $_.p; r = (HitVal $_.hit); sc = (ScoreOf $_.key) } })
