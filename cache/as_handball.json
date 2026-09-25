@@ -1,5 +1,37 @@
 [
     {
+        "id":  202346,
+        "utc":  "2026-09-25T18:00:00+02:00",
+        "final":  true,
+        "league":  "NB I",
+        "country":  "Hungary",
+        "lid":  49,
+        "hid":  412,
+        "aid":  411,
+        "hn":  "Ferencvaros",
+        "an":  "Eger",
+        "hs":  31,
+        "as":  30,
+        "hl":  "https://media.api-sports.io/handball/teams/412.png",
+        "al":  "https://media.api-sports.io/handball/teams/411.png"
+    },
+    {
+        "id":  203771,
+        "utc":  "2026-09-25T18:00:00+02:00",
+        "final":  true,
+        "league":  "Elkjop-ligaen",
+        "country":  "Norway",
+        "lid":  75,
+        "hid":  1168,
+        "aid":  636,
+        "hn":  "Bergsoy",
+        "an":  "Elverum",
+        "hs":  22,
+        "as":  37,
+        "hl":  "https://media.api-sports.io/handball/teams/1168.png",
+        "al":  "https://media.api-sports.io/handball/teams/636.png"
+    },
+    {
         "id":  197452,
         "utc":  "2026-09-25T17:30:00+02:00",
         "final":  true,
