@@ -85,9 +85,12 @@ $legs = New-Object System.Collections.ArrayList
 foreach ($sport in $lists.Keys) { foreach ($m in @($lists[$sport] | Where-Object { $_ -and $_.o })) {
   foreach ($pr in $m.p.PSObject.Properties) { $q = $m.o.($pr.Name)
     if ($q -and [double]$q -ge 1.2 -and $pr.Value -ne $null -and $pr.Value -ge 65) {
-      [void]$legs.Add([pscustomobject]@{ sport = $sport; mk = $pr.Name; key = "${sport}:$($m.id)"; home = $m.home; away = $m.away; league = $m.league; time = $m.time; p = [int]$pr.Value; o = [double]$q }) } } } }
+      [void]$legs.Add([pscustomobject]@{ sport = $sport; mk = $pr.Name; key = "${sport}:$($m.id)"; home = $m.home; away = $m.away; hl = $m.hl; al = $m.al; league = $m.league; time = $m.time; p = [int]$pr.Value; o = [double]$q }) } } } }
 $ticket = New-Object System.Collections.ArrayList; $used = @{}
-foreach ($l in ($legs | Sort-Object @{ e = { $_.p }; Descending = $true }, @{ e = { $_.o }; Descending = $true })) {
+# najpametniji izbor iz SVIH opcija i sportova: sigurnost = manji od (nas procenat, procenat iz kvote bez marze),
+# plus pola nase prednosti nad kladionicom. Tako ulaze tipovi gdje se statistika i trziste slazu.
+foreach ($l in $legs) { $imp = 100 / $l.o * 0.95; $l | Add-Member -NotePropertyName score -NotePropertyValue ([math]::Min($l.p, $imp) + 0.5 * [math]::Max(0, $l.p - $imp)) }
+foreach ($l in ($legs | Sort-Object @{ e = { $_.score }; Descending = $true }, @{ e = { $_.o }; Descending = $true })) {
   if ($used.ContainsKey($l.key)) { continue }; $used[$l.key] = 1; [void]$ticket.Add($l); if ($ticket.Count -ge 3) { break } }
 $tFile = Join-Path $root 'cache\tickets.json'
 $tickets = New-Object System.Collections.ArrayList

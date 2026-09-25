@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="bs">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Tips of the Day – 3 najsigurnija tipa dana po opciji: statistička analiza forme, međusobnih susreta i kvota. Fudbal, košarka, hokej, rukomet i više.">
+<meta name="theme-color" content="#0f2a1c">
 <title>Tips of the Day</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -142,22 +148,68 @@ body[data-m="w2"]  .decor{--pat:repeating-linear-gradient(-60deg, rgba(255,255,2
 .about b{color:var(--gold);font-weight:700}
 .foot{font-size:11px;color:var(--muted);text-align:center;padding:0 16px 6px}
 .inj{color:#ff6b6b;font-weight:800}
-.ticket{margin:0 16px 8px;border-radius:14px;border:1px solid rgba(244,196,67,.5);background:linear-gradient(120deg,rgba(244,196,67,.16),rgba(61,214,140,.1));overflow:hidden}
+/* ulaz na Tiket dana (glavna stranica) */
+.ticket{margin:0 16px 8px}
 .ticket[hidden]{display:none}
-.ticket .th{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border:0;background:transparent;color:var(--ink);font:inherit;cursor:pointer;text-align:left}
-.ticket .th .ti{font-size:18px}
-.ticket .th b{font-family:var(--display);font-size:18px;text-transform:uppercase;letter-spacing:.03em;flex:1}
-.ticket .th .tq{font-family:var(--display);font-weight:800;font-size:20px;color:var(--gold)}
-.ticket .th .tp{font-size:12px;color:var(--muted);white-space:nowrap}
-.ticket .th .chev{transition:transform .25s}
-.ticket[data-open="1"] .th .chev{transform:rotate(180deg)}
-.ticket .tl{display:none;padding:0 12px 10px;flex-direction:column;gap:6px}
-.ticket[data-open="1"] .tl{display:flex}
-.ticket .leg{display:grid;grid-template-columns:22px 1fr auto;gap:2px 8px;align-items:center;background:rgba(0,0,0,.18);border-radius:10px;padding:7px 9px;font-size:13px}
-.ticket .leg svg{width:18px;height:18px;color:var(--gold)}
-.ticket .leg .lm{color:var(--muted);font-size:12px;grid-column:2}
-.ticket .leg .lr{grid-row:span 2;text-align:right;font-weight:700;white-space:nowrap}
-.ticket .leg .lr small{display:block;color:var(--muted);font-weight:600}
+.tkbtn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border-radius:14px;border:1px solid rgba(244,196,67,.6);background:linear-gradient(110deg,rgba(244,196,67,.24),rgba(61,214,140,.12));color:var(--ink);font:inherit;cursor:pointer;text-align:left;box-shadow:0 0 22px rgba(244,196,67,.18)}
+.tkbtn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.tkbtn .ti{font-size:20px}
+.tkbtn b{flex:1;font:800 18px var(--display);text-transform:uppercase;letter-spacing:.03em}
+.tkbtn .tp{font-size:12px;color:var(--muted);white-space:nowrap}
+.tkbtn .tq{font:800 22px var(--display);color:var(--gold)}
+.tkbtn .go{font-weight:800;color:var(--gold);font-size:18px}
+/* Tiket dana - posebna stranica (#tiket) */
+.tview{position:fixed;inset:0;z-index:50;overflow-y:auto;padding:16px 16px 36px;color:var(--ink);
+  background:radial-gradient(120% 70% at 50% -10%,rgba(244,196,67,.30),transparent 60%),radial-gradient(90% 60% at 50% 115%,rgba(61,214,140,.20),transparent 60%),#0a0f0c;animation:tvin .35s ease}
+.tview[hidden]{display:none}
+.tv-top{max-width:440px;margin:0 auto 14px;display:flex;justify-content:space-between;gap:10px}
+.tv-btn{border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--ink);border-radius:999px;padding:8px 16px;font:600 14px var(--body);cursor:pointer}
+.tv-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.slip{max-width:440px;margin:0 auto;position:relative;border-radius:22px;background:linear-gradient(180deg,#18221c,#0f1612);border:1px solid rgba(244,196,67,.5);
+  box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 70px rgba(244,196,67,.14),inset 0 1px 0 rgba(255,255,255,.06)}
+.slip .sheen{position:absolute;inset:0;border-radius:22px;overflow:hidden;pointer-events:none}
+.slip .sheen::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.08) 48%,transparent 60%);transform:translateX(-110%);animation:sheen 5s ease-in-out infinite}
+.sl-head{padding:22px 20px 16px;text-align:center;border-radius:22px 22px 0 0;background:radial-gradient(100% 130% at 50% 0%,rgba(244,196,67,.26),transparent 70%)}
+.sl-brand{font:700 12px var(--display);letter-spacing:.32em;text-transform:uppercase;color:var(--muted)}
+.sl-brand span{color:var(--green)}
+.sl-title{font:800 46px/.95 var(--display);text-transform:uppercase;margin:8px 0;letter-spacing:.02em;background:linear-gradient(90deg,#F4C443,#fff4c7 50%,#F4C443);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sl-date{font-size:13px;color:var(--muted)}
+.sl-date::first-letter{text-transform:uppercase}
+.sl-legs{padding:4px 14px 2px;display:flex;flex-direction:column;gap:10px}
+.lg{display:grid;grid-template-columns:38px 1fr auto;gap:5px 12px;align-items:center;padding:12px;border-radius:16px;background:rgba(255,255,255,.045);border:1px solid var(--line);animation:lgin .5s ease both}
+.lg:nth-child(2){animation-delay:.08s}.lg:nth-child(3){animation-delay:.16s}
+.lg-ic{grid-row:span 3;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(244,196,67,.13);color:var(--gold)}
+.lg-ic svg{width:22px;height:22px}
+.lg-t{font-weight:600;font-size:15px;line-height:1.3;display:flex;flex-wrap:wrap;align-items:center;min-width:0;overflow-wrap:anywhere}
+.lg-t .vs{color:var(--muted);font-weight:400;padding:0 5px}
+.lg-mk{justify-self:start;font:700 11.5px var(--body);color:#0B1A12;background:var(--green);border-radius:6px;padding:2px 8px;text-transform:uppercase;letter-spacing:.03em}
+.lg-meta{font-size:12px;color:var(--muted)}
+.lg-o{grid-row:span 3;text-align:right}
+.lg-o b{display:block;font:800 28px/1 var(--display)}
+.lg-o small{color:var(--muted);font-size:12px;font-weight:600}
+.lg-bar{grid-column:1/4;height:4px;border-radius:2px;background:var(--track);overflow:hidden}
+.lg-bar i{display:block;height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold))}
+.perf{position:relative;height:30px;margin:8px 0 2px}
+.perf::before{content:"";position:absolute;left:24px;right:24px;top:50%;border-top:2px dashed rgba(238,244,239,.2)}
+.perf i{position:absolute;top:0;width:30px;height:30px;border-radius:50%;background:#0b110d;border:1px solid rgba(244,196,67,.5)}
+.perf i.l{left:-16px;clip-path:inset(0 0 0 50%)}.perf i.r{right:-16px;clip-path:inset(0 50% 0 0)}
+.sl-sum{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:6px 22px 18px}
+.sum-l small{display:block;font:700 12px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.sum-l b{font:800 60px/1 var(--display);color:var(--gold);text-shadow:0 0 34px rgba(244,196,67,.4)}
+.ring{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--green) calc(var(--v) * 1%),rgba(255,255,255,.1) 0)}
+.ring::before{content:"";position:absolute;inset:8px;border-radius:50%;background:#111914}
+.ring span{position:relative;text-align:center;font:800 26px/1 var(--display)}
+.ring small{display:block;margin-top:3px;font:600 10px var(--body);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.sl-code{margin:0 22px;height:46px;border-radius:4px;opacity:.8;background:repeating-linear-gradient(90deg,#e8efe9 0 2px,transparent 2px 4px,#e8efe9 4px 5px,transparent 5px 8px,#e8efe9 8px 11px,transparent 11px 12px,#e8efe9 12px 13px,transparent 13px 17px)}
+.sl-id{text-align:center;font:600 11px ui-monospace,Consolas,monospace;letter-spacing:.3em;color:var(--muted);padding:8px 0 18px}
+.sl-hist{max-width:440px;margin:16px auto 0;text-align:center;font-size:13px}
+.sl-hist b{color:var(--green);font:800 17px var(--display)}
+.sl-resp{max-width:440px;margin:10px auto 0;text-align:center;font-size:11px;color:var(--muted)}
+@keyframes sheen{0%,55%{transform:translateX(-110%)}100%{transform:translateX(110%)}}
+@keyframes tvin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes lgin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tview,.lg,.slip .sheen::before{animation:none}}
+html[lang=ar] .lg-t,html[lang=ar] .lg-meta,html[lang=ar] .sl-date{unicode-bidi:plaintext}
 .track{margin:0 16px 6px;align-self:flex-start;background:rgba(61,214,140,.14);border:1px solid rgba(61,214,140,.4);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
 .track b{color:var(--green);font-family:var(--display);font-size:16px}
 .track[hidden]{display:none}
@@ -197,6 +249,7 @@ body[data-m="w2"]  .decor{--pat:repeating-linear-gradient(-60deg, rgba(255,255,2
   <button class="side r" id="next" type="button" aria-label="Sljedeća opcija">→</button>
 </div>
 
+<section class="tview" id="tview" hidden role="dialog" aria-modal="true"></section>
 <script>
 const FOOTBALL = [
   {k:'gg',  t:'Oba daju gol', s:'GG', d:'I domaćin i gost postižu bar jedan gol.', h:150},
@@ -532,17 +585,73 @@ function mtFor(sp, k){
   const s = SPORTS.find(x => x.k === sp), mk = s && s.markets.find(x => x.k === k); if (!mk) return k;
   const keep = SPORT; SPORT = sp; const r = mt(mk).t; SPORT = keep; return r;
 }
+const TKX = {
+  bs:['Ukupna kvota','Nazad','Podijeli','Link kopiran','Tiketi zadnjih 30 dana','Statistika, ne garancija · 18+ · igraj odgovorno'],
+  en:['Total odds','Back','Share','Link copied','Tickets, last 30 days','Stats, not a guarantee · 18+ · play responsibly'],
+  de:['Gesamtquote','Zurück','Teilen','Link kopiert','Tippscheine, letzte 30 Tage','Statistik, keine Garantie · 18+ · verantwortungsvoll spielen'],
+  it:['Quota totale','Indietro','Condividi','Link copiato','Schedine, ultimi 30 giorni','Statistica, non una garanzia · 18+ · gioca responsabilmente'],
+  es:['Cuota total','Atrás','Compartir','Enlace copiado','Combinadas, últimos 30 días','Estadística, no garantía · 18+ · juega con responsabilidad'],
+  fr:['Cote totale','Retour','Partager','Lien copié','Combinés, 30 derniers jours','Statistiques, aucune garantie · 18+ · jouez responsable'],
+  pt:['Odd total','Voltar','Compartilhar','Link copiado','Bilhetes, últimos 30 dias','Estatística, não garantia · 18+ · jogue com responsabilidade'],
+  tr:['Toplam oran','Geri','Paylaş','Bağlantı kopyalandı','Kuponlar, son 30 gün','İstatistik, garanti değil · 18+ · sorumlu oyna'],
+  sq:['Koeficienti total','Kthehu','Ndaj','Linku u kopjua','Biletat, 30 ditët e fundit','Statistikë, jo garanci · 18+ · luaj me përgjegjësi'],
+  pl:['Kurs łączny','Wstecz','Udostępnij','Link skopiowany','Kupony, ostatnie 30 dni','Statystyka, nie gwarancja · 18+ · graj odpowiedzialnie'],
+  ro:['Cotă totală','Înapoi','Distribuie','Link copiat','Bilete, ultimele 30 de zile','Statistică, nu garanție · 18+ · joacă responsabil'],
+  el:['Συνολική απόδοση','Πίσω','Κοινοποίηση','Ο σύνδεσμος αντιγράφηκε','Δελτία, τελευταίες 30 ημέρες','Στατιστικά, όχι εγγύηση · 18+ · παίξε υπεύθυνα'],
+  ru:['Общий коэффициент','Назад','Поделиться','Ссылка скопирована','Экспрессы за 30 дней','Статистика, не гарантия · 18+ · играйте ответственно'],
+  nl:['Totale odds','Terug','Delen','Link gekopieerd','Combi’s, laatste 30 dagen','Statistiek, geen garantie · 18+ · speel verantwoord'],
+  ar:['الأودز الإجمالي','رجوع','مشاركة','تم نسخ الرابط','القسائم آخر 30 يومًا','إحصائيات وليست ضمانًا · 18+ · العب بمسؤولية']
+};
+function tkx(i){ return (TKX[LANG] || TKX.bs.map(loc))[i]; }
+function tkw(i){ return (TKT[LANG] || TKT.bs.map(loc))[i]; }
+/* ulaz na glavnoj stranici */
 function renderTicket(){
   const el = $('ticket'), t = DATA && DATA.ticket;
-  if (!t || !t.legs || t.date !== TODAY) { el.hidden = true; return; }
-  const w = TKT[LANG] || TKT.bs.map(loc), open = el.dataset.open === '1';
+  if (!t || !t.legs || t.date !== TODAY) { el.hidden = true; route(); return; }
   el.hidden = false;
-  el.innerHTML = `<button class="th" type="button" aria-expanded="${open}"><span class="ti">🎫</span><b>${w[0]}</b><span class="tp">${w[1]} ${t.p}%</span><span class="tq">${t.odd.toFixed(2)}</span><span class="chev">▾</span></button>
-    <div class="tl">${t.legs.map(l => `<div class="leg">${IC[l.sport] || ''}<span>${esc(l.home)} – ${esc(l.away)}</span>
-      <span class="lr">${ODW[LANG] || 'odds'} ${Number(l.o).toFixed(2)}<small>${l.p}%</small></span><span class="lm">${esc(mtFor(l.sport, l.mk))} · ${esc(lg(l.league))} · ${l.time}</span></div>`).join('')}</div>`;
-  el.querySelector('.th').onclick = () => { el.dataset.open = el.dataset.open === '1' ? '0' : '1'; renderTicket(); };
+  el.innerHTML = `<button class="tkbtn" type="button"><span class="ti">🎫</span><b>${tkw(0)}</b><span class="tp">${tkw(1)} ${t.p}%</span><span class="tq">${t.odd.toFixed(2)}</span><span class="go">›</span></button>`;
+  el.querySelector('.tkbtn').onclick = () => { location.hash = 'tiket'; };
+  route();
 }
-function showTrack(){
+/* posebna stranica tiketa */
+function renderTicketView(){
+  const t = DATA.ticket, v = $('tview');
+  const [y, mo, d] = TODAY.split('-').map(Number);
+  const date = String(d).padStart(2, '0') + '.' + String(mo).padStart(2, '0') + '.' + y + '.';
+  const tr = DATA.track && DATA.track.ticket;
+  v.innerHTML = `
+    <div class="tv-top"><button class="tv-btn" type="button" id="tvback">← ${tkx(1)}</button><button class="tv-btn" type="button" id="tvshare">${tkx(2)}</button></div>
+    <article class="slip"><div class="sheen"></div>
+      <header class="sl-head"><div class="sl-brand">Tips <span>of the</span> Day</div><h1 class="sl-title">${tkw(0)}</h1><div class="sl-date">${esc(date)}</div></header>
+      <div class="sl-legs">${t.legs.map(l => `
+        <div class="lg"><span class="lg-ic">${IC[l.sport] || ''}</span>
+          <span class="lg-t"><span class="tm">${crest(l.hl, l.home)}${esc(l.home)}</span><span class="vs">${L().vs}</span><span class="tm">${crest(l.al, l.away)}${esc(l.away)}</span></span>
+          <span class="lg-o"><b>${Number(l.o).toFixed(2)}</b><small>${l.p}%</small></span>
+          <span class="lg-mk">${esc(mtFor(l.sport, l.mk))}</span>
+          <span class="lg-meta">${esc(lg(l.league))} · ${l.time}</span>
+          <span class="lg-bar"><i style="width:${l.p}%"></i></span></div>`).join('')}</div>
+      <div class="perf"><i class="l"></i><i class="r"></i></div>
+      <div class="sl-sum"><div class="sum-l"><small>${tkx(0)}</small><b>${t.odd.toFixed(2)}</b></div>
+        <div class="ring" style="--v:${t.p}"><span>${t.p}%<small>${tkw(1)}</small></span></div></div>
+      <div class="sl-code" aria-hidden="true"></div>
+      <div class="sl-id">TOTD·${TODAY.replace(/-/g, '')}·${t.legs.length}</div>
+    </article>
+    ${tr && tr.n >= 5 ? `<p class="sl-hist">✓ ${tkx(4)}: <b>${tr.hit}/${tr.n}</b></p>` : ''}
+    <p class="sl-resp">${tkx(5)}</p>`;
+  $('tvback').onclick = () => { if (history.state && history.state.fromMain) history.back(); else { location.hash = ''; } };
+  $('tvshare').onclick = async () => {
+    const url = location.href.split('#')[0] + '#tiket';
+    try { if (navigator.share) { await navigator.share({ title: tkw(0) + ' · Tips of the Day', url }); return; } } catch(e) { return; }
+    try { await navigator.clipboard.writeText(url); $('tvshare').textContent = tkx(3); } catch(e) {}
+  };
+}
+function route(){
+  const v = $('tview'), want = location.hash === '#tiket' && DATA && DATA.ticket && DATA.ticket.date === TODAY;
+  if (want) { renderTicketView(); v.hidden = false; v.scrollTop = 0; document.title = tkw(0) + ' · Tips of the Day'; }
+  else { v.hidden = true; document.title = 'Tips of the Day'; if (location.hash === '#tiket' && DATA) history.replaceState(null, '', location.pathname); }
+}
+window.addEventListener('hashchange', route);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('tview').hidden) location.hash = ''; });function showTrack(){
   const el = $('track'), s = DATA && DATA.track && DATA.track.sports && DATA.track.sports[SPORT];
   if (!s || s.n < 10) { el.hidden = true; return; }
   el.hidden = false;

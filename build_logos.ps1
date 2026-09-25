@@ -15,6 +15,7 @@ foreach ($d in $lists) {
     }
   }
 }
+if ($data.ticket) { foreach ($l in $data.ticket.legs) { foreach ($u in @($l.hl, $l.al)) { if ($u) { [void]$urls.Add([string]$u) } } } }
 $wc = New-Object System.Net.WebClient
 $wc.Headers.Add('User-Agent', 'Mozilla/5.0 TipsOfTheDay')
 $map = [ordered]@{}
