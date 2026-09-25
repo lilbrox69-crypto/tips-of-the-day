@@ -148,6 +148,36 @@ body[data-m="w2"]  .decor{--pat:repeating-linear-gradient(-60deg, rgba(255,255,2
 .about b{color:var(--gold);font-weight:700}
 .foot{font-size:11px;color:var(--muted);text-align:center;padding:0 16px 6px}
 .inj{color:#ff6b6b;font-weight:800}
+/* uvod za nove posjetioce */
+.helpbtn{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--card-hi);color:var(--muted);font:800 14px var(--body);cursor:pointer;display:grid;place-items:center;padding:0}
+.helpbtn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.intro{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.42);animation:tvin .3s ease}
+.intro[hidden]{display:none}
+.in-card{width:100%;max-width:460px;margin:0 12px calc(16px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#18221c,#0f1612);border:1px solid rgba(244,196,67,.55);border-radius:22px;padding:18px 20px 16px;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 50px rgba(244,196,67,.12);text-align:center}
+.in-vis{height:78px;position:relative;display:grid;place-items:center;margin-bottom:6px}
+.in-hand{font-size:44px;line-height:1;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5))}
+.in-swipe .in-hand{animation:inswipe 1.6s ease-in-out infinite}
+.in-tap .in-hand{animation:intap 1.1s ease-in-out infinite}
+.in-tap::after{content:"";position:absolute;width:56px;height:56px;border-radius:50%;border:2px solid var(--gold);top:6px;left:50%;margin-left:-38px;animation:inring 1.1s ease-out infinite}
+.in-up .in-hand{animation:inup 1.1s ease-in-out infinite}
+.in-vis .ar{position:absolute;top:22px;font:800 30px var(--display);color:var(--gold);opacity:.85}
+.in-vis .ar.l{left:18%}.in-vis .ar.r{right:18%}
+@keyframes inswipe{0%,100%{transform:translateX(-50px) rotate(-10deg)}50%{transform:translateX(50px) rotate(10deg)}}
+@keyframes intap{0%,100%{transform:scale(1)}45%{transform:scale(.82)}}
+@keyframes inring{0%{transform:scale(.5);opacity:1}100%{transform:scale(1.5);opacity:0}}
+@keyframes inup{0%,100%{transform:translateY(10px)}50%{transform:translateY(-10px)}}
+.in-card h3{font:800 28px/1.05 var(--display);text-transform:uppercase;margin:2px 0 8px;color:var(--gold);letter-spacing:.02em}
+.in-card p{margin:0 0 14px;font-size:15px;line-height:1.45;opacity:.9}
+.in-dots{display:flex;justify-content:center;gap:6px;margin-bottom:14px}
+.in-dots i{width:8px;height:8px;border-radius:4px;background:rgba(255,255,255,.22);transition:width .25s}
+.in-dots i.on{width:22px;background:var(--gold)}
+.in-btns{display:flex;gap:10px}
+.in-skip{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:14px;padding:12px 16px;font:600 14px var(--body);cursor:pointer}
+.in-next{flex:1;border:0;border-radius:14px;padding:12px;cursor:pointer;color:#0B1A12;font:800 19px var(--display);text-transform:uppercase;letter-spacing:.04em;background:linear-gradient(100deg,#F4C443,#3DD68C)}
+.in-skip:focus-visible,.in-next:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.hl-pulse{position:relative;z-index:61;box-shadow:0 0 0 3px var(--gold),0 0 34px rgba(244,196,67,.7)!important;border-radius:16px}
+@media (prefers-reduced-motion:reduce){.in-hand,.in-tap::after{animation:none}}
+html[lang=ar] .in-card p,html[lang=ar] .in-card h3{unicode-bidi:plaintext}
 /* ulaz na Tiket dana (glavna stranica) */
 .ticket{margin:0 16px 8px}
 .ticket[hidden]{display:none}
@@ -226,7 +256,7 @@ html[lang=ar] .lg-t,html[lang=ar] .lg-meta,html[lang=ar] .sl-date{unicode-bidi:p
 <div class="app">
   <div class="top">
     <div class="brand">
-      <div class="logo">Tips <span>of the</span> Day</div>
+      <div class="logo">Tips <span>of the</span> Day</div><button class="helpbtn" id="helpbtn" type="button" aria-label="?">?</button>
     </div>
     <div class="daypill" aria-live="polite">
       <span style="padding-right:8px"><span class="dl" id="dl">—</span> <span class="dd" id="dd"></span></span>
@@ -249,6 +279,7 @@ html[lang=ar] .lg-t,html[lang=ar] .lg-meta,html[lang=ar] .sl-date{unicode-bidi:p
   <button class="side r" id="next" type="button" aria-label="Sljedeća opcija">→</button>
 </div>
 
+<div class="intro" id="intro" hidden role="dialog" aria-modal="true"></div>
 <section class="tview" id="tview" hidden role="dialog" aria-modal="true"></section>
 <script>
 const FOOTBALL = [
@@ -604,6 +635,59 @@ const TKX = {
 };
 function tkx(i){ return (TKX[LANG] || TKX.bs.map(loc))[i]; }
 function tkw(i){ return (TKT[LANG] || TKT.bs.map(loc))[i]; }
+/* ---------- kratki uvod (prvi ulazak) ---------- */
+const INTRO = {
+  bs:[['Prevuci lijevo i desno','Svaka strana je druga opcija: oba daju gol, više od 2.5, korneri, pobjeda…'],['Dodirni utakmicu','Vidiš zašto je u top 3: forma, međusobni susreti, očekivani golovi i povrede.'],['Sport i Tiket dana','Gore mijenjaš sport i jezik, a zlatno dugme vodi na Tiket dana.'],['Dalje','Kreni','Preskoči']],
+  en:[['Swipe left and right','Every page is a different pick: both teams to score, over 2.5, corners, wins…'],['Tap a game','See why it made the top 3: form, head-to-head, expected goals and injuries.'],['Sport & Ticket of the day','Change sport and language at the top — the gold button opens the Ticket of the day.'],['Next','Let’s go','Skip']],
+  de:[['Nach links und rechts wischen','Jede Seite ist ein anderer Tipp: beide treffen, über 2.5, Ecken, Siege…'],['Spiel antippen','Sieh, warum es in den Top 3 ist: Form, direkte Duelle, erwartete Tore und Verletzungen.'],['Sport & Tippschein des Tages','Oben Sport und Sprache wählen – der goldene Button öffnet den Tippschein des Tages.'],['Weiter','Los geht’s','Überspringen']],
+  it:[['Scorri a destra e sinistra','Ogni pagina è un pronostico diverso: entrambe segnano, over 2.5, angoli, vittorie…'],['Tocca una partita','Scopri perché è nella top 3: forma, precedenti, gol attesi e infortuni.'],['Sport e schedina del giorno','In alto cambi sport e lingua, il pulsante dorato apre la schedina del giorno.'],['Avanti','Iniziamo','Salta']],
+  es:[['Desliza a izquierda y derecha','Cada página es un pronóstico distinto: ambos marcan, más de 2.5, córners, victorias…'],['Toca un partido','Mira por qué está en el top 3: forma, enfrentamientos, goles esperados y lesiones.'],['Deporte y combinada del día','Arriba cambias deporte e idioma; el botón dorado abre la combinada del día.'],['Siguiente','Vamos','Saltar']],
+  fr:[['Glisse à gauche et à droite','Chaque page est un autre pronostic : les deux marquent, plus de 2.5, corners, victoires…'],['Touche un match','Découvre pourquoi il est dans le top 3 : forme, confrontations, buts attendus et blessures.'],['Sport et combiné du jour','En haut, change de sport et de langue ; le bouton doré ouvre le combiné du jour.'],['Suivant','C’est parti','Passer']],
+  pt:[['Deslize para os lados','Cada página é um palpite diferente: ambas marcam, mais de 2.5, escanteios, vitórias…'],['Toque num jogo','Veja por que está no top 3: forma, confrontos, gols esperados e lesões.'],['Esporte e bilhete do dia','No topo você muda esporte e idioma; o botão dourado abre o bilhete do dia.'],['Próximo','Vamos lá','Pular']],
+  tr:[['Sağa sola kaydır','Her sayfa farklı bir tahmin: karşılıklı gol, 2.5 üst, korner, galibiyet…'],['Bir maça dokun','Neden ilk 3’te olduğunu gör: form, aralarındaki maçlar, beklenen goller ve sakatlıklar.'],['Spor ve günün kuponu','Üstten spor ve dili değiştir; altın düğme günün kuponunu açar.'],['İleri','Başla','Geç']],
+  sq:[['Rrëshqit majtas dhe djathtas','Çdo faqe është një parashikim tjetër: të dyja shënojnë, mbi 2.5, kornera, fitore…'],['Prek një ndeshje','Shih pse është në top 3: forma, ndeshjet mes tyre, golat e pritshëm dhe lëndimet.'],['Sporti dhe bileta e ditës','Lart ndryshon sportin dhe gjuhën; butoni i artë hap biletën e ditës.'],['Tjetër','Fillo','Kalo']],
+  pl:[['Przesuwaj w lewo i prawo','Każda strona to inny typ: obie strzelą, powyżej 2.5, rzuty rożne, wygrane…'],['Dotknij meczu','Zobacz, dlaczego jest w top 3: forma, mecze bezpośrednie, oczekiwane gole i kontuzje.'],['Sport i kupon dnia','Na górze zmienisz sport i język, złoty przycisk otwiera kupon dnia.'],['Dalej','Zaczynamy','Pomiń']],
+  ro:[['Glisează stânga-dreapta','Fiecare pagină e alt pont: ambele marchează, peste 2.5, cornere, victorii…'],['Atinge un meci','Vezi de ce e în top 3: formă, meciuri directe, goluri așteptate și accidentări.'],['Sport și biletul zilei','Sus schimbi sportul și limba; butonul auriu deschide biletul zilei.'],['Înainte','Hai','Sari']],
+  el:[['Σύρε αριστερά και δεξιά','Κάθε σελίδα είναι άλλη πρόβλεψη: γκολ-γκολ, over 2.5, κόρνερ, νίκες…'],['Πάτησε έναν αγώνα','Δες γιατί είναι στο top 3: φόρμα, αλληλοσυγκρούσεις, αναμενόμενα γκολ και τραυματισμοί.'],['Άθλημα και δελτίο ημέρας','Πάνω αλλάζεις άθλημα και γλώσσα· το χρυσό κουμπί ανοίγει το δελτίο της ημέρας.'],['Επόμενο','Πάμε','Παράλειψη']],
+  ru:[['Листай влево и вправо','Каждая страница — другой прогноз: обе забьют, больше 2.5, угловые, победы…'],['Нажми на матч','Узнай, почему он в топ-3: форма, личные встречи, ожидаемые голы и травмы.'],['Спорт и экспресс дня','Вверху меняешь спорт и язык, золотая кнопка открывает экспресс дня.'],['Далее','Начать','Пропустить']],
+  nl:[['Swipe naar links en rechts','Elke pagina is een andere tip: beide scoren, meer dan 2.5, hoekschoppen, winst…'],['Tik op een wedstrijd','Zie waarom hij in de top 3 staat: vorm, onderlinge duels, verwachte goals en blessures.'],['Sport en combi van de dag','Bovenaan kies je sport en taal; de gouden knop opent de combi van de dag.'],['Volgende','Aan de slag','Overslaan']],
+  ar:[['اسحب يمينًا ويسارًا','كل صفحة توقع مختلف: كلا الفريقين يسجل، أكثر من 2.5، ركنيات، فوز…'],['اضغط على مباراة','اعرف لماذا هي ضمن أفضل 3: الأداء، المواجهات المباشرة، الأهداف المتوقعة والإصابات.'],['الرياضة وقسيمة اليوم','في الأعلى تغيّر الرياضة واللغة، والزر الذهبي يفتح قسيمة اليوم.'],['التالي','ابدأ','تخطَّ']]
+};
+function introTxt(){ return INTRO[LANG] || INTRO.bs.map(r => r.map(loc)); }
+let introTimers = [];
+function introClear(){
+  introTimers.forEach(clearTimeout); introTimers = [];
+  document.querySelectorAll('.hl-pulse').forEach(e => e.classList.remove('hl-pulse'));
+  document.querySelectorAll('.card[data-demo]').forEach(c => { c.setAttribute('aria-expanded', 'false'); c.removeAttribute('data-demo'); });
+}
+function showIntro(force){
+  if (!force) { try { if (localStorage.getItem('totd-intro')) return; } catch(e) {} }
+  if (location.hash === '#tiket' || !DAYS.length) return;
+  const el = $('intro'), tx = introTxt(), vis = ['in-swipe', 'in-tap', 'in-up'], hand = ['👆', '👆', '☝️'];
+  let step = 0;
+  const done = () => { introClear(); el.hidden = true; try { localStorage.setItem('totd-intro', '1'); } catch(e) {} };
+  const draw = () => {
+    introClear();
+    const last = step === 2;
+    el.innerHTML = `<div class="in-card"><div class="in-vis ${vis[step]}">${step === 0 ? '<span class="ar l">‹</span><span class="ar r">›</span>' : ''}<span class="in-hand">${hand[step]}</span></div>
+      <h3>${tx[step][0]}</h3><p>${tx[step][1]}</p><div class="in-dots">${[0, 1, 2].map(i => `<i class="${i === step ? 'on' : ''}"></i>`).join('')}</div>
+      <div class="in-btns"><button class="in-skip" type="button">${tx[3][2]}</button><button class="in-next" type="button">${last ? tx[3][1] : tx[3][0]}</button></div></div>`;
+    el.querySelector('.in-skip').onclick = done;
+    el.querySelector('.in-next').onclick = () => { if (last) done(); else { step++; draw(); } };
+    if (step === 0) {          // stranica sama pokaze prelazak na sljedecu opciju i nazad
+      introTimers.push(setTimeout(() => goMarket(mi + 1), 700), setTimeout(() => goMarket(mi - 1), 2100));
+    } else if (step === 1) {   // prva kartica se otvori i pokaze detalje
+      const c = document.querySelector('.slide.in .card'); if (c) { c.setAttribute('aria-expanded', 'true'); c.dataset.demo = '1'; c.classList.add('hl-pulse'); }
+    } else {                   // zasvijetle sport, jezik i Tiket dana
+      ['sportbtn', 'langbtn'].forEach(id => $(id).classList.add('hl-pulse'));
+      const tb = document.querySelector('.tkbtn'); if (tb) tb.classList.add('hl-pulse');
+    }
+    el.querySelector('.in-next').focus();
+  };
+  el.hidden = false; draw();
+}
+document.getElementById('helpbtn').onclick = () => showIntro(true);
+
 /* ulaz na glavnoj stranici */
 function renderTicket(){
   const el = $('ticket'), t = DATA && DATA.ticket;
@@ -1035,5 +1119,6 @@ Promise.all([  fetch('data.json', {cache:'no-store'}).then(r => r.json()),
   if (!SPORTS.some(s => s.k === saved)) saved = 'football';
   if (!hasData(saved)){ const f = SPORTS.find(s => hasData(s.k)); if (f) saved = f.k; }
   SPORT = saved; renderSports(); setSport(saved);
+  setTimeout(() => showIntro(), 900);
 }).catch(() => { renderSports(); $('note').hidden = false; $('note').textContent = L().err; });
 </script>
