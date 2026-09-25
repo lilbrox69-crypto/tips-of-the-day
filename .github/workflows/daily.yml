@@ -1,0 +1,66 @@
+name: Tips of the Day - dnevno osvjezavanje
+
+on:
+  schedule:
+    - cron: '10 6 * * *'   # 06:10 UTC = 08:10 po ljetnom vremenu u BiH
+  workflow_dispatch:        # dugme "Run workflow" za rucno pokretanje
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: daily
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Kljucevi iz GitHub Secrets
+        shell: powershell
+        env:
+          FD: ${{ secrets.FOOTBALL_DATA_TOKEN }}
+          BDL: ${{ secrets.BALLDONTLIE_KEY }}
+          APIS: ${{ secrets.API_SPORTS_KEY }}
+          ODDS: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          [ordered]@{ footballDataToken = $env:FD; balldontlieKey = $env:BDL; apiSportsKey = $env:APIS; oddsApiKey = $env:ODDS } | ConvertTo-Json | Set-Content -Encoding ascii config.json
+
+      - name: Osvjezi podatke (svi sportovi, kvote, pracenje pogodaka, grbovi)
+        shell: powershell
+        run: .\update.ps1
+
+      - name: Sacuvaj kes (istorija, pogoci, rezultati)
+        shell: powershell
+        run: |
+          git config user.name "tips-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cache cache_nba.json cache_nfl.json
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) { git commit -m "Dnevni kes $(Get-Date -Format yyyy-MM-dd)"; git push }
+          exit 0
+
+      - name: Pripremi stranicu
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force site | Out-Null
+          Copy-Item index.html, data.json, logos.json site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: update
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
