@@ -97,23 +97,30 @@ $sres = Get-Many $idPaths
 foreach ($r in $sres.Values) { Save-FxStats $r.response }
 [IO.File]::WriteAllText($fxFile, ($fxStats | ConvertTo-Json -Depth 3 -Compress), $enc)
 
-# ---------- 4) kvote (Bet365), stranica po stranica ----------
+# ---------- 4) kvote: sve kladionice, srednja vrijednost (medijan) po opciji ----------
 $odds = @{}
-$o1 = Get-One "odds?date=$today&bookmaker=8&timezone=Europe/Sarajevo&page=1"
+$o1 = Get-One "odds?date=$today&timezone=Europe/Sarajevo&page=1"
 $oPages = @($o1)
-if ($o1 -and $o1.paging.total -gt 1) { $more = Get-Many @(2..$o1.paging.total | ForEach-Object { "odds?date=$today&bookmaker=8&timezone=Europe/Sarajevo&page=$_" }); $oPages += @($more.Values) }
-function OddOf($bets, $betId, $val) { $b = @($bets | Where-Object { $_.id -eq $betId })[0]; if (-not $b) { return $null }; $v = @($b.values | Where-Object { [string]$_.value -eq $val })[0]; if ($v) { [math]::Round([double]$v.odd, 2) } }
+if ($o1 -and $o1.paging.total -gt 1) { $more = Get-Many @(2..$o1.paging.total | ForEach-Object { "odds?date=$today&timezone=Europe/Sarajevo&page=$_" }); $oPages += @($more.Values) }
+function Median($xs) { $s = @($xs | Sort-Object); if ($s.Count -eq 0) { return $null }; $m = [int][math]::Floor($s.Count / 2); if ($s.Count % 2) { $s[$m] } else { ($s[$m - 1] + $s[$m]) / 2 } }
+$map = @(@('w1',1,'Home'), @('x',1,'Draw'), @('w2',1,'Away'), @('o15',5,'Over 1.5'), @('o25',5,'Over 2.5'), @('u25',5,'Under 2.5'),
+  @('gg',8,'Yes'), @('hs',28,'No'), @('as',27,'No'), @('c8',45,'Over 7.5'), @('y3',80,'Over 2.5'))
 foreach ($pg in $oPages) {
   foreach ($r in $pg.response) {
-    $bets = $r.bookmakers[0].bets; if (-not $bets) { continue }
-    $o = [ordered]@{}
-    $map = @(@('w1',1,'Home'), @('x',1,'Draw'), @('w2',1,'Away'), @('o15',5,'Over 1.5'), @('o25',5,'Over 2.5'), @('u25',5,'Under 2.5'),
-      @('gg',8,'Yes'), @('hs',28,'No'), @('as',27,'No'), @('c8',45,'Over 7.5'), @('y3',80,'Over 2.5'))
-    foreach ($m in $map) { $v = OddOf $bets $m[1] $m[2]; if ($v) { $o[$m[0]] = $v } }
+    $vals = @{}
+    foreach ($bk in $r.bookmakers) {
+      foreach ($m in $map) {
+        $b = @($bk.bets | Where-Object { $_.id -eq $m[1] })[0]; if (-not $b) { continue }
+        $v = @($b.values | Where-Object { [string]$_.value -eq $m[2] })[0]; if (-not $v) { continue }
+        if (-not $vals.ContainsKey($m[0])) { $vals[$m[0]] = New-Object System.Collections.ArrayList }
+        [void]$vals[$m[0]].Add([double]$v.odd)
+      }
+    }
+    $o = [ordered]@{}; foreach ($m in $map) { if ($vals.ContainsKey($m[0])) { $o[$m[0]] = [math]::Round((Median $vals[$m[0]]), 2) } }
     if ($o.Count) { $odds[[string]$r.fixture.id] = $o }
   }
 }
-
+Write-Host "  kvote: $($odds.Count) utakmica, $(@($oPages).Count) stranica"
 # ---------- 5) procenti (isti model kao ranije) ----------
 function Get-Stats($t) {
   $g = $last[$t]; if (-not $g -or $g.Count -lt 8) { return $null }
