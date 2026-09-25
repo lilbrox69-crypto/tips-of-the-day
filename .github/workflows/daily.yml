@@ -47,7 +47,7 @@ jobs:
         shell: powershell
         run: |
           New-Item -ItemType Directory -Force site | Out-Null
-          Copy-Item index.html, data.json, logos.json site
+          Copy-Item index.html, data.json, logos.json, history.json site
 
       - uses: actions/upload-pages-artifact@v3
         with:

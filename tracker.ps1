@@ -121,5 +121,25 @@ $bySport = [ordered]@{}
 foreach ($g in ($win | Group-Object sport)) { $bySport[$g.Name] = [ordered]@{ n = $g.Count; hit = @($g.Group | Where-Object { $_.hit }).Count } }
 $track = [ordered]@{ days = 30; n = $win.Count; hit = @($win | Where-Object { $_.hit }).Count; sports = $bySport; ticket = $ticketTrack }
 $data | Add-Member -NotePropertyName track -NotePropertyValue $track -Force
+
+# 4) istorija za stranicu "Rezultati" (zadnjih 30 dana): history.json
+function ScoreOf($key) { $r = $results[$key]; if ($r) { "$([int]$r.h)-$([int]$r.a)" } else { '' } }
+function HitVal($v) { if ($v -is [bool]) { return [int]$v } ; return $null }   # 1 proslo, 0 palo, null ceka
+$hdays = New-Object System.Collections.ArrayList
+for ($i = 0; $i -le 30; $i++) {
+  $ds = $todayD.AddDays(-$i).ToString('yyyy-MM-dd')
+  $dp = @($keep | Where-Object { $_.date -eq $ds })
+  $tk = @($tickets | Where-Object { $_.date -eq $ds })[0]
+  if (-not $dp.Count -and -not $tk) { continue }
+  $day = [ordered]@{ date = $ds }
+  if ($tk) {
+    $day.t = [ordered]@{ odd = $tk.odd; p = $tk.p; r = (HitVal $tk.hit); legs = @($tk.legs | ForEach-Object {
+      $rr = $results[$_.key]; $v = if ($rr) { Judge $_.sport $_.mk $rr } else { $null }
+      [ordered]@{ s = $_.sport; m = $_.mk; h = $_.home; a = $_.away; hl = $_.hl; al = $_.al; o = $_.o; p = $_.p; r = (HitVal $v); sc = (ScoreOf $_.key) } }) }
+  }
+  $day.k = @($dp | ForEach-Object { [ordered]@{ s = $_.sport; m = $_.mk; h = $_.home; a = $_.away; p = $_.p; r = (HitVal $_.hit); sc = (ScoreOf $_.key) } })
+  [void]$hdays.Add($day)
+}
+[IO.File]::WriteAllText((Join-Path $root 'history.json'), ([ordered]@{ today = $today; days = @($hdays) } | ConvertTo-Json -Depth 6 -Compress), $enc)
 [IO.File]::WriteAllText($dataFile, ($data | ConvertTo-Json -Depth 12), $enc)
 Write-Host "Pracenje: danas zapisano $(@($keep | Where-Object { $_.date -eq $today }).Count) tipova; zadnjih 30 dana $($track.hit)/$($track.n)"
