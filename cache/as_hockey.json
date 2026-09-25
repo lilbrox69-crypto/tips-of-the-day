@@ -32,20 +32,20 @@
         "al":  "https://media.api-sports.io/hockey/teams/687.png"
     },
     {
-        "id":  430481,
-        "utc":  "2026-09-25T11:00:00+02:00",
+        "id":  432525,
+        "utc":  "2026-09-24T04:00:00+02:00",
         "final":  true,
-        "league":  "KHL",
-        "country":  "Russia",
-        "lid":  35,
-        "hid":  1486,
-        "aid":  377,
-        "hn":  "Khabarovsk",
-        "an":  "Lokomotiv Yaroslavl",
-        "hs":  3,
-        "as":  1,
-        "hl":  "https://media.api-sports.io/hockey/teams/1486.png",
-        "al":  "https://media.api-sports.io/hockey/teams/377.png"
+        "league":  "NHL",
+        "country":  "USA",
+        "lid":  57,
+        "hid":  670,
+        "aid":  685,
+        "hn":  "Anaheim Ducks",
+        "an":  "Los Angeles Kings",
+        "hs":  1,
+        "as":  2,
+        "hl":  "https://media.api-sports.io/hockey/teams/670.png",
+        "al":  "https://media.api-sports.io/hockey/teams/685.png"
     },
     {
         "id":  444579,
@@ -192,6 +192,22 @@
         "al":  "https://media.api-sports.io/hockey/teams/520.png"
     },
     {
+        "id":  430481,
+        "utc":  "2026-09-25T11:00:00+02:00",
+        "final":  true,
+        "league":  "KHL",
+        "country":  "Russia",
+        "lid":  35,
+        "hid":  1486,
+        "aid":  377,
+        "hn":  "Khabarovsk",
+        "an":  "Lokomotiv Yaroslavl",
+        "hs":  3,
+        "as":  1,
+        "hl":  "https://media.api-sports.io/hockey/teams/1486.png",
+        "al":  "https://media.api-sports.io/hockey/teams/377.png"
+    },
+    {
         "id":  430477,
         "utc":  "2026-09-24T14:30:00+02:00",
         "final":  true,
@@ -224,20 +240,20 @@
         "al":  "https://media.api-sports.io/hockey/teams/534.png"
     },
     {
-        "id":  432525,
-        "utc":  "2026-09-24T04:00:00+02:00",
+        "id":  432530,
+        "utc":  "2026-09-25T03:40:00+02:00",
         "final":  true,
         "league":  "NHL",
         "country":  "USA",
         "lid":  57,
-        "hid":  670,
-        "aid":  685,
-        "hn":  "Anaheim Ducks",
-        "an":  "Los Angeles Kings",
-        "hs":  1,
-        "as":  2,
-        "hl":  "https://media.api-sports.io/hockey/teams/670.png",
-        "al":  "https://media.api-sports.io/hockey/teams/685.png"
+        "hid":  1436,
+        "aid":  675,
+        "hn":  "Seattle Kraken",
+        "an":  "Calgary Flames",
+        "hs":  4,
+        "as":  3,
+        "hl":  "https://media.api-sports.io/hockey/teams/1436.png",
+        "al":  "https://media.api-sports.io/hockey/teams/675.png"
     },
     {
         "id":  428777,
@@ -270,22 +286,6 @@
         "as":  5,
         "hl":  "https://media.api-sports.io/hockey/teams/699.png",
         "al":  "https://media.api-sports.io/hockey/teams/684.png"
-    },
-    {
-        "id":  425764,
-        "utc":  "2026-09-24T17:30:00+02:00",
-        "final":  true,
-        "league":  "Liiga",
-        "country":  "Finland",
-        "lid":  16,
-        "hid":  177,
-        "aid":  181,
-        "hn":  "Lukko",
-        "an":  "Tappara",
-        "hs":  3,
-        "as":  2,
-        "hl":  "https://media.api-sports.io/hockey/teams/177.png",
-        "al":  "https://media.api-sports.io/hockey/teams/181.png"
     },
     {
         "id":  432527,
@@ -448,20 +448,20 @@
         "al":  "https://media.api-sports.io/hockey/teams/382.png"
     },
     {
-        "id":  432530,
-        "utc":  "2026-09-25T03:40:00+02:00",
+        "id":  425764,
+        "utc":  "2026-09-24T17:30:00+02:00",
         "final":  true,
-        "league":  "NHL",
-        "country":  "USA",
-        "lid":  57,
-        "hid":  1436,
-        "aid":  675,
-        "hn":  "Seattle Kraken",
-        "an":  "Calgary Flames",
-        "hs":  4,
-        "as":  3,
-        "hl":  "https://media.api-sports.io/hockey/teams/1436.png",
-        "al":  "https://media.api-sports.io/hockey/teams/675.png"
+        "league":  "Liiga",
+        "country":  "Finland",
+        "lid":  16,
+        "hid":  177,
+        "aid":  181,
+        "hn":  "Lukko",
+        "an":  "Tappara",
+        "hs":  3,
+        "as":  2,
+        "hl":  "https://media.api-sports.io/hockey/teams/177.png",
+        "al":  "https://media.api-sports.io/hockey/teams/181.png"
     },
     {
         "id":  444582,
@@ -478,6 +478,22 @@
         "as":  5,
         "hl":  "https://media.api-sports.io/hockey/teams/676.png",
         "al":  "https://media.api-sports.io/hockey/teams/689.png"
+    },
+    {
+        "id":  430479,
+        "utc":  "2026-09-25T17:00:00+02:00",
+        "final":  true,
+        "league":  "KHL",
+        "country":  "Russia",
+        "lid":  35,
+        "hid":  451,
+        "aid":  371,
+        "hn":  "Lada",
+        "an":  "CSKA Moscow",
+        "hs":  0,
+        "as":  5,
+        "hl":  "https://media.api-sports.io/hockey/teams/451.png",
+        "al":  "https://media.api-sports.io/hockey/teams/371.png"
     },
     {
         "id":  432528,

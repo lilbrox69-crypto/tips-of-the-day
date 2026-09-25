@@ -1,3 +1,18 @@
 [
-
+    {
+        "id":  197452,
+        "utc":  "2026-09-25T17:30:00+02:00",
+        "final":  true,
+        "league":  "Superleague",
+        "country":  "North-Macedonia",
+        "lid":  37,
+        "hid":  1157,
+        "aid":  1158,
+        "hn":  "Eurofarm Pelister",
+        "an":  "Eurofarm Pelister 2",
+        "hs":  35,
+        "as":  24,
+        "hl":  "https://media.api-sports.io/handball/teams/1157.png",
+        "al":  "https://media.api-sports.io/handball/teams/1158.png"
+    }
 ]
