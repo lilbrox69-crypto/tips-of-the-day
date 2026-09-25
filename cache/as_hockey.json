@@ -48,6 +48,22 @@
         "al":  "https://media.api-sports.io/hockey/teams/492.png"
     },
     {
+        "id":  433625,
+        "utc":  "2026-09-25T19:30:00+02:00",
+        "final":  true,
+        "league":  "DEL",
+        "country":  "Germany",
+        "lid":  19,
+        "hid":  251,
+        "aid":  248,
+        "hn":  "Kolner",
+        "an":  "Eisbaren Berlin",
+        "hs":  5,
+        "as":  6,
+        "hl":  "https://media.api-sports.io/hockey/teams/251.png",
+        "al":  "https://media.api-sports.io/hockey/teams/248.png"
+    },
+    {
         "id":  433627,
         "utc":  "2026-09-25T19:30:00+02:00",
         "final":  true,
@@ -286,6 +302,22 @@
         "as":  0,
         "hl":  "https://media.api-sports.io/hockey/teams/697.png",
         "al":  "https://media.api-sports.io/hockey/teams/670.png"
+    },
+    {
+        "id":  431166,
+        "utc":  "2026-09-25T20:15:00+02:00",
+        "final":  true,
+        "league":  "Ligue Magnus",
+        "country":  "France",
+        "lid":  18,
+        "hid":  234,
+        "aid":  967,
+        "hn":  "Bordeaux",
+        "an":  "Marseille",
+        "hs":  2,
+        "as":  5,
+        "hl":  "https://media.api-sports.io/hockey/teams/234.png",
+        "al":  "https://media.api-sports.io/hockey/teams/967.png"
     },
     {
         "id":  435755,
@@ -528,6 +560,22 @@
         "al":  "https://media.api-sports.io/hockey/teams/371.png"
     },
     {
+        "id":  431163,
+        "utc":  "2026-09-25T20:00:00+02:00",
+        "final":  true,
+        "league":  "Ligue Magnus",
+        "country":  "France",
+        "lid":  18,
+        "hid":  241,
+        "aid":  235,
+        "hn":  "Nice",
+        "an":  "Briancon",
+        "hs":  5,
+        "as":  0,
+        "hl":  "https://media.api-sports.io/hockey/teams/241.png",
+        "al":  "https://media.api-sports.io/hockey/teams/235.png"
+    },
+    {
         "id":  425218,
         "utc":  "2026-09-24T19:00:00+02:00",
         "final":  true,
@@ -576,6 +624,38 @@
         "al":  "https://media.api-sports.io/hockey/teams/556.png"
     },
     {
+        "id":  428782,
+        "utc":  "2026-09-25T19:45:00+02:00",
+        "final":  true,
+        "league":  "National League",
+        "country":  "Switzerland",
+        "lid":  51,
+        "hid":  554,
+        "aid":  549,
+        "hn":  "Servette",
+        "an":  "Fribourg",
+        "hs":  4,
+        "as":  3,
+        "hl":  "https://media.api-sports.io/hockey/teams/554.png",
+        "al":  "https://media.api-sports.io/hockey/teams/549.png"
+    },
+    {
+        "id":  431165,
+        "utc":  "2026-09-25T20:05:00+02:00",
+        "final":  true,
+        "league":  "Ligue Magnus",
+        "country":  "France",
+        "lid":  18,
+        "hid":  237,
+        "aid":  236,
+        "hn":  "Chamonix Mont-Blanc",
+        "an":  "Cergy-Pontoise",
+        "hs":  6,
+        "as":  4,
+        "hl":  "https://media.api-sports.io/hockey/teams/237.png",
+        "al":  "https://media.api-sports.io/hockey/teams/236.png"
+    },
+    {
         "id":  426280,
         "utc":  "2026-09-25T18:00:00+02:00",
         "final":  true,
@@ -590,6 +670,22 @@
         "as":  1,
         "hl":  "https://media.api-sports.io/hockey/teams/125.png",
         "al":  "https://media.api-sports.io/hockey/teams/124.png"
+    },
+    {
+        "id":  444584,
+        "utc":  "2026-09-25T01:00:00+02:00",
+        "final":  true,
+        "league":  "NHL",
+        "country":  "USA",
+        "lid":  57,
+        "hid":  692,
+        "aid":  690,
+        "hn":  "New York Rangers",
+        "an":  "New Jersey Devils",
+        "hs":  4,
+        "as":  3,
+        "hl":  "https://media.api-sports.io/hockey/teams/692.png",
+        "al":  "https://media.api-sports.io/hockey/teams/690.png"
     },
     {
         "id":  427818,
@@ -784,6 +880,22 @@
         "al":  "https://media.api-sports.io/hockey/teams/16.png"
     },
     {
+        "id":  431167,
+        "utc":  "2026-09-25T20:30:00+02:00",
+        "final":  true,
+        "league":  "Ligue Magnus",
+        "country":  "France",
+        "lid":  18,
+        "hid":  232,
+        "aid":  233,
+        "hn":  "Angers",
+        "an":  "Anglet",
+        "hs":  6,
+        "as":  1,
+        "hl":  "https://media.api-sports.io/hockey/teams/232.png",
+        "al":  "https://media.api-sports.io/hockey/teams/233.png"
+    },
+    {
         "id":  430478,
         "utc":  "2026-09-24T18:30:00+02:00",
         "final":  true,
@@ -864,20 +976,20 @@
         "al":  "https://media.api-sports.io/hockey/teams/683.png"
     },
     {
-        "id":  433625,
-        "utc":  "2026-09-25T19:30:00+02:00",
+        "id":  431164,
+        "utc":  "2026-09-25T20:00:00+02:00",
         "final":  true,
-        "league":  "DEL",
-        "country":  "Germany",
-        "lid":  19,
-        "hid":  251,
-        "aid":  248,
-        "hn":  "Kolner",
-        "an":  "Eisbaren Berlin",
-        "hs":  5,
-        "as":  6,
-        "hl":  "https://media.api-sports.io/hockey/teams/251.png",
-        "al":  "https://media.api-sports.io/hockey/teams/248.png"
+        "league":  "Ligue Magnus",
+        "country":  "France",
+        "lid":  18,
+        "hid":  242,
+        "aid":  238,
+        "hn":  "Rouen",
+        "an":  "Gap",
+        "hs":  4,
+        "as":  0,
+        "hl":  "https://media.api-sports.io/hockey/teams/242.png",
+        "al":  "https://media.api-sports.io/hockey/teams/238.png"
     },
     {
         "id":  444580,
@@ -928,22 +1040,6 @@
         "al":  "https://media.api-sports.io/hockey/teams/689.png"
     },
     {
-        "id":  425765,
-        "utc":  "2026-09-25T17:30:00+02:00",
-        "final":  true,
-        "league":  "Liiga",
-        "country":  "Finland",
-        "lid":  16,
-        "hid":  168,
-        "aid":  179,
-        "hn":  "Assat",
-        "an":  "SaiPa",
-        "hs":  0,
-        "as":  5,
-        "hl":  "https://media.api-sports.io/hockey/teams/168.png",
-        "al":  "https://media.api-sports.io/hockey/teams/179.png"
-    },
-    {
         "id":  426281,
         "utc":  "2026-09-25T18:00:00+02:00",
         "final":  true,
@@ -992,22 +1088,6 @@
         "al":  "https://media.api-sports.io/hockey/teams/134.png"
     },
     {
-        "id":  431164,
-        "utc":  "2026-09-25T20:00:00+02:00",
-        "final":  true,
-        "league":  "Ligue Magnus",
-        "country":  "France",
-        "lid":  18,
-        "hid":  242,
-        "aid":  238,
-        "hn":  "Rouen",
-        "an":  "Gap",
-        "hs":  4,
-        "as":  0,
-        "hl":  "https://media.api-sports.io/hockey/teams/242.png",
-        "al":  "https://media.api-sports.io/hockey/teams/238.png"
-    },
-    {
         "id":  426277,
         "utc":  "2026-09-25T17:00:00+02:00",
         "final":  true,
@@ -1024,20 +1104,36 @@
         "al":  "https://media.api-sports.io/hockey/teams/136.png"
     },
     {
-        "id":  444584,
-        "utc":  "2026-09-25T01:00:00+02:00",
+        "id":  425765,
+        "utc":  "2026-09-25T17:30:00+02:00",
         "final":  true,
-        "league":  "NHL",
-        "country":  "USA",
-        "lid":  57,
-        "hid":  692,
-        "aid":  690,
-        "hn":  "New York Rangers",
-        "an":  "New Jersey Devils",
+        "league":  "Liiga",
+        "country":  "Finland",
+        "lid":  16,
+        "hid":  168,
+        "aid":  179,
+        "hn":  "Assat",
+        "an":  "SaiPa",
+        "hs":  0,
+        "as":  5,
+        "hl":  "https://media.api-sports.io/hockey/teams/168.png",
+        "al":  "https://media.api-sports.io/hockey/teams/179.png"
+    },
+    {
+        "id":  431162,
+        "utc":  "2026-09-25T20:30:00+02:00",
+        "final":  true,
+        "league":  "Ligue Magnus",
+        "country":  "France",
+        "lid":  18,
+        "hid":  239,
+        "aid":  231,
+        "hn":  "Grenoble",
+        "an":  "Amiens",
         "hs":  4,
-        "as":  3,
-        "hl":  "https://media.api-sports.io/hockey/teams/692.png",
-        "al":  "https://media.api-sports.io/hockey/teams/690.png"
+        "as":  1,
+        "hl":  "https://media.api-sports.io/hockey/teams/239.png",
+        "al":  "https://media.api-sports.io/hockey/teams/231.png"
     },
     {
         "id":  425215,

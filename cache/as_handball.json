@@ -16,20 +16,20 @@
         "al":  "https://media.api-sports.io/handball/teams/180.png"
     },
     {
-        "id":  202346,
-        "utc":  "2026-09-25T18:00:00+02:00",
+        "id":  197643,
+        "utc":  "2026-09-25T20:30:00+02:00",
         "final":  true,
-        "league":  "NB I",
-        "country":  "Hungary",
-        "lid":  49,
-        "hid":  412,
-        "aid":  411,
-        "hn":  "Ferencvaros",
-        "an":  "Eger",
-        "hs":  31,
-        "as":  30,
-        "hl":  "https://media.api-sports.io/handball/teams/412.png",
-        "al":  "https://media.api-sports.io/handball/teams/411.png"
+        "league":  "Starligue",
+        "country":  "France",
+        "lid":  34,
+        "hid":  288,
+        "aid":  248,
+        "hn":  "Selestat",
+        "an":  "Montpellier",
+        "hs":  30,
+        "as":  38,
+        "hl":  "https://media.api-sports.io/handball/teams/288.png",
+        "al":  "https://media.api-sports.io/handball/teams/248.png"
     },
     {
         "id":  197644,
@@ -80,22 +80,6 @@
         "al":  "https://media.api-sports.io/handball/teams/245.png"
     },
     {
-        "id":  197643,
-        "utc":  "2026-09-25T20:30:00+02:00",
-        "final":  true,
-        "league":  "Starligue",
-        "country":  "France",
-        "lid":  34,
-        "hid":  288,
-        "aid":  248,
-        "hn":  "Selestat",
-        "an":  "Montpellier",
-        "hs":  30,
-        "as":  38,
-        "hl":  "https://media.api-sports.io/handball/teams/288.png",
-        "al":  "https://media.api-sports.io/handball/teams/248.png"
-    },
-    {
         "id":  198560,
         "utc":  "2026-09-25T19:00:00+02:00",
         "final":  true,
@@ -142,6 +126,22 @@
         "as":  27,
         "hl":  "https://media.api-sports.io/handball/teams/15.png",
         "al":  "https://media.api-sports.io/handball/teams/18.png"
+    },
+    {
+        "id":  202346,
+        "utc":  "2026-09-25T18:00:00+02:00",
+        "final":  true,
+        "league":  "NB I",
+        "country":  "Hungary",
+        "lid":  49,
+        "hid":  412,
+        "aid":  411,
+        "hn":  "Ferencvaros",
+        "an":  "Eger",
+        "hs":  31,
+        "as":  30,
+        "hl":  "https://media.api-sports.io/handball/teams/412.png",
+        "al":  "https://media.api-sports.io/handball/teams/411.png"
     },
     {
         "id":  203771,
