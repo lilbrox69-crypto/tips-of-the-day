@@ -121,17 +121,30 @@ foreach ($pg in $oPages) {
   }
 }
 Write-Host "  kvote: $($odds.Count) utakmica, $(@($oPages).Count) stranica"
-# ---------- 5) procenti (isti model kao ranije) ----------
-function Get-Stats($t) {
+# ---------- 5) procenti ----------
+# Forma: zadnjih 10 (novije vrijede vise, 0.9^i) + zadnjih 6 na istom terenu (domacin kod kuce, gost u gostima).
+# Prikaz na kartici i dalje pokazuje obicnih zadnjih 10.
+function Rows($list, $t) { @($list | ForEach-Object { $h = $_.hid -eq $t; $gf = if ($h) { $_.hg } else { $_.ag }; $ga = if ($h) { $_.ag } else { $_.hg }
+  [pscustomobject]@{ gf = [double]$gf; ga = [double]$ga; res = $(if ($gf -gt $ga) { 'P' } elseif ($gf -eq $ga) { 'N' } else { 'I' }) } }) }
+function Get-Stats($t, $venue) {
   $g = $last[$t]; if (-not $g -or $g.Count -lt 8) { return $null }
-  $rows = @($g | ForEach-Object { $h = $_.hid -eq $t; $gf = if ($h) { $_.hg } else { $_.ag }; $ga = if ($h) { $_.ag } else { $_.hg }
-    [pscustomobject]@{ gf = $gf; ga = $ga; res = $(if ($gf -gt $ga) { 'P' } elseif ($gf -eq $ga) { 'N' } else { 'I' }) } })
+  $rows = Rows $g $t
   $n = $rows.Count
+  $vg = @($hist[$t] | Where-Object { if ($venue -eq 'h') { $_.hid -eq $t } else { $_.aid -eq $t } } | Sort-Object { [datetime]$_.d } -Descending | Select-Object -First 6)
+  $vrows = Rows $vg $t
+  $W = 0.0; $acc = @{ gf = 0.0; ga = 0.0; scored = 0.0; conceded = 0.0; btts = 0.0; o15 = 0.0; o25 = 0.0 }
+  $add = { param($r, $w) $script:W += $w; $acc.gf += $w * $r.gf; $acc.ga += $w * $r.ga; $acc.scored += $w * [int]($r.gf -gt 0); $acc.conceded += $w * [int]($r.ga -gt 0)
+    $acc.btts += $w * [int]($r.gf -gt 0 -and $r.ga -gt 0); $acc.o15 += $w * [int](($r.gf + $r.ga) -ge 2); $acc.o25 += $w * [int](($r.gf + $r.ga) -ge 3) }
+  $script:W = 0.0
+  for ($i = 0; $i -lt $rows.Count; $i++) { & $add $rows[$i] ([math]::Pow(0.9, $i)) }
+  if ($vrows.Count -ge 3) { for ($i = 0; $i -lt $vrows.Count; $i++) { & $add $vrows[$i] ([math]::Pow(0.9, $i)) } }
+  $wr = [pscustomobject]@{ gf = $acc.gf / $script:W; ga = $acc.ga / $script:W; scored = $acc.scored / $script:W; conceded = $acc.conceded / $script:W
+    btts = $acc.btts / $script:W; o15 = $acc.o15 / $script:W; o25 = $acc.o25 / $script:W }
   [pscustomobject]@{ n = $n; gf = [math]::Round((($rows | Measure-Object gf -Sum).Sum / $n), 2); ga = [math]::Round((($rows | Measure-Object ga -Sum).Sum / $n), 2)
     scored = @($rows | Where-Object { $_.gf -gt 0 }).Count; conceded = @($rows | Where-Object { $_.ga -gt 0 }).Count
     btts = @($rows | Where-Object { $_.gf -gt 0 -and $_.ga -gt 0 }).Count; o15 = @($rows | Where-Object { ($_.gf + $_.ga) -ge 2 }).Count
     o25 = @($rows | Where-Object { ($_.gf + $_.ga) -ge 3 }).Count; o35 = @($rows | Where-Object { ($_.gf + $_.ga) -ge 4 }).Count
-    form = (($rows | Select-Object -First 5 | ForEach-Object { $_.res }) -join '') }
+    form = (($rows | Select-Object -First 5 | ForEach-Object { $_.res }) -join ''); wr = $wr }
 }
 function Get-CStats($t) {
   $rows = @($last[$t] | ForEach-Object { $s = $fxStats[$_.id]; if ($s -and $s.hc -ne $null -and ([int]$s.hc + [int]$s.ac) -gt 0) { $h = $_.hid -eq $t
@@ -145,39 +158,63 @@ function Get-CStats($t) {
 function PoissonP($l, $k) { $f = 1.0; for ($i = 2; $i -le $k; $i++) { $f *= $i }; [math]::Exp(-$l) * [math]::Pow($l, $k) / $f }
 function PoissonOver($l, $line) { $b = 0.0; for ($k = 0; $k -le [math]::Floor($line); $k++) { $b += PoissonP $l $k }; 1 - $b }
 function Pct([double]$x) { [int][math]::Round([math]::Max([double]0.0, [math]::Min([double]1.0, $x)) * 100) }
-
-$list = New-Object System.Collections.ArrayList
-$pairs = @{}
-foreach ($g in $games) {
-  $ht = [string]$g.teams.home.id; $at = [string]$g.teams.away.id
-  $hs = Get-Stats $ht; $as = Get-Stats $at; if (-not $hs -or -not $as) { continue }
-  $lh = [math]::Max(0.2, (($hs.gf + $as.ga) / 2) * 1.08); $la = [math]::Max(0.2, (($as.gf + $hs.ga) / 2) * 0.94)
-  $pH = 0.5 * (1 - [math]::Exp(-$lh)) + 0.5 * ((($hs.scored / $hs.n) + ($as.conceded / $as.n)) / 2)
-  $pA = 0.5 * (1 - [math]::Exp(-$la)) + 0.5 * ((($as.scored / $as.n) + ($hs.conceded / $hs.n)) / 2)
-  $bt = (($hs.btts / $hs.n) + ($as.btts / $as.n)) / 2; $tot = $lh + $la
-  $o15 = 0.5 * (PoissonOver $tot 1.5) + 0.5 * ((($hs.o15 / $hs.n) + ($as.o15 / $as.n)) / 2)
-  $o25 = 0.5 * (PoissonOver $tot 2.5) + 0.5 * ((($hs.o25 / $hs.n) + ($as.o25 / $as.n)) / 2)
+# povrede: svaki igrac koji sigurno ne igra smanjuje ocekivane golove tima za 4% (najvise 20%)
+function CalcP($hs, $as, $hc, $ac, [int]$injH, [int]$injA) {
+  $h = $hs.wr; $a = $as.wr
+  $lh = [math]::Max(0.2, (($h.gf + $a.ga) / 2) * 1.08 * (1 - [math]::Min(0.2, 0.04 * $injH)) * (1 + [math]::Min(0.1, 0.02 * $injA)))
+  $la = [math]::Max(0.2, (($a.gf + $h.ga) / 2) * 0.94 * (1 - [math]::Min(0.2, 0.04 * $injA)) * (1 + [math]::Min(0.1, 0.02 * $injH)))
+  $pH = 0.5 * (1 - [math]::Exp(-$lh)) + 0.5 * (($h.scored + $a.conceded) / 2)
+  $pA = 0.5 * (1 - [math]::Exp(-$la)) + 0.5 * (($a.scored + $h.conceded) / 2)
+  $bt = ($h.btts + $a.btts) / 2; $tot = $lh + $la
+  $o15 = 0.5 * (PoissonOver $tot 1.5) + 0.5 * (($h.o15 + $a.o15) / 2)
+  $o25 = 0.5 * (PoissonOver $tot 2.5) + 0.5 * (($h.o25 + $a.o25) / 2)
   $w1 = 0.0; $dr = 0.0; $w2 = 0.0
-  for ($i = 0; $i -le 8; $i++) { for ($j = 0; $j -le 8; $j++) { $p = (PoissonP $lh $i) * (PoissonP $la $j); if ($i -gt $j) { $w1 += $p } elseif ($i -eq $j) { $dr += $p } else { $w2 += $p } } }
-  $s = $w1 + $dr + $w2
-  $hc = Get-CStats $ht; $ac = Get-CStats $at; $pc8 = $null; $py3 = $null
+  for ($i = 0; $i -le 8; $i++) { for ($j = 0; $j -le 8; $j++) { $q = (PoissonP $lh $i) * (PoissonP $la $j); if ($i -gt $j) { $w1 += $q } elseif ($i -eq $j) { $dr += $q } else { $w2 += $q } } }
+  $sum = $w1 + $dr + $w2
+  $pc8 = $null; $py3 = $null
   if ($hc -and $ac) {
     $lc = ($hc.cf + $ac.ca) / 2 + ($ac.cf + $hc.ca) / 2
     $pc8 = Pct (0.5 * (PoissonOver $lc 7.5) + 0.5 * ((($hc.c8 / $hc.n) + ($ac.c8 / $ac.n)) / 2))
     $py3 = Pct (0.5 * (PoissonOver (($hc.yt + $ac.yt) / 2) 2.5) + 0.5 * ((($hc.y3 / $hc.n) + ($ac.y3 / $ac.n)) / 2))
   }
+  @{ xg = @([math]::Round($lh, 2), [math]::Round($la, 2))
+     p = [ordered]@{ gg = Pct (0.5 * $pH * $pA + 0.5 * $bt); o15 = Pct $o15; o25 = Pct $o25; u25 = Pct (1 - $o25); hs = Pct $pH; as = Pct $pA
+       w1 = Pct ($w1 / $sum); x = Pct ($dr / $sum); w2 = Pct ($w2 / $sum); c8 = $pc8; y3 = $py3 } }
+}
+
+$list = New-Object System.Collections.ArrayList
+$pairs = @{}; $ctx = @{}
+foreach ($g in $games) {
+  $ht = [string]$g.teams.home.id; $at = [string]$g.teams.away.id
+  $hs = Get-Stats $ht 'h'; $as = Get-Stats $at 'a'; if (-not $hs -or -not $as) { continue }
+  $hc = Get-CStats $ht; $ac = Get-CStats $at
+  $c = CalcP $hs $as $hc $ac 0 0
   $utc = [datetime]::Parse($g.fixture.date, [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AdjustToUniversal)
   $local = [System.TimeZoneInfo]::ConvertTimeFromUtc($utc, $tz)
   $m = [ordered]@{ id = "af$($g.fixture.id)"; league = "$($g.league.name) ($($g.league.country))"; time = $local.ToString('HH:mm')
     home = $g.teams.home.name; away = $g.teams.away.name; hl = $g.teams.home.logo; al = $g.teams.away.logo
-    xg = @([math]::Round($lh, 2), [math]::Round($la, 2))
-    p = [ordered]@{ gg = Pct (0.5 * $pH * $pA + 0.5 * $bt); o15 = Pct $o15; o25 = Pct $o25; u25 = Pct (1 - $o25); hs = Pct $pH; as = Pct $pA
-      w1 = Pct ($w1 / $s); x = Pct ($dr / $s); w2 = Pct ($w2 / $s); c8 = $pc8; y3 = $py3 }
-    hs = $hs; as = $as; hc = $hc; ac = $ac }
+    xg = $c.xg; p = $c.p
+    hs = ($hs | Select-Object * -ExcludeProperty wr); as = ($as | Select-Object * -ExcludeProperty wr); hc = $hc; ac = $ac }
   $oo = $odds[[string]$g.fixture.id]; if ($oo) { $m.o = $oo }
-  $pairs[$m.id] = @($ht, $at)
+  $pairs[$m.id] = @($ht, $at); $ctx[$m.id] = @($hs, $as, $hc, $ac)
   [void]$list.Add($m)
 }
+
+# ---------- 5b) povrede i suspenzije za kandidate za top 3 ----------
+$icand = @{}
+foreach ($mk in 'gg','o15','o25','u25','hs','as','w1','x','w2','c8','y3') { foreach ($m in @($list | Where-Object { $_.p[$mk] -ne $null } | Sort-Object { - [int]$_.p[$mk] } | Select-Object -First 12)) { $icand[$m.id] = $m } }
+$ipaths = @{}; foreach ($id in $icand.Keys) { $ipaths[$id] = "injuries?fixture=$($id.Substring(2))" }
+$ires = Get-Many @($ipaths.Values)
+$nI = 0
+foreach ($id in $icand.Keys) {
+  $r = $ires[$ipaths[$id]]; if (-not $r -or -not $r.results) { continue }
+  $out_ = @($r.response | Where-Object { $_.player.type -eq 'Missing Fixture' })
+  $nh = @($out_ | Where-Object { [string]$_.team.id -eq $pairs[$id][0] }).Count; $na = @($out_ | Where-Object { [string]$_.team.id -eq $pairs[$id][1] }).Count
+  if ($nh + $na -eq 0) { continue }
+  $x = $ctx[$id]; $c = CalcP $x[0] $x[1] $x[2] $x[3] $nh $na
+  $m = $icand[$id]; $m.p = $c.p; $m.xg = $c.xg; $m.inj = @($nh, $na); $nI++
+}
+Write-Host "  povrede: uracunate za $nI utakmica ($($icand.Count) kandidata)"
 # ---------- 6) medjusobni susreti (zadnjih 5) za kandidate za top 3 ----------
 $H2HM = @('gg','o15','o25','u25','hs','as','w1','x','w2')
 $cand = @{}

@@ -141,6 +141,23 @@ body[data-m="w2"]  .decor{--pat:repeating-linear-gradient(-60deg, rgba(255,255,2
 .about::before{content:"";position:absolute;left:11px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:radial-gradient(circle at 50% 50%,var(--gold) 0 3px,transparent 3.5px),conic-gradient(var(--green) 0 75%,rgba(255,255,255,.2) 0)}
 .about b{color:var(--gold);font-weight:700}
 .foot{font-size:11px;color:var(--muted);text-align:center;padding:0 16px 6px}
+.inj{color:#ff6b6b;font-weight:800}
+.ticket{margin:0 16px 8px;border-radius:14px;border:1px solid rgba(244,196,67,.5);background:linear-gradient(120deg,rgba(244,196,67,.16),rgba(61,214,140,.1));overflow:hidden}
+.ticket[hidden]{display:none}
+.ticket .th{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border:0;background:transparent;color:var(--ink);font:inherit;cursor:pointer;text-align:left}
+.ticket .th .ti{font-size:18px}
+.ticket .th b{font-family:var(--display);font-size:18px;text-transform:uppercase;letter-spacing:.03em;flex:1}
+.ticket .th .tq{font-family:var(--display);font-weight:800;font-size:20px;color:var(--gold)}
+.ticket .th .tp{font-size:12px;color:var(--muted);white-space:nowrap}
+.ticket .th .chev{transition:transform .25s}
+.ticket[data-open="1"] .th .chev{transform:rotate(180deg)}
+.ticket .tl{display:none;padding:0 12px 10px;flex-direction:column;gap:6px}
+.ticket[data-open="1"] .tl{display:flex}
+.ticket .leg{display:grid;grid-template-columns:22px 1fr auto;gap:2px 8px;align-items:center;background:rgba(0,0,0,.18);border-radius:10px;padding:7px 9px;font-size:13px}
+.ticket .leg svg{width:18px;height:18px;color:var(--gold)}
+.ticket .leg .lm{color:var(--muted);font-size:12px;grid-column:2}
+.ticket .leg .lr{grid-row:span 2;text-align:right;font-weight:700;white-space:nowrap}
+.ticket .leg .lr small{display:block;color:var(--muted);font-weight:600}
 .track{margin:0 16px 6px;align-self:flex-start;background:rgba(61,214,140,.14);border:1px solid rgba(61,214,140,.4);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
 .track b{color:var(--green);font-family:var(--display);font-size:16px}
 .track[hidden]{display:none}
@@ -171,6 +188,7 @@ body[data-m="w2"]  .decor{--pat:repeating-linear-gradient(-60deg, rgba(255,255,2
   <div class="sportpanel" id="sportpanel" hidden role="dialog" aria-label="Izaberi sport"></div>
   <div class="note" id="note" hidden></div>
   <div class="track" id="track" hidden></div>
+  <div class="ticket" id="ticket" hidden></div>
   <div class="days" id="days"></div>
   <div class="bottom"><div class="dots" id="dots"></div></div>
   <p class="about" id="about"></p>
@@ -460,6 +478,9 @@ const TRK = {bs:'Pogođeno zadnjih 30 dana', en:'Hit rate, last 30 days', de:'Tr
   es:'Acertados, últimos 30 días', fr:'Réussite, 30 derniers jours', pt:'Acertos nos últimos 30 dias', tr:'Son 30 günde tutan',
   sq:'Të qëlluara, 30 ditët e fundit', pl:'Trafione, ostatnie 30 dni', ro:'Reușite, ultimele 30 de zile', el:'Επιτυχία, τελευταίες 30 ημέρες',
   ru:'Зашло за 30 дней', nl:'Raak, laatste 30 dagen', ar:'نسبة النجاح آخر 30 يومًا'};
+const INJ = {bs:'Ne igraju (povrede/kazne)', en:'Out (injured/suspended)', de:'Fehlen (verletzt/gesperrt)', it:'Assenti (infortuni/squalifiche)', es:'Bajas (lesión/sanción)',
+  fr:'Absents (blessés/suspendus)', pt:'Desfalques (lesão/suspensão)', tr:'Eksikler (sakat/cezalı)', sq:'Mungojnë (lëndime/pezullime)', pl:'Nie zagrają (kontuzje/kary)',
+  ro:'Absenți (accidentări/suspendări)', el:'Απουσίες (τραυματισμοί/τιμωρίες)', ru:'Не сыграют (травмы/дисквалификации)', nl:'Afwezig (blessure/schorsing)', ar:'غيابات (إصابات/إيقافات)'};
 /* kratko objašnjenje kako se biraju tipovi (dno stranice) */
 const ABOUT = {
   bs:'Svaki tip je izabran <b>statističkom analizom</b> forme, rezultata i detaljne statistike zadnjih 10 utakmica. Od svih današnjih utakmica prikazujemo samo <b>tri sa najvećom šansom za prolaz</b>.',
@@ -478,6 +499,24 @@ const ABOUT = {
   nl:'Elke tip is gekozen met <b>statistische analyse</b> van vorm, uitslagen en gedetailleerde statistieken uit de laatste 10 wedstrijden. Van alle wedstrijden van vandaag tonen we alleen <b>de drie met de grootste kans op succes</b>.',
   ar:'كل توقع مختار عبر <b>تحليل إحصائي</b> للأداء والنتائج والإحصائيات التفصيلية لآخر 10 مباريات. من بين كل مباريات اليوم نعرض فقط <b>الثلاث الأعلى فرصة للنجاح</b>.'
 };
+/* Tiket dana: 2-3 najsigurnija tipa dana (svi sportovi) sa ukupnom kvotom */
+const TKT = {bs:['Tiket dana','šansa'], en:['Ticket of the day','chance'], de:['Tippschein des Tages','Chance'], it:['Schedina del giorno','probabilità'],
+  es:['Combinada del día','probabilidad'], fr:['Combiné du jour','chance'], pt:['Bilhete do dia','chance'], tr:['Günün kuponu','şans'], sq:['Bileta e ditës','shansi'],
+  pl:['Kupon dnia','szansa'], ro:['Biletul zilei','șansă'], el:['Δελτίο της ημέρας','πιθανότητα'], ru:['Экспресс дня','шанс'], nl:['Combi van de dag','kans'], ar:['قسيمة اليوم','الفرصة']};
+function mtFor(sp, k){
+  const s = SPORTS.find(x => x.k === sp), mk = s && s.markets.find(x => x.k === k); if (!mk) return k;
+  const keep = SPORT; SPORT = sp; const r = mt(mk).t; SPORT = keep; return r;
+}
+function renderTicket(){
+  const el = $('ticket'), t = DATA && DATA.ticket;
+  if (!t || !t.legs || t.date !== TODAY) { el.hidden = true; return; }
+  const w = TKT[LANG] || TKT.bs.map(loc), open = el.dataset.open === '1';
+  el.hidden = false;
+  el.innerHTML = `<button class="th" type="button" aria-expanded="${open}"><span class="ti">🎫</span><b>${w[0]}</b><span class="tp">${w[1]} ${t.p}%</span><span class="tq">${t.odd.toFixed(2)}</span><span class="chev">▾</span></button>
+    <div class="tl">${t.legs.map(l => `<div class="leg">${IC[l.sport] || ''}<span>${esc(l.home)} – ${esc(l.away)}</span>
+      <span class="lr">${ODW[LANG] || 'odds'} ${Number(l.o).toFixed(2)}<small>${l.p}%</small></span><span class="lm">${esc(mtFor(l.sport, l.mk))} · ${esc(lg(l.league))} · ${l.time}</span></div>`).join('')}</div>`;
+  el.querySelector('.th').onclick = () => { el.dataset.open = el.dataset.open === '1' ? '0' : '1'; renderTicket(); };
+}
 function showTrack(){
   const el = $('track'), s = DATA && DATA.track && DATA.track.sports && DATA.track.sports[SPORT];
   if (!s || s.n < 10) { el.hidden = true; return; }
@@ -702,7 +741,8 @@ function why(k, m){
   }[k];
   if (k === 'c8' || k === 'y3') return line;
   const hh = m.h2h ? `<br>H2H ${m.h2h.n}: <b>${m.h2h.w}-${m.h2h.d}-${m.h2h.l}</b> · ${m.h2h.gf}:${m.h2h.ga} · ${esc(m.h2h.res)}` : '';
-  return `${line}<br>Forma: ${H} <span class="f">${h.form}</span> · ${A} <span class="f">${a.form}</span><br>Očekivani golovi ${m.xg[0]} – ${m.xg[1]}${hh}`;
+  const ij = m.inj ? `<br><span class="inj">✚</span> ${INJ[LANG] || loc(INJ.bs)}: ${H} ${m.inj[0]} · ${A} ${m.inj[1]}` : '';
+  return `${line}<br>Forma: ${H} <span class="f">${h.form}</span> · ${A} <span class="f">${a.form}</span><br>Očekivani golovi ${m.xg[0]} – ${m.xg[1]}${hh}${ij}`;
 }
 
 function build(){
@@ -804,7 +844,7 @@ function setSport(k){
   $('sporticon').innerHTML = IC[k]; $('sportname').textContent = sname(sp); $('pickl').textContent = L().pick;
   const src = DATA && DATA.sports && DATA.sports[k] ? DATA.sports[k].days : (k === 'football' && DATA ? DATA.days : []);
   DAYS = (src || []).filter(d => d.date === TODAY && d.matches.length);
-  const note = $('note'); note.hidden = true; showTrack();
+  const note = $('note'); note.hidden = true; showTrack(); renderTicket();
   const days = $('days'); days.scrollTop = 0;
   if (!DAYS.length){
     const always = k === 'tennis' || k === 'volleyball';
