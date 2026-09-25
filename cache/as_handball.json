@@ -80,6 +80,22 @@
         "al":  "https://media.api-sports.io/handball/teams/245.png"
     },
     {
+        "id":  197643,
+        "utc":  "2026-09-25T20:30:00+02:00",
+        "final":  true,
+        "league":  "Starligue",
+        "country":  "France",
+        "lid":  34,
+        "hid":  288,
+        "aid":  248,
+        "hn":  "Selestat",
+        "an":  "Montpellier",
+        "hs":  30,
+        "as":  38,
+        "hl":  "https://media.api-sports.io/handball/teams/288.png",
+        "al":  "https://media.api-sports.io/handball/teams/248.png"
+    },
+    {
         "id":  198560,
         "utc":  "2026-09-25T19:00:00+02:00",
         "final":  true,

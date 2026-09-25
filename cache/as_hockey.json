@@ -1,5 +1,21 @@
 [
     {
+        "id":  428779,
+        "utc":  "2026-09-25T19:45:00+02:00",
+        "final":  true,
+        "league":  "National League",
+        "country":  "Switzerland",
+        "lid":  51,
+        "hid":  546,
+        "aid":  558,
+        "hn":  "Bern",
+        "an":  "Ajoie",
+        "hs":  2,
+        "as":  3,
+        "hl":  "https://media.api-sports.io/hockey/teams/546.png",
+        "al":  "https://media.api-sports.io/hockey/teams/558.png"
+    },
+    {
         "id":  430480,
         "utc":  "2026-09-25T16:00:00+02:00",
         "final":  true,
@@ -544,6 +560,22 @@
         "al":  "https://media.api-sports.io/hockey/teams/2046.png"
     },
     {
+        "id":  428778,
+        "utc":  "2026-09-25T19:45:00+02:00",
+        "final":  true,
+        "league":  "National League",
+        "country":  "Switzerland",
+        "lid":  51,
+        "hid":  545,
+        "aid":  556,
+        "hn":  "Ambri-Piotta",
+        "an":  "Zurich",
+        "hs":  3,
+        "as":  6,
+        "hl":  "https://media.api-sports.io/hockey/teams/545.png",
+        "al":  "https://media.api-sports.io/hockey/teams/556.png"
+    },
+    {
         "id":  426280,
         "utc":  "2026-09-25T18:00:00+02:00",
         "final":  true,
@@ -640,20 +672,20 @@
         "al":  "https://media.api-sports.io/hockey/teams/2483.png"
     },
     {
-        "id":  433630,
+        "id":  427817,
         "utc":  "2026-09-25T19:30:00+02:00",
         "final":  true,
-        "league":  "DEL",
-        "country":  "Germany",
-        "lid":  19,
-        "hid":  243,
-        "aid":  252,
-        "hn":  "Adler Mannheim",
-        "an":  "Krefeld Pinguine",
-        "hs":  4,
+        "league":  "Metal Ligaen",
+        "country":  "Denmark",
+        "lid":  12,
+        "hid":  156,
+        "aid":  157,
+        "hn":  "Frederikshavn",
+        "an":  "Herlev",
+        "hs":  2,
         "as":  1,
-        "hl":  "https://media.api-sports.io/hockey/teams/243.png",
-        "al":  "https://media.api-sports.io/hockey/teams/252.png"
+        "hl":  "https://media.api-sports.io/hockey/teams/156.png",
+        "al":  "https://media.api-sports.io/hockey/teams/157.png"
     },
     {
         "id":  425767,
@@ -686,6 +718,22 @@
         "as":  2,
         "hl":  "https://media.api-sports.io/hockey/teams/177.png",
         "al":  "https://media.api-sports.io/hockey/teams/181.png"
+    },
+    {
+        "id":  433630,
+        "utc":  "2026-09-25T19:30:00+02:00",
+        "final":  true,
+        "league":  "DEL",
+        "country":  "Germany",
+        "lid":  19,
+        "hid":  243,
+        "aid":  252,
+        "hn":  "Adler Mannheim",
+        "an":  "Krefeld Pinguine",
+        "hs":  4,
+        "as":  1,
+        "hl":  "https://media.api-sports.io/hockey/teams/243.png",
+        "al":  "https://media.api-sports.io/hockey/teams/252.png"
     },
     {
         "id":  444585,
@@ -768,22 +816,6 @@
         "al":  "https://media.api-sports.io/hockey/teams/520.png"
     },
     {
-        "id":  427817,
-        "utc":  "2026-09-25T19:30:00+02:00",
-        "final":  true,
-        "league":  "Metal Ligaen",
-        "country":  "Denmark",
-        "lid":  12,
-        "hid":  156,
-        "aid":  157,
-        "hn":  "Frederikshavn",
-        "an":  "Herlev",
-        "hs":  2,
-        "as":  1,
-        "hl":  "https://media.api-sports.io/hockey/teams/156.png",
-        "al":  "https://media.api-sports.io/hockey/teams/157.png"
-    },
-    {
         "id":  430481,
         "utc":  "2026-09-25T11:00:00+02:00",
         "final":  true,
@@ -830,6 +862,22 @@
         "as":  2,
         "hl":  "https://media.api-sports.io/hockey/teams/701.png",
         "al":  "https://media.api-sports.io/hockey/teams/683.png"
+    },
+    {
+        "id":  433625,
+        "utc":  "2026-09-25T19:30:00+02:00",
+        "final":  true,
+        "league":  "DEL",
+        "country":  "Germany",
+        "lid":  19,
+        "hid":  251,
+        "aid":  248,
+        "hn":  "Kolner",
+        "an":  "Eisbaren Berlin",
+        "hs":  5,
+        "as":  6,
+        "hl":  "https://media.api-sports.io/hockey/teams/251.png",
+        "al":  "https://media.api-sports.io/hockey/teams/248.png"
     },
     {
         "id":  444580,
@@ -942,6 +990,22 @@
         "as":  4,
         "hl":  "https://media.api-sports.io/hockey/teams/128.png",
         "al":  "https://media.api-sports.io/hockey/teams/134.png"
+    },
+    {
+        "id":  431164,
+        "utc":  "2026-09-25T20:00:00+02:00",
+        "final":  true,
+        "league":  "Ligue Magnus",
+        "country":  "France",
+        "lid":  18,
+        "hid":  242,
+        "aid":  238,
+        "hn":  "Rouen",
+        "an":  "Gap",
+        "hs":  4,
+        "as":  0,
+        "hl":  "https://media.api-sports.io/hockey/teams/242.png",
+        "al":  "https://media.api-sports.io/hockey/teams/238.png"
     },
     {
         "id":  426277,
