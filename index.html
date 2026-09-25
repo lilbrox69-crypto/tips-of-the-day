@@ -701,7 +701,8 @@ function why(k, m){
     y3:  m.hc && m.ac ? `3+ žuta: ${H} ${m.hc.y3}/${m.hc.n}, ${A} ${m.ac.y3}/${m.ac.n}<br>Prosjek žutih na njihovim utakmicama: ${m.hc.yt} i ${m.ac.yt}` : ''
   }[k];
   if (k === 'c8' || k === 'y3') return line;
-  return `${line}<br>Forma: ${H} <span class="f">${h.form}</span> · ${A} <span class="f">${a.form}</span><br>Očekivani golovi ${m.xg[0]} – ${m.xg[1]}`;
+  const hh = m.h2h ? `<br>H2H ${m.h2h.n}: <b>${m.h2h.w}-${m.h2h.d}-${m.h2h.l}</b> · ${m.h2h.gf}:${m.h2h.ga} · ${esc(m.h2h.res)}` : '';
+  return `${line}<br>Forma: ${H} <span class="f">${h.form}</span> · ${A} <span class="f">${a.form}</span><br>Očekivani golovi ${m.xg[0]} – ${m.xg[1]}${hh}`;
 }
 
 function build(){

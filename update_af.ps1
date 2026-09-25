@@ -147,6 +147,7 @@ function PoissonOver($l, $line) { $b = 0.0; for ($k = 0; $k -le [math]::Floor($l
 function Pct([double]$x) { [int][math]::Round([math]::Max([double]0.0, [math]::Min([double]1.0, $x)) * 100) }
 
 $list = New-Object System.Collections.ArrayList
+$pairs = @{}
 foreach ($g in $games) {
   $ht = [string]$g.teams.home.id; $at = [string]$g.teams.away.id
   $hs = Get-Stats $ht; $as = Get-Stats $at; if (-not $hs -or -not $as) { continue }
@@ -174,8 +175,51 @@ foreach ($g in $games) {
       w1 = Pct ($w1 / $s); x = Pct ($dr / $s); w2 = Pct ($w2 / $s); c8 = $pc8; y3 = $py3 }
     hs = $hs; as = $as; hc = $hc; ac = $ac }
   $oo = $odds[[string]$g.fixture.id]; if ($oo) { $m.o = $oo }
+  $pairs[$m.id] = @($ht, $at)
   [void]$list.Add($m)
 }
+# ---------- 6) medjusobni susreti (zadnjih 5) za kandidate za top 3 ----------
+$H2HM = @('gg','o15','o25','u25','hs','as','w1','x','w2')
+$cand = @{}
+foreach ($mk in $H2HM) { foreach ($m in @($list | Where-Object { $_.p[$mk] -ne $null } | Sort-Object { - [int]$_.p[$mk] } | Select-Object -First 12)) { $cand[$m.id] = $m } }
+$hpaths = @{}; foreach ($id in $cand.Keys) { $hpaths[$id] = "fixtures/headtohead?h2h=$($pairs[$id][0])-$($pairs[$id][1])&last=8" }
+$hres = Get-Many @($hpaths.Values)
+$nH = 0
+foreach ($id in $cand.Keys) {
+  $r = $hres[$hpaths[$id]]; if (-not $r) { continue }
+  $ht = $pairs[$id][0]
+  $games = @($r.response | Where-Object { $_.fixture.status.short -in $FIN } | Sort-Object { [datetime]$_.fixture.date } -Descending | Select-Object -First 5)
+  if ($games.Count -lt 3) { continue }
+  $rows = @($games | ForEach-Object { $c = Compact $_; $isH = $c.hid -eq $ht
+    [pscustomobject]@{ gf = $(if ($isH) { $c.hg } else { $c.ag }); ga = $(if ($isH) { $c.ag } else { $c.hg }) } })
+  $n = $rows.Count
+  $rate = @{
+    gg = @($rows | Where-Object { $_.gf -gt 0 -and $_.ga -gt 0 }).Count / $n; o15 = @($rows | Where-Object { ($_.gf + $_.ga) -ge 2 }).Count / $n
+    o25 = @($rows | Where-Object { ($_.gf + $_.ga) -ge 3 }).Count / $n; u25 = @($rows | Where-Object { ($_.gf + $_.ga) -le 2 }).Count / $n
+    hs = @($rows | Where-Object { $_.gf -gt 0 }).Count / $n; as = @($rows | Where-Object { $_.ga -gt 0 }).Count / $n
+    w1 = @($rows | Where-Object { $_.gf -gt $_.ga }).Count / $n; x = @($rows | Where-Object { $_.gf -eq $_.ga }).Count / $n; w2 = @($rows | Where-Object { $_.gf -lt $_.ga }).Count / $n }
+  $wt = 0.25 * $n / 5   # do 25% uticaja; manje ako ima manje od 5 susreta
+  $m = $cand[$id]
+  foreach ($mk in $H2HM) { if ($m.p[$mk] -ne $null) { $m.p[$mk] = [int][math]::Round((1 - $wt) * $m.p[$mk] + $wt * $rate[$mk] * 100) } }
+  $m.h2h = [ordered]@{ n = $n; w = @($rows | Where-Object { $_.gf -gt $_.ga }).Count; d = @($rows | Where-Object { $_.gf -eq $_.ga }).Count; l = @($rows | Where-Object { $_.gf -lt $_.ga }).Count
+    gf = ($rows | Measure-Object gf -Sum).Sum; ga = ($rows | Measure-Object ga -Sum).Sum; res = (($rows | ForEach-Object { "$($_.gf)-$($_.ga)" }) -join ', ') }
+  $nH++
+}
+Write-Host "  H2H: $nH utakmica ($($cand.Count) kandidata)"
+# ---------- 7) sigurnije: mijesanje sa trzistem (kvote) i samo utakmice koje kladionice nude ----------
+function Imp($o, $k) { if ($o.Contains($k) -and $o[$k] -gt 1) { return 1 / [double]$o[$k] } ; return $null }
+foreach ($m in $list) {
+  $o = $m.o; if (-not $o) { continue }
+  $imp = @{}
+  $a = Imp $o 'w1'; $b = Imp $o 'x'; $c = Imp $o 'w2'
+  if ($a -and $b -and $c) { $t = $a + $b + $c; $imp.w1 = $a / $t; $imp.x = $b / $t; $imp.w2 = $c / $t }
+  $ov = Imp $o 'o25'; $un = Imp $o 'u25'
+  if ($ov -and $un) { $imp.o25 = $ov / ($ov + $un); $imp.u25 = $un / ($ov + $un) } elseif ($ov) { $imp.o25 = $ov * 0.95 } elseif ($un) { $imp.u25 = $un * 0.95 }
+  foreach ($k in 'o15','gg','hs','as','c8','y3') { $v = Imp $o $k; if ($v) { $imp[$k] = [math]::Min(0.99, $v * 0.95) } }   # 5% marza kladionice
+  foreach ($k in $imp.Keys) { if ($m.p[$k] -ne $null) { $m.p[$k] = [int][math]::Round(0.65 * $m.p[$k] + 0.35 * $imp[$k] * 100) } }
+}
+$withOdds = @($list | Where-Object { $_.o })
+if ($withOdds.Count -ge 20) { Write-Host "  samo utakmice sa kvotama: $($withOdds.Count) od $($list.Count)"; $list = New-Object System.Collections.ArrayList (, $withOdds) }
 $out = [ordered]@{ date = $today; days = @([ordered]@{ date = $today; matches = @($list | Sort-Object { $_.time }) }) }
 [IO.File]::WriteAllText((Join-Path $root 'af.json'), ($out | ConvertTo-Json -Depth 8), $enc)
 Write-Host "API-Football gotovo: $($list.Count) utakmica sa statistikom, $(@($list | Where-Object { $_.o }).Count) sa kvotama, $($script:calls) poziva"
