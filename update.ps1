@@ -28,13 +28,20 @@ function Get-Api($path) {
 
 # --- Glavni izvor: API-Football (Pro). football-data.org ostaje kao rezerva. ---
 $afOk = $false
-try {
-  & (Join-Path $root 'update_af.ps1')
-  $af = Get-Content -Raw -Encoding UTF8 (Join-Path $root 'af.json') | ConvertFrom-Json
-  $todayStr = [System.TimeZoneInfo]::ConvertTimeFromUtc([datetime]::UtcNow, $tz).ToString('yyyy-MM-dd')
-  if ($af.date -eq $todayStr -and @($af.days[0].matches).Count -gt 0) { $afOk = $true; $dayList = @($af.days) }
-} catch { Write-Host "API-Football preskocen: $($_.Exception.Message)" }
-if (-not $afOk) {
+$todayStr = [System.TimeZoneInfo]::ConvertTimeFromUtc([datetime]::UtcNow, $tz).ToString('yyyy-MM-dd')
+$afCache = Join-Path $root 'cache\af_today.json'
+# API-Football se zove SAMO JEDNOM dnevno (prvo pokretanje). Svako kasnije pokretanje istog dana koristi spremljene podatke:
+# ne trosi dnevni limit (7500 poziva) i tipovi se ne mijenjaju tokom dana.
+$cachedAf = $null; if (Test-Path $afCache) { try { $cachedAf = Get-Content -Raw -Encoding UTF8 $afCache | ConvertFrom-Json } catch {} }
+if ($cachedAf -and $cachedAf.date -eq $todayStr -and @($cachedAf.days[0].matches).Count -gt 0) {
+  $afOk = $true; $dayList = @($cachedAf.days); Write-Host "API-Football: koristim jutarnje podatke ($(@($cachedAf.days[0].matches).Count) utakmica), bez novih poziva"
+} else {
+  try {
+    & (Join-Path $root 'update_af.ps1')
+    $af = Get-Content -Raw -Encoding UTF8 (Join-Path $root 'af.json') | ConvertFrom-Json
+    if ($af.date -eq $todayStr -and @($af.days[0].matches).Count -gt 0) { $afOk = $true; $dayList = @($af.days); Copy-Item (Join-Path $root 'af.json') $afCache -Force }
+  } catch { Write-Host "API-Football preskocen: $($_.Exception.Message)" }
+}if (-not $afOk) {
 $finished = @{}   # match id -> match
 $upcoming = @{}
 foreach ($code in $comps.Keys) {
@@ -261,7 +268,9 @@ $out = [ordered]@{
   days = @($dayList)
 }
 try { & (Join-Path $root 'update_us.ps1') } catch { Write-Host "US sportovi preskoceni: $($_.Exception.Message)" }
-try { & (Join-Path $root 'update_bb.ps1') } catch { Write-Host "API-Basketball preskocen: $($_.Exception.Message)" }   # kosarka Pro (26.9.2026), zamjena za update_as.ps1
+$bbCache = Join-Path $root 'cache\bb_today.json'; $bbUsed = $false
+if (Test-Path $bbCache) { try { $cb = Get-Content -Raw -Encoding UTF8 $bbCache | ConvertFrom-Json; if ($cb.basketball.days[0].date -eq ([System.TimeZoneInfo]::ConvertTimeFromUtc([datetime]::UtcNow, $tz).ToString('yyyy-MM-dd'))) { Copy-Item $bbCache (Join-Path $root 'bb.json') -Force; $bbUsed = $true; Write-Host 'API-Basketball: koristim jutarnje podatke' } } catch {} }
+if (-not $bbUsed) { try { & (Join-Path $root 'update_bb.ps1'); if (@((Get-Content -Raw -Encoding UTF8 (Join-Path $root 'bb.json') | ConvertFrom-Json).basketball.days[0].matches).Count) { Copy-Item (Join-Path $root 'bb.json') $bbCache -Force } } catch { Write-Host "API-Basketball preskocen: $($_.Exception.Message)" } }   # kosarka Pro (26.9.2026)
 # NHL, hokej, rukomet, odbojka, NFL i MLB iskljuceni (26.9.2026) - ostaju fudbal i kosarka
 $sports = [ordered]@{}
 foreach ($f in 'us.json','bb.json') {
