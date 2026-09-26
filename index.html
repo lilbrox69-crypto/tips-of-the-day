@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v:202609271200 -->
+<!-- v:202609271230 -->
 <html lang="bs">
 <meta charset="utf-8">
 <script>if(location.protocol==='http:'&&location.hostname.indexOf('tipsoftheday.win')>=0)location.replace('https://'+location.host+location.pathname+location.search+location.hash);</script>
@@ -761,11 +761,11 @@ function inx(i){ return (INST[LANG] || INST.bs.map(loc))[i]; }
 let instEvt = null;
 const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-function instRefresh(){ const b = $('instbtn'); if (!b) return; b.hidden = isStandalone(); $('instlbl').textContent = inx(0); }
+function instRefresh(){ const b = document.getElementById('instbtn'); if (!b) return; b.hidden = isStandalone(); document.getElementById('instlbl').textContent = inx(0); }
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); instEvt = e; instRefresh(); });
-window.addEventListener('appinstalled', () => { instEvt = null; $('instbtn').hidden = true; $('intro').hidden = true; });
-$('instbtn').onclick = async () => {
-  const el = $('intro'); const close = () => { el.hidden = true; };
+window.addEventListener('appinstalled', () => { instEvt = null; document.getElementById('instbtn').hidden = true; document.getElementById('intro').hidden = true; });
+document.getElementById('instbtn').onclick = async () => {
+  const el = document.getElementById('intro'); const close = () => { el.hidden = true; };
   const how = isIOS() ? inx(3) : inx(4);
   el.innerHTML = `<div class="in-card"><div class="in-vis"><img class="in-app" src="icon-192.png" alt=""></div>
     <h3>${inx(1)}</h3><p>${inx(2)}</p>${instEvt ? '' : `<div class="in-steps">${how}</div>`}
