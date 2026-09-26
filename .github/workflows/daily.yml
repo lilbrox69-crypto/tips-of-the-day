@@ -5,7 +5,7 @@ on:
     - cron: '10 6 * * *'   # 06:10 UTC = 08:10 po ljetnom vremenu u BiH
   workflow_dispatch:        # dugme "Run workflow" za rucno pokretanje
   push:                     # promjena izgleda stranice -> odmah nova verzija
-    paths: ['index.html']
+    paths: ['index.html', 'analitika.html']
 
 permissions:
   contents: write
@@ -31,6 +31,8 @@ jobs:
           $env:CFG | Set-Content -Encoding ascii config.json
       - name: Osvjezi podatke (svi sportovi, kvote, pracenje pogodaka, grbovi)
         shell: powershell
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: .\update.ps1
 
       - name: Sacuvaj kes (istorija, pogoci, rezultati)
@@ -47,7 +49,7 @@ jobs:
         shell: powershell
         run: |
           New-Item -ItemType Directory -Force site | Out-Null
-          Copy-Item index.html, data.json, logos.json, history.json site
+          Copy-Item index.html, analitika.html, data.json, logos.json, history.json, analytics.json site
 
       - uses: actions/upload-pages-artifact@v3
         with:

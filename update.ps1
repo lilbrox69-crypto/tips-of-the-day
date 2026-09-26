@@ -281,5 +281,6 @@ $json = $out | ConvertTo-Json -Depth 10
 [IO.File]::WriteAllText((Join-Path $root 'data.json'), $json, (New-Object System.Text.UTF8Encoding($false)))
 try { & (Join-Path $root 'update_odds.ps1') } catch { Write-Host "Kvote preskocene: $($_.Exception.Message)" }
 try { & (Join-Path $root 'tracker.ps1') } catch { Write-Host "Pracenje preskoceno: $($_.Exception.Message)" }
+try { & (Join-Path $root 'update_cf.ps1') } catch { Write-Host "Analitika preskocena: $($_.Exception.Message)" }
 try { & (Join-Path $root 'build_logos.ps1') } catch { Write-Host "Grbovi preskoceni: $($_.Exception.Message)" }
 Write-Host "Gotovo:$(@($dayList).Count) dana, $((@($dayList) | ForEach-Object { $_.matches.Count } | Measure-Object -Sum).Sum) utakmica"

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="bs">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Analitika · Tips of the Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#0a0f0c;--card:#121a15;--card2:#18221c;--line:rgba(238,244,239,.1);--ink:#eef4ef;--muted:#9db0a3;--gold:#f4c443;--green:#3dd68c;--red:#ff6b6b;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;--body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(100% 50% at 50% -10%,rgba(244,196,67,.18),transparent 60%),var(--bg);color:var(--ink);font:15px/1.45 var(--body);min-height:100vh}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.brand{font:700 13px var(--display);letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.brand span{color:var(--green)}
+h1{font:800 44px/1 var(--display);text-transform:uppercase;margin:4px 0 0;background:linear-gradient(90deg,#f4c443,#fff4c7 50%,#f4c443);-webkit-background-clip:text;background-clip:text;color:transparent}
+.meta{color:var(--muted);font-size:13px;text-align:right}
+.meta a{color:var(--gold)}
+h2{font:800 20px var(--display);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:28px 0 10px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.kpi small{display:block;font:700 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.kpi b{display:block;font:800 38px/1.1 var(--display);margin-top:4px}
+.kpi span{font-size:12px;color:var(--muted)}
+.kpi.gold b{color:var(--gold)}.kpi.green b{color:var(--green)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.chart{height:210px;display:flex;align-items:flex-end;gap:3px;padding-top:18px;position:relative}
+.bar{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;position:relative}
+.bar i{display:block;width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--green),rgba(61,214,140,.35));min-height:2px}
+.bar.today i{background:linear-gradient(180deg,var(--gold),rgba(244,196,67,.4))}
+.bar em{position:absolute;top:-16px;font:700 10px var(--body);color:var(--muted);font-style:normal}
+.axis{display:flex;gap:3px;margin-top:6px}
+.axis span{flex:1;min-width:0;text-align:center;font-size:10px;color:var(--muted);overflow:hidden;white-space:nowrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.list h3{font:800 16px var(--display);text-transform:uppercase;letter-spacing:.05em;margin:0 0 8px;color:var(--gold)}
+.row{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;padding:5px 0}
+.row .n{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .v{font-weight:700;font-variant-numeric:tabular-nums}
+.row .t{grid-column:1/3;height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+.row .t i{display:block;height:100%;border-radius:3px;background:var(--green)}
+.row.lo .t i{background:var(--red)}.row.mid .t i{background:var(--gold)}
+.empty{color:var(--muted);font-size:14px;padding:8px 0}
+.note{background:rgba(244,196,67,.1);border:1px solid rgba(244,196,67,.4);border-radius:14px;padding:12px 14px;font-size:14px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp .kpi.win{border-color:rgba(61,214,140,.6);box-shadow:0 0 24px rgba(61,214,140,.15)}
+.pos{color:var(--green)}.neg{color:var(--red)}
+footer{margin-top:30px;color:var(--muted);font-size:12px;text-align:center}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}h1{font-size:36px}.meta{text-align:left}}
+</style>
+<div class="wrap">
+  <header>
+    <div><div class="brand">Tips <span>of the</span> Day</div><h1>Analitika</h1></div>
+    <div class="meta" id="meta">Učitavam…</div>
+  </header>
+
+  <h2>Posjete</h2>
+  <div id="visits"></div>
+
+  <h2>Uspješnost tipova</h2>
+  <div id="perf"></div>
+
+  <footer>Posjete: Cloudflare Web Analytics (bez kolačića, ne prati pojedince) · Tipovi: vlastito praćenje · <a href="./" style="color:var(--gold)">← Nazad na stranicu</a></footer>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const MK = {football:{gg:'Oba daju gol',o15:'Više od 1.5',o25:'Više od 2.5',u25:'Manje od 2.5',c8:'Korneri 8+',y3:'Žuti 3+',hs:'Domaćin daje gol',as:'Gost daje gol',w1:'Pobjeda domaćina',x:'Neriješeno',w2:'Pobjeda gosta'},
+  basketball:{w1:'Pobjeda domaćina',w2:'Pobjeda gosta',o160:'Više od 160.5',u160:'Manje od 160.5',o220:'Više od 220.5',u220:'Manje od 220.5',m10:'Pobjeda 10+',h80:'Domaćin 80+',h110:'Domaćin 110+'}};
+const SP = {football:'⚽ Fudbal', basketball:'🏀 Košarka'};
+const DEV = {mobile:'📱 Mobitel', desktop:'💻 Računar', tablet:'📟 Tablet'};
+const pct = (a, b) => b ? Math.round(a / b * 100) : null;
+const cls = p => p == null ? '' : p >= 70 ? '' : p >= 55 ? 'mid' : 'lo';
+function listCard(title, rows, fmtName){
+  if (!rows || !rows.length) return `<div class="card list"><h3>${title}</h3><p class="empty">Još nema podataka.</p></div>`;
+  const max = Math.max(...rows.map(r => r.visits), 1);
+  return `<div class="card list"><h3>${title}</h3>${rows.map(r => `<div class="row"><span class="n">${esc(fmtName(r.k))}</span><span class="v">${r.visits}</span><span class="t"><i style="width:${Math.round(r.visits / max * 100)}%"></i></span></div>`).join('')}</div>`;
+}
+function renderVisits(a){
+  const el = $('visits');
+  if (!a || !a.connected) { el.innerHTML = `<div class="note">📊 Posjete će se ovdje pojaviti čim se poveže Cloudflare ključ (CF_API_TOKEN). Brojač na stranici već radi, podaci se skupljaju.</div>`; return; }
+  const byDate = {}; (a.days || []).forEach(d => byDate[d.k] = d);
+  const days = []; const end = new Date(a.to + 'T12:00:00');
+  for (let i = 29; i >= 0; i--) { const d = new Date(end); d.setDate(d.getDate() - i); const k = d.toISOString().slice(0, 10); days.push({k, v: byDate[k] ? byDate[k].visits : 0, pv: byDate[k] ? byDate[k].views : 0}); }
+  const sum = n => days.slice(-n).reduce((s, d) => s + d.v, 0);
+  const pv = days.reduce((s, d) => s + d.pv, 0), max = Math.max(...days.map(d => d.v), 1);
+  el.innerHTML = `
+    <div class="kpis">
+      <div class="kpi gold"><small>Danas</small><b>${days[days.length - 1].v}</b><span>posjeta</span></div>
+      <div class="kpi"><small>Zadnjih 7 dana</small><b>${sum(7)}</b><span>posjeta</span></div>
+      <div class="kpi"><small>Zadnjih 30 dana</small><b>${sum(30)}</b><span>posjeta</span></div>
+      <div class="kpi green"><small>Pregledi (30 dana)</small><b>${pv}</b><span>otvaranja stranica</span></div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div class="chart">${days.map((d, i) => `<div class="bar${i === days.length - 1 ? ' today' : ''}" title="${d.k}: ${d.v} posjeta">${d.v ? `<em>${d.v}</em>` : ''}<i style="height:${Math.round(d.v / max * 100)}%"></i></div>`).join('')}</div>
+      <div class="axis">${days.map((d, i) => `<span>${i % 3 === 0 || i === days.length - 1 ? +d.k.slice(8) + '.' + +d.k.slice(5, 7) + '.' : ''}</span>`).join('')}</div>
+    </div>
+    <div class="grid3" style="margin-top:10px">
+      ${listCard('🌍 Zemlje', a.countries, k => k || 'Nepoznato')}
+      ${listCard('🔗 Odakle dolaze', a.referrers, k => k ? k.replace(/^www\./, '') : 'Direktno / link')}
+      ${listCard('📱 Uređaji', a.devices, k => DEV[k] || k || 'Ostalo')}
+    </div>`;
+}
+function renderPerf(h, d){
+  const el = $('perf'), days = (h && h.days) || [];
+  let pn = 0, ph = 0, tn = 0, th = 0, profit = 0; const bySport = {}, byMk = {};
+  days.forEach(day => {
+    (day.k || []).forEach(k => { if (k.r == null) return; pn++; ph += k.r;
+      (bySport[k.s] = bySport[k.s] || {n:0, h:0}).n++; bySport[k.s].h += k.r;
+      const g = k.s + '|' + k.m; (byMk[g] = byMk[g] || {n:0, h:0}).n++; byMk[g].h += k.r; });
+    if (day.t && day.t.r != null) { tn++; th += day.t.r; profit += day.t.r ? 10 * (day.t.odd - 1) : -10; }
+  });
+  const cmp = d && d.track && d.track.cmp;
+  const mkRows = Object.entries(byMk).map(([g, v]) => { const [s, m] = g.split('|'); return {name: `${SP[s] ? SP[s].split(' ')[0] : ''} ${(MK[s] && MK[s][m]) || m}`, n: v.n, h: v.h, p: pct(v.h, v.n)}; }).sort((a, b) => b.p - a.p || b.n - a.n);
+  const pctTxt = (h, n) => n ? `${pct(h, n)}%` : '–';
+  el.innerHTML = `
+    <div class="kpis">
+      <div class="kpi green"><small>Top 3 tipovi</small><b>${pctTxt(ph, pn)}</b><span>${ph}/${pn} prošlo</span></div>
+      <div class="kpi gold"><small>Tiket dana</small><b>${pctTxt(th, tn)}</b><span>${th}/${tn} prošlo</span></div>
+      <div class="kpi"><small>Ulog 10 po tiketu</small><b class="${profit >= 0 ? 'pos' : 'neg'}">${tn ? (profit >= 0 ? '+' : '') + profit.toFixed(2) : '–'}</b><span>zadnjih 30 dana</span></div>
+      <div class="kpi"><small>Dana praćenja</small><b>${days.filter(x => (x.k || []).some(k => k.r != null) || (x.t && x.t.r != null)).length}</b><span>sa rezultatima</span></div>
+    </div>
+    ${cmp ? `<h2>Sa kvotama ili bez</h2><div class="cmp">
+      <div class="kpi ${pct(cmp.saKvotama.hit, cmp.saKvotama.n) >= (pct(cmp.bezKvota.hit, cmp.bezKvota.n) || 0) && cmp.saKvotama.n ? 'win' : ''}"><small>Statistika + kvote (na stranici)</small><b>${pctTxt(cmp.saKvotama.hit, cmp.saKvotama.n)}</b><span>${cmp.saKvotama.hit}/${cmp.saKvotama.n}</span></div>
+      <div class="kpi ${pct(cmp.bezKvota.hit, cmp.bezKvota.n) > (pct(cmp.saKvotama.hit, cmp.saKvotama.n) || 0) ? 'win' : ''}"><small>Samo statistika (u pozadini)</small><b>${pctTxt(cmp.bezKvota.hit, cmp.bezKvota.n)}</b><span>${cmp.bezKvota.hit}/${cmp.bezKvota.n}</span></div>
+    </div>` : ''}
+    <div class="grid2" style="margin-top:10px">
+      <div class="card list"><h3>Po sportu</h3>${Object.keys(bySport).length ? Object.entries(bySport).map(([s, v]) => { const p = pct(v.h, v.n); return `<div class="row ${cls(p)}"><span class="n">${SP[s] || s}</span><span class="v">${p}% <small style="color:var(--muted)">(${v.h}/${v.n})</small></span><span class="t"><i style="width:${p}%"></i></span></div>`; }).join('') : '<p class="empty">Rezultati se skupljaju — provjeravaju se svako jutro.</p>'}</div>
+      <div class="card list"><h3>Po opciji (najbolje gore)</h3>${mkRows.length ? mkRows.map(r => `<div class="row ${cls(r.p)}"><span class="n">${esc(r.name)}</span><span class="v">${r.p}% <small style="color:var(--muted)">(${r.h}/${r.n})</small></span><span class="t"><i style="width:${r.p}%"></i></span></div>`).join('') : '<p class="empty">Još nema provjerenih tipova.</p>'}</div>
+    </div>`;
+}
+Promise.all([
+  fetch('analytics.json', {cache:'no-store'}).then(r => r.ok ? r.json() : null).catch(() => null),
+  fetch('history.json', {cache:'no-store'}).then(r => r.ok ? r.json() : null).catch(() => null),
+  fetch('data.json', {cache:'no-store'}).then(r => r.ok ? r.json() : null).catch(() => null)
+]).then(([a, h, d]) => {
+  $('meta').innerHTML = `Osvježeno: ${esc((d && d.generatedAt) || '–')}<br><a href="https://dash.cloudflare.com/cebe60636baa9a78290edc49ba7e1e15/web-analytics" target="_blank" rel="noopener">Cloudflare detalji ↗</a>`;
+  renderVisits(a); renderPerf(h, d);
+});
+</script>
