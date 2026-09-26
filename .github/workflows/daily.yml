@@ -2,7 +2,7 @@ name: Tips of the Day - dnevno osvjezavanje
 
 on:
   schedule:
-    - cron: '10 6 * * *'   # 06:10 UTC = 08:10 po ljetnom vremenu u BiH
+    - cron: '10 4 * * *'   # 04:10 UTC = 06:10 ljeti / 05:10 zimi u BiH
   workflow_dispatch:        # dugme "Run workflow" za rucno pokretanje
   push:                     # promjena izgleda stranice -> odmah nova verzija
     paths: ['index.html', 'analitika.html']
