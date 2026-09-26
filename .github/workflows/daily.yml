@@ -49,7 +49,7 @@ jobs:
         shell: powershell
         run: |
           New-Item -ItemType Directory -Force site | Out-Null
-          Copy-Item index.html, analitika.html, data.json, logos.json, history.json, analytics.json site
+          Copy-Item index.html, analitika.html, data.json, logos.json, history.json, analytics.json, manifest.webmanifest, sw.js, icon-192.png, icon-512.png, apple-touch-icon.png site
 
       - uses: actions/upload-pages-artifact@v3
         with:

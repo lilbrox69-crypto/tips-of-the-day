@@ -1,11 +1,17 @@
 <!doctype html>
-<!-- v:202609262309 -->
+<!-- v:202609271200 -->
 <html lang="bs">
 <meta charset="utf-8">
 <script>if(location.protocol==='http:'&&location.hostname.indexOf('tipsoftheday.win')>=0)location.replace('https://'+location.host+location.pathname+location.search+location.hash);</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Tips of the Day – 3 najsigurnija tipa dana po opciji: statistička analiza forme, međusobnih susreta i kvota. Fudbal, košarka, hokej, rukomet i više.">
 <meta name="theme-color" content="#0f2a1c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tips of the Day">
 <title>Tips of the Day</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -153,6 +159,12 @@ body[data-m="w2"]  .decor{--pat:repeating-linear-gradient(-60deg, rgba(255,255,2
 /* uvod za nove posjetioce */
 .helpbtn{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--card-hi);color:var(--muted);font:800 14px var(--body);cursor:pointer;display:grid;place-items:center;padding:0}
 .helpbtn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.instbtn{display:flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-radius:13px;border:1px solid rgba(244,196,67,.6);background:rgba(244,196,67,.12);color:var(--gold);font:800 13px var(--display);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;white-space:nowrap}
+.instbtn[hidden]{display:none}
+.instbtn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media (max-width:380px){.instbtn .it{display:none}}
+.in-app{width:72px;height:72px;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.in-steps{text-align:left;margin:0 0 14px;padding:10px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.04);font-size:15px;line-height:1.5}
 .intro{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.42);animation:tvin .3s ease}
 .intro[hidden]{display:none}
 .in-card{width:100%;max-width:460px;margin:0 12px calc(16px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#18221c,#0f1612);border:1px solid rgba(244,196,67,.55);border-radius:22px;padding:18px 20px 16px;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 50px rgba(244,196,67,.12);text-align:center}
@@ -299,7 +311,7 @@ html[lang=ar] .lg-t,html[lang=ar] .lg-meta,html[lang=ar] .sl-date{unicode-bidi:p
 <div class="app">
   <div class="top">
     <div class="brand">
-      <div class="logo">Tips <span>of the</span> Day</div><button class="helpbtn" id="helpbtn" type="button" aria-label="?">?</button>
+      <div class="logo">Tips <span>of the</span> Day</div><button class="helpbtn" id="helpbtn" type="button" aria-label="?">?</button><button class="instbtn" id="instbtn" type="button" hidden>📲 <span class="it" id="instlbl">Dodaj na telefon</span></button>
     </div>
     <div class="daypill" aria-live="polite">
       <span style="padding-right:8px"><span class="dl" id="dl">—</span> <span class="dd" id="dd"></span></span>
@@ -725,6 +737,47 @@ function showIntro(force){
   el.hidden = false; draw();
 }
 document.getElementById('helpbtn').onclick = () => showIntro(true);
+
+/* ---------- 📲 Dodaj na telefon (aplikacija na pocetnom ekranu) ---------- */
+// [dugme, naslov, opis, iPhone uputstvo, ostali preglednici, Instaliraj, Zatvori]
+const INST = {
+  bs:['Dodaj na telefon','Tips of the Day kao aplikacija','Ikonica na početnom ekranu – jedan dodir i vidiš današnje tipove i tiket dana.','Dodirni <b>Podijeli ⬆️</b> dolje u Safariju, pa izaberi <b>„Dodaj na početni ekran”</b>.','Otvori meni preglednika <b>⋮</b> i izaberi <b>„Instaliraj aplikaciju”</b> ili <b>„Dodaj na početni ekran”</b>.','Dodaj','Zatvori'],
+  en:['Add to phone','Tips of the Day as an app','An icon on your home screen – one tap and you see today’s picks and ticket.','Tap <b>Share ⬆️</b> at the bottom of Safari, then choose <b>“Add to Home Screen”</b>.','Open the browser menu <b>⋮</b> and choose <b>“Install app”</b> or <b>“Add to Home screen”</b>.','Add','Close'],
+  de:['Aufs Handy','Tips of the Day als App','Ein Symbol auf dem Startbildschirm – ein Tipp und du siehst die heutigen Tipps und den Tippschein.','Tippe unten in Safari auf <b>Teilen ⬆️</b> und wähle <b>„Zum Home-Bildschirm”</b>.','Öffne das Browser-Menü <b>⋮</b> und wähle <b>„App installieren”</b> oder <b>„Zum Startbildschirm hinzufügen”</b>.','Hinzufügen','Schließen'],
+  it:['Aggiungi al telefono','Tips of the Day come app','Un’icona nella schermata Home: un tocco e vedi i pronostici e la schedina di oggi.','Tocca <b>Condividi ⬆️</b> in basso in Safari, poi scegli <b>“Aggiungi alla schermata Home”</b>.','Apri il menu del browser <b>⋮</b> e scegli <b>“Installa app”</b> o <b>“Aggiungi a schermata Home”</b>.','Aggiungi','Chiudi'],
+  es:['Añadir al móvil','Tips of the Day como app','Un icono en tu pantalla de inicio: un toque y ves los pronósticos y la combinada de hoy.','Toca <b>Compartir ⬆️</b> abajo en Safari y elige <b>“Añadir a pantalla de inicio”</b>.','Abre el menú del navegador <b>⋮</b> y elige <b>“Instalar aplicación”</b> o <b>“Añadir a pantalla de inicio”</b>.','Añadir','Cerrar'],
+  fr:['Ajouter au téléphone','Tips of the Day en appli','Une icône sur l’écran d’accueil : un geste et tu vois les pronos et le combiné du jour.','Touche <b>Partager ⬆️</b> en bas de Safari, puis <b>« Sur l’écran d’accueil »</b>.','Ouvre le menu du navigateur <b>⋮</b> et choisis <b>« Installer l’application »</b> ou <b>« Ajouter à l’écran d’accueil »</b>.','Ajouter','Fermer'],
+  pt:['Adicionar ao celular','Tips of the Day como app','Um ícone na tela inicial – um toque e você vê os palpites e o bilhete de hoje.','Toque em <b>Compartilhar ⬆️</b> embaixo no Safari e escolha <b>“Adicionar à Tela de Início”</b>.','Abra o menu do navegador <b>⋮</b> e escolha <b>“Instalar app”</b> ou <b>“Adicionar à tela inicial”</b>.','Adicionar','Fechar'],
+  tr:['Telefona ekle','Uygulama olarak Tips of the Day','Ana ekranda bir simge – tek dokunuşla bugünün tahminleri ve kuponu.','Safari’de alttaki <b>Paylaş ⬆️</b> düğmesine dokun, sonra <b>“Ana Ekrana Ekle”</b>yi seç.','Tarayıcı menüsünü <b>⋮</b> aç ve <b>“Uygulamayı yükle”</b> veya <b>“Ana ekrana ekle”</b>yi seç.','Ekle','Kapat'],
+  sq:['Shto në telefon','Tips of the Day si aplikacion','Një ikonë në ekranin kryesor – një prekje dhe sheh parashikimet dhe biletën e sotme.','Prek <b>Shpërnda ⬆️</b> poshtë në Safari, pastaj zgjidh <b>“Shto në ekranin bazë”</b>.','Hap menunë e shfletuesit <b>⋮</b> dhe zgjidh <b>“Instalo aplikacionin”</b> ose <b>“Shto në ekranin bazë”</b>.','Shto','Mbyll'],
+  pl:['Dodaj do telefonu','Tips of the Day jako aplikacja','Ikona na ekranie głównym – jedno dotknięcie i widzisz dzisiejsze typy i kupon.','Stuknij <b>Udostępnij ⬆️</b> na dole Safari i wybierz <b>„Do ekranu początkowego”</b>.','Otwórz menu przeglądarki <b>⋮</b> i wybierz <b>„Zainstaluj aplikację”</b> lub <b>„Dodaj do ekranu głównego”</b>.','Dodaj','Zamknij'],
+  ro:['Adaugă pe telefon','Tips of the Day ca aplicație','O pictogramă pe ecranul principal – o atingere și vezi ponturile și biletul zilei.','Atinge <b>Partajează ⬆️</b> jos în Safari, apoi alege <b>„Adaugă pe ecranul principal”</b>.','Deschide meniul browserului <b>⋮</b> și alege <b>„Instalează aplicația”</b> sau <b>„Adaugă pe ecranul de pornire”</b>.','Adaugă','Închide'],
+  el:['Στο κινητό','Το Tips of the Day ως εφαρμογή','Ένα εικονίδιο στην αρχική οθόνη – ένα πάτημα και βλέπεις τις σημερινές προβλέψεις και το δελτίο.','Πάτησε <b>Κοινοποίηση ⬆️</b> κάτω στο Safari και διάλεξε <b>«Προσθήκη στην οθόνη Αφετηρίας»</b>.','Άνοιξε το μενού του browser <b>⋮</b> και διάλεξε <b>«Εγκατάσταση εφαρμογής»</b> ή <b>«Προσθήκη στην αρχική οθόνη»</b>.','Προσθήκη','Κλείσιμο'],
+  ru:['На телефон','Tips of the Day как приложение','Значок на главном экране — одно касание, и ты видишь прогнозы и экспресс дня.','Нажми <b>Поделиться ⬆️</b> внизу Safari и выбери <b>«На экран „Домой”»</b>.','Открой меню браузера <b>⋮</b> и выбери <b>«Установить приложение»</b> или <b>«Добавить на главный экран»</b>.','Добавить','Закрыть'],
+  nl:['Op je telefoon','Tips of the Day als app','Een icoon op je beginscherm – één tik en je ziet de tips en combi van vandaag.','Tik onderaan in Safari op <b>Deel ⬆️</b> en kies <b>„Zet op beginscherm”</b>.','Open het browsermenu <b>⋮</b> en kies <b>„App installeren”</b> of <b>„Toevoegen aan startscherm”</b>.','Toevoegen','Sluiten'],
+  ar:['أضف إلى الهاتف','Tips of the Day كتطبيق','أيقونة على الشاشة الرئيسية – لمسة واحدة وترى توقعات اليوم وقسيمته.','اضغط <b>مشاركة ⬆️</b> أسفل Safari ثم اختر <b>«إضافة إلى الشاشة الرئيسية»</b>.','افتح قائمة المتصفح <b>⋮</b> واختر <b>«تثبيت التطبيق»</b> أو <b>«إضافة إلى الشاشة الرئيسية»</b>.','أضف','إغلاق']
+};
+function inx(i){ return (INST[LANG] || INST.bs.map(loc))[i]; }
+let instEvt = null;
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function instRefresh(){ const b = $('instbtn'); if (!b) return; b.hidden = isStandalone(); $('instlbl').textContent = inx(0); }
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); instEvt = e; instRefresh(); });
+window.addEventListener('appinstalled', () => { instEvt = null; $('instbtn').hidden = true; $('intro').hidden = true; });
+$('instbtn').onclick = async () => {
+  const el = $('intro'); const close = () => { el.hidden = true; };
+  const how = isIOS() ? inx(3) : inx(4);
+  el.innerHTML = `<div class="in-card"><div class="in-vis"><img class="in-app" src="icon-192.png" alt=""></div>
+    <h3>${inx(1)}</h3><p>${inx(2)}</p>${instEvt ? '' : `<div class="in-steps">${how}</div>`}
+    <div class="in-btns"><button class="in-skip" type="button">${inx(6)}</button>${instEvt ? `<button class="in-next" type="button">📲 ${inx(5)}</button>` : ''}</div></div>`;
+  el.querySelector('.in-skip').onclick = close;
+  const go = el.querySelector('.in-next');
+  if (go) go.onclick = async () => { const ev = instEvt; if (!ev) return close(); ev.prompt(); try { await ev.userChoice; } catch(e) {} instEvt = null; close(); };
+  el.onclick = e => { if (e.target === el) close(); };
+  el.hidden = false; (go || el.querySelector('.in-skip')).focus();
+};
+instRefresh();
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 
 /* ---------- stranica Rezultati (#rezultati) ---------- */
 const RES = {
@@ -1227,7 +1280,7 @@ function setLang(k){
   if (k === LANG) return;
   LANG = k;
   try { localStorage.setItem('totd-lang', LANG); } catch(e) {}
-  applyLangChrome();
+  applyLangChrome(); instRefresh();
   const keepM = mi, keepD = di;
   renderSports(); setSport(SPORT);
   if (DAYS.length){
