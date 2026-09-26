@@ -90,7 +90,10 @@ function Save-FxStats($resp) {
 $ids = @($last.Values | ForEach-Object { $_ } | ForEach-Object { $_.id } | Select-Object -Unique | Where-Object { -not $fxStats.ContainsKey($_) })
 # + jucerasnji i stariji nasi tipovi koji jos cekaju rezultat
 $pf = Join-Path $cacheDir 'picks.json'
-if (Test-Path $pf) { $ids += @(Get-Content -Raw -Encoding UTF8 $pf | ConvertFrom-Json | Where-Object { $_.hit -eq $null -and $_.date -lt $today -and $_.key -like 'football:af*' } | ForEach-Object { $_.key.Substring(11) }) }
+if (Test-Path $pf) { $parr = Get-Content -Raw -Encoding UTF8 $pf | ConvertFrom-Json; foreach ($pp in $parr) { if ($pp -and $pp.hit -eq $null -and $pp.date -lt $today -and [string]$pp.key -like 'football:af*') { $ids += ([string]$pp.key).Substring(11) } } }
+# + utakmice iz tiketa koje jos cekaju rezultat
+$tfile = Join-Path $cacheDir 'tickets.json'
+if (Test-Path $tfile) { $tarr = Get-Content -Raw -Encoding UTF8 $tfile | ConvertFrom-Json; foreach ($t in $tarr) { if ($t -and $t.hit -eq $null -and $t.date -lt $today) { foreach ($l in $t.legs) { if ([string]$l.key -like 'football:af*') { $ids += ([string]$l.key).Substring(11) } } } } }
 $ids = @($ids | Select-Object -Unique)
 $idPaths = @(); for ($i = 0; $i -lt $ids.Count; $i += 20) { $idPaths += 'fixtures?ids=' + (($ids[$i..([math]::Min($i + 19, $ids.Count - 1))]) -join '-') }
 $sres = Get-Many $idPaths
