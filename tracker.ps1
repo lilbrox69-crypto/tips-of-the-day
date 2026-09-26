@@ -93,14 +93,17 @@ foreach ($p in $picks) {
 $legs = New-Object System.Collections.ArrayList
 foreach ($sport in $lists.Keys) { foreach ($m in @($lists[$sport] | Where-Object { $_ -and $_.o })) {
   foreach ($pr in $m.p.PSObject.Properties) { $q = $m.o.($pr.Name)
-    if ($q -and [double]$q -ge 1.2 -and $pr.Value -ne $null -and $pr.Value -ge 65) {
+    if ($q -and [double]$q -ge 1.15 -and $pr.Value -ne $null -and $pr.Value -ge 80 -and (100 / [double]$q * 0.95) -ge 72) {   # sigurniji tiket: nas procenat >= 80 i kladionice >= ~75%
       [void]$legs.Add([pscustomobject]@{ sport = $sport; mk = $pr.Name; key = "${sport}:$($m.id)"; home = $m.home; away = $m.away; hl = $m.hl; al = $m.al; league = $m.league; time = $m.time; p = [int]$pr.Value; o = [double]$q }) } } } }
 $ticket = New-Object System.Collections.ArrayList; $used = @{}
 # najpametniji izbor iz SVIH opcija i sportova: sigurnost = manji od (nas procenat, procenat iz kvote bez marze),
 # plus pola nase prednosti nad kladionicom. Tako ulaze tipovi gdje se statistika i trziste slazu.
 foreach ($l in $legs) { $imp = 100 / $l.o * 0.95; $l | Add-Member -NotePropertyName score -NotePropertyValue ([math]::Min($l.p, $imp) + 0.5 * [math]::Max(0, $l.p - $imp)) }
 foreach ($l in ($legs | Sort-Object @{ e = { $_.score }; Descending = $true }, @{ e = { $_.o }; Descending = $true })) {
-  if ($used.ContainsKey($l.key)) { continue }; $used[$l.key] = 1; [void]$ticket.Add($l); if ($ticket.Count -ge 3) { break } }
+  if ($used.ContainsKey($l.key)) { continue }
+  # treci par samo ako ukupna sansa tiketa ostaje >= 60%
+  if ($ticket.Count -ge 2) { $pp0 = 1.0; foreach ($z in $ticket) { $pp0 *= $z.p / 100 }; if ($pp0 * $l.p / 100 -lt 0.60) { continue } }
+  $used[$l.key] = 1; [void]$ticket.Add($l); if ($ticket.Count -ge 3) { break } }
 $tFile = Join-Path $root 'cache\tickets.json'
 $tickets = New-Object System.Collections.ArrayList
 if (Test-Path $tFile) { $arr = Get-Content -Raw -Encoding UTF8 $tFile | ConvertFrom-Json; foreach ($t in $arr) { if ($t -and $t.date) { [void]$tickets.Add($t) } } }
