@@ -51,7 +51,7 @@ foreach ($r in $lres.Values) { foreach ($g in $r.response) { if ($g.status.short
 $prevNeed = @($games | Where-Object { -not $hist.ContainsKey([string]$_.teams.home.id) -or $hist[[string]$_.teams.home.id].Count -lt 8 -or -not $hist.ContainsKey([string]$_.teams.away.id) -or $hist[[string]$_.teams.away.id].Count -lt 8 } |
   ForEach-Object { "$($_.league.id)|$(PrevSeason $_.league.season)" } | Select-Object -Unique)
 $fetch = @()
-foreach ($ls in $prevNeed) { $lid, $ps = $ls.Split('|'); $f = Join-Path $cacheDir "bb_${lid}_$ps.json"; if (Test-Path $f) { foreach ($c in @(Get-Content -Raw -Encoding UTF8 $f | ConvertFrom-Json)) { Add-Hist $c } } else { $fetch += "games?league=$lid&season=$ps" } }
+foreach ($ls in $prevNeed) { $lid, $ps = $ls.Split('|'); $f = Join-Path $cacheDir "bb_${lid}_$ps.json"; if (Test-Path $f) { $carr = Get-Content -Raw -Encoding UTF8 $f | ConvertFrom-Json; foreach ($c in $carr) { if ($c -and $c.id) { Add-Hist $c } } } else { $fetch += "games?league=$lid&season=$ps" } }
 if ($fetch.Count) {
   $pres = Get-Many $fetch
   foreach ($pth in $pres.Keys) {

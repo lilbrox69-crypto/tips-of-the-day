@@ -86,7 +86,7 @@ function Add-Day($days, $g, $lgName, $p, $why) {
 function Days-Out($days) { if ($days.Count -eq 0) { return ,@() }; @(foreach ($k in ($days.Keys | Sort-Object)) { [ordered]@{ date = $k; matches = @($days[$k] | Sort-Object { $_.time }) } }) }
 function Cache-Season($lg, $url) {
   $file = Join-Path $root "cache_$lg.json"
-  if (Test-Path $file) { return @(Get-Content -Raw -Encoding UTF8 $file | ConvertFrom-Json) }
+  if (Test-Path $file) { $arr = Get-Content -Raw -Encoding UTF8 $file | ConvertFrom-Json; return @($arr | ForEach-Object { $_ }) }
   Write-Host "  prvi put: skidam proslu sezonu ($lg)"
   $raw = Get-AllPages $url
   $norm = @($raw | ForEach-Object { Norm-Game $_ $lg } | Where-Object { $_.final })

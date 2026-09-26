@@ -45,7 +45,7 @@ function Norm-AS($sport, $g) {
   [pscustomobject]@{ id = $g.id; utc = $g.date; final = $final; league = $g.league.name; country = $g.country.name; lid = $g.league.id
     hid = $g.teams.home.id; aid = $g.teams.away.id; hn = $g.teams.home.name; an = $g.teams.away.name; hs = $hs; as = $as; hl = $g.teams.home.logo; al = $g.teams.away.logo }
 }
-function Load-Json($file) { if (Test-Path $file) { return @(Get-Content -Raw -Encoding UTF8 $file | ConvertFrom-Json) } ; return @() }
+function Load-Json($file) { if (Test-Path $file) { $arr = Get-Content -Raw -Encoding UTF8 $file | ConvertFrom-Json; return @($arr | ForEach-Object { $_ }) } ; return @() }
 function Save-Json($file, $obj) { [IO.File]::WriteAllText($file, (ConvertTo-Json @($obj) -Depth 5), $enc) }
 
 function Erf([double]$x) { $s = [math]::Sign($x); $x = [math]::Abs($x); $t = 1 / (1 + 0.3275911 * $x)
