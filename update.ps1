@@ -30,6 +30,12 @@ function Get-Api($path) {
 $afOk = $false
 $todayStr = [System.TimeZoneInfo]::ConvertTimeFromUtc([datetime]::UtcNow, $tz).ToString('yyyy-MM-dd')
 $afCache = Join-Path $root 'cache\af_today.json'
+# Kod nas je vec novi dan, a API limit se resetuje tek u 00:00 UTC (02:00 ljeti). U tom razmaku NIKAKO ne pravimo novi dan:
+# prekini (radnja pada prije objave) i stranica ostaje kakva jeste. Automatski ce to uraditi pokretanje poslije reseta limita.
+if ($todayStr -ne [datetime]::UtcNow.ToString('yyyy-MM-dd')) {
+  $cA = $null; if (Test-Path $afCache) { try { $cA = Get-Content -Raw -Encoding UTF8 $afCache | ConvertFrom-Json } catch {} }
+  if (-not ($cA -and $cA.date -eq $todayStr)) { Write-Host "Prije reseta API limita (00:00 UTC) - preskacem, stranica ostaje kakva je."; exit 1 }
+}
 # API-Football se zove SAMO JEDNOM dnevno (prvo pokretanje). Svako kasnije pokretanje istog dana koristi spremljene podatke:
 # ne trosi dnevni limit (7500 poziva) i tipovi se ne mijenjaju tokom dana.
 $cachedAf = $null; if (Test-Path $afCache) { try { $cachedAf = Get-Content -Raw -Encoding UTF8 $afCache | ConvertFrom-Json } catch {} }

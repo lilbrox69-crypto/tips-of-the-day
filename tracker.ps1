@@ -12,6 +12,10 @@ $today = $data.today
 $picks = New-Object System.Collections.ArrayList
 if (Test-Path $picksFile) { $arr = Get-Content -Raw -Encoding UTF8 $picksFile | ConvertFrom-Json; foreach ($p in $arr) { if ($p -and $p.date) { [void]$picks.Add($p) } } }
 $picksLocked = @($picks | Where-Object { $_.date -eq $today }).Count -gt 0   # prvo (jutarnje) pokretanje zakljucava danasnje tipove
+# zakljucava se SAMO ako ima fudbala i ako je vec 5 ujutro ili kasnije (nocna pokretanja ne smiju zakljucati dan bez fudbala)
+$hourLocal = [System.TimeZoneInfo]::ConvertTimeFromUtc([datetime]::UtcNow, [System.TimeZoneInfo]::FindSystemTimeZoneById('Central European Standard Time')).Hour
+$canLock = ($data.sports.PSObject.Properties.Name -contains 'football') -and $hourLocal -ge 5
+if (-not $canLock) { Write-Host "Tracker: danasnji tipovi i tiket se NE zakljucavaju (nema fudbala ili je prije 5h)" }
 $results = @{}
 if (Test-Path $resFile) { (Get-Content -Raw -Encoding UTF8 $resFile | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $results[$_.Name] = $_.Value } }
 
@@ -130,13 +134,15 @@ foreach ($t in $tickets) {
   elseif (@($vals | Where-Object { $_ -eq $true }).Count -eq $vals.Count) { $t.hit = $true }
   elseif (([datetime]::ParseExact($t.date, 'yyyy-MM-dd', $null)) -lt $todayD0.AddDays(-10)) { $t.hit = 'void' }
 }
+if (-not $canLock -and -not $picksLocked) { $tickets = @($tickets | Where-Object { $_.date -ne $today }) }
 [IO.File]::WriteAllText($tFile, ('[' + ((@($tickets | Select-Object -Last 90) | ForEach-Object { $_ | ConvertTo-Json -Depth 5 -Compress }) -join ',') + ']'), $enc)
 $tw = @($tickets | Where-Object { $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD0.AddDays(-30) })
 $ticketTrack = [ordered]@{ n = $tw.Count; hit = @($tw | Where-Object { $_.hit }).Count }
 
 # 3) cuvanje (zadnjih 60 dana) i statistika zadnjih 30 dana
 $keep = @($picks | Where-Object { ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-60) })
-[IO.File]::WriteAllText($picksFile, (ConvertTo-Json @($keep) -Depth 3 -Compress), $enc)
+$keepSave = if (-not $canLock -and -not $picksLocked) { @($keep | Where-Object { $_.date -ne $today }) } else { $keep }
+[IO.File]::WriteAllText($picksFile, (ConvertTo-Json @($keepSave) -Depth 3 -Compress), $enc)
 $win = @($keep | Where-Object { $_.v -ne 'm' -and $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-30) })
 $bySport = [ordered]@{}
 foreach ($g in ($win | Group-Object sport)) { $bySport[$g.Name] = [ordered]@{ n = $g.Count; hit = @($g.Group | Where-Object { $_.hit }).Count } }
