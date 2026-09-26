@@ -247,6 +247,12 @@ foreach ($id in $cand.Keys) {
   $nH++
 }
 Write-Host "  H2H: $nH utakmica ($($cand.Count) kandidata)"
+# ---------- 6b) sjena: top 3 samo po statistici (bez kvota), za poredjenje u pracenju ----------
+$sh = New-Object System.Collections.ArrayList
+foreach ($mk in 'gg','o15','o25','u25','hs','as','w1','x','w2','c8','y3') {
+  foreach ($m in @($list | Where-Object { $_.p[$mk] -ne $null } | Sort-Object { - [int]$_.p[$mk] } | Select-Object -First 3)) {
+    [void]$sh.Add([ordered]@{ sport = 'football'; mk = $mk; key = "football:$($m.id)"; home = $m.home; away = $m.away; p = [int]$m.p[$mk] }) } }
+[IO.File]::WriteAllText((Join-Path $root 'shadow_af.json'), (([ordered]@{ date = $today; picks = @($sh) }) | ConvertTo-Json -Depth 4 -Compress), $enc)
 # ---------- 7) sigurnije: mijesanje sa trzistem (kvote) i samo utakmice koje kladionice nude ----------
 function Imp($o, $k) { if ($o.Contains($k) -and $o[$k] -gt 1) { return 1 / [double]$o[$k] } ; return $null }
 foreach ($m in $list) {

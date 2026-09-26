@@ -104,6 +104,7 @@ foreach ($g in $games) {
   $o220 = 0.5 * (1 - (Phi ((220.5 - $tot) / 17))) + 0.5 * ((($h.o220 / $h.n) + ($a.o220 / $a.n)) / 2)
   $p = [ordered]@{ w1 = Pct $w1; w2 = Pct (1 - $w1); m10 = Pct ((1 - (Phi ((9.5 - $m) / $sd))) + (Phi ((-9.5 - $m) / $sd))); h80 = Pct (1 - (Phi ((79.5 - $eh) / 9))); o160 = Pct $o160; u160 = Pct (1 - $o160) }
   if ($tot -gt 190) { $p.o220 = Pct $o220; $p.u220 = Pct (1 - $o220); $p.h110 = Pct (1 - (Phi ((109.5 - $eh) / 11))) }
+  $pm = [ordered]@{}; foreach ($k in @($p.Keys)) { $pm[$k] = $p[$k] }
   # mijesanje sa trzistem (kvote), kao u fudbalu: 65% nasa statistika, 35% kvote
   $o = $odds[[string]$g.id]
   if ($o) {
@@ -122,8 +123,16 @@ foreach ($g in $games) {
   $mm = [ordered]@{ id = "bb$($g.id)"; league = "$($g.league.name) ($($g.country.name))"; time = $local.ToString('HH:mm'); home = $g.teams.home.name; away = $g.teams.away.name
     hl = $g.teams.home.logo; al = $g.teams.away.logo; p = $p; why = $why }
   if ($o) { $mm.o = $o }
+  $mm.pm = $pm
   [void]$list.Add($mm)
 }
+# sjena: top 3 samo po statistici (bez kvota), iz svih utakmica
+$sh = New-Object System.Collections.ArrayList
+foreach ($mk in 'w1','w2','o160','u160','o220','u220','m10','h80','h110') {
+  foreach ($m in @($list | Where-Object { $_.pm[$mk] -ne $null } | Sort-Object { - [int]$_.pm[$mk] } | Select-Object -First 3)) {
+    [void]$sh.Add([ordered]@{ sport = 'basketball'; mk = $mk; key = "basketball:$($m.id)"; home = $m.home; away = $m.away; p = [int]$m.pm[$mk] }) } }
+[IO.File]::WriteAllText((Join-Path $root 'shadow_bb.json'), (([ordered]@{ date = $today; picks = @($sh) }) | ConvertTo-Json -Depth 4 -Compress), $enc)
+foreach ($m in $list) { $m.Remove('pm') }
 $withOdds = @($list | Where-Object { $_.o })
 if ($withOdds.Count -ge 10) { $list = $withOdds }
 $out = [ordered]@{ basketball = [ordered]@{ days = @([ordered]@{ date = $today; matches = @($list | Sort-Object { $_.time }) }) } }

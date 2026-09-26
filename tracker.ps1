@@ -18,7 +18,7 @@ if (Test-Path $resFile) { (Get-Content -Raw -Encoding UTF8 $resFile | ConvertFro
 # 0) samokorekcija: ako neka opcija u nekom sportu (zadnjih 45 dana, bar 25 provjerenih tipova) prolazi
 #    cesce/rjedje nego sto smo rekli, pomjeri danasnje procente za tu opciju (oprezno, najvise +-12)
 $todayD0 = [datetime]::ParseExact($today, 'yyyy-MM-dd', $null)
-$judged = @($picks | Where-Object { $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD0.AddDays(-45) })
+$judged = @($picks | Where-Object { $_.v -ne 'm' -and $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD0.AddDays(-45) })
 $calib = @{}
 foreach ($g in ($judged | Group-Object { "$($_.sport)|$($_.mk)" })) {
   $n = $g.Count; if ($n -lt 25) { continue }
@@ -51,6 +51,14 @@ foreach ($sport in @(if ($picksLocked) { } else { $lists.Keys })) {
   }
 }
 
+# 1b) sjena "samo statistika" (v = 'm') - ne prikazuje se, samo za poredjenje
+if (-not $picksLocked) {
+  foreach ($sf in 'shadow_af.json', 'shadow_bb.json') {
+    $sp = Join-Path $root $sf; if (-not (Test-Path $sp)) { continue }
+    $sj = Get-Content -Raw -Encoding UTF8 $sp | ConvertFrom-Json; if ($sj.date -ne $today) { continue }
+    foreach ($x in $sj.picks) { [void]$picks.Add([pscustomobject]@{ date = $today; sport = $x.sport; mk = $x.mk; key = $x.key; home = $x.home; away = $x.away; p = [int]$x.p; hit = $null; v = 'm' }) }
+  }
+}
 # 2) provjera rezultata
 function Judge($sport, $mk, $r) {
   $h = [int]$r.h; $a = [int]$r.a; $t = $h + $a
@@ -119,10 +127,13 @@ $ticketTrack = [ordered]@{ n = $tw.Count; hit = @($tw | Where-Object { $_.hit })
 # 3) cuvanje (zadnjih 60 dana) i statistika zadnjih 30 dana
 $keep = @($picks | Where-Object { ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-60) })
 [IO.File]::WriteAllText($picksFile, (ConvertTo-Json @($keep) -Depth 3 -Compress), $enc)
-$win = @($keep | Where-Object { $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-30) })
+$win = @($keep | Where-Object { $_.v -ne 'm' -and $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-30) })
 $bySport = [ordered]@{}
 foreach ($g in ($win | Group-Object sport)) { $bySport[$g.Name] = [ordered]@{ n = $g.Count; hit = @($g.Group | Where-Object { $_.hit }).Count } }
-$track = [ordered]@{ days = 30; n = $win.Count; hit = @($win | Where-Object { $_.hit }).Count; sports = $bySport; ticket = $ticketTrack }
+$shw = @($keep | Where-Object { $_.v -eq 'm' -and $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-30) })
+$cmp = [ordered]@{ saKvotama = [ordered]@{ n = $win.Count; hit = @($win | Where-Object { $_.hit }).Count }; bezKvota = [ordered]@{ n = $shw.Count; hit = @($shw | Where-Object { $_.hit }).Count } }
+Write-Host "Poredjenje: sa kvotama $($cmp.saKvotama.hit)/$($cmp.saKvotama.n), samo statistika $($cmp.bezKvota.hit)/$($cmp.bezKvota.n)"
+$track = [ordered]@{ days = 30; n = $win.Count; hit = @($win | Where-Object { $_.hit }).Count; sports = $bySport; ticket = $ticketTrack; cmp = $cmp }
 $data | Add-Member -NotePropertyName track -NotePropertyValue $track -Force
 
 # 4) istorija za stranicu "Rezultati" (zadnjih 30 dana): history.json
@@ -131,7 +142,7 @@ function HitVal($v) { if ($v -is [bool]) { return [int]$v } ; return $null }   #
 $hdays = New-Object System.Collections.ArrayList
 for ($i = 0; $i -le 30; $i++) {
   $ds = $todayD.AddDays(-$i).ToString('yyyy-MM-dd')
-  $dp = @($keep | Where-Object { $_.date -eq $ds })
+  $dp = @($keep | Where-Object { $_.date -eq $ds -and $_.v -ne 'm' })
   $tk = @($tickets | Where-Object { $_.date -eq $ds })[0]
   if (-not $dp.Count -and -not $tk) { continue }
   $day = [ordered]@{ date = $ds }
