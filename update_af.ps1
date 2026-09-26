@@ -107,7 +107,8 @@ $oPages = @($o1)
 if ($o1 -and $o1.paging.total -gt 1) { $more = Get-Many @(2..$o1.paging.total | ForEach-Object { "odds?date=$today&timezone=Europe/Sarajevo&page=$_" }); $oPages += @($more.Values) }
 function Median($xs) { $s = @($xs | Sort-Object); if ($s.Count -eq 0) { return $null }; $m = [int][math]::Floor($s.Count / 2); if ($s.Count % 2) { $s[$m] } else { ($s[$m - 1] + $s[$m]) / 2 } }
 $map = @(@('w1',1,'Home'), @('x',1,'Draw'), @('w2',1,'Away'), @('o15',5,'Over 1.5'), @('o25',5,'Over 2.5'), @('u25',5,'Under 2.5'),
-  @('gg',8,'Yes'), @('hs',28,'No'), @('as',27,'No'), @('c8',45,'Over 7.5'), @('y3',80,'Over 2.5'))
+  @('gg',8,'Yes'), @('hs',28,'No'), @('hs',43,'Yes'), @('hs',16,'Over 0.5'), @('as',27,'No'), @('as',44,'Yes'), @('as',17,'Over 0.5'),
+  @('c8',45,'Over 7.5'), @('y3',80,'Over 2.5'))
 foreach ($pg in $oPages) {
   foreach ($r in $pg.response) {
     $vals = @{}
@@ -119,7 +120,7 @@ foreach ($pg in $oPages) {
         [void]$vals[$m[0]].Add([double]$v.odd)
       }
     }
-    $o = [ordered]@{}; foreach ($m in $map) { if ($vals.ContainsKey($m[0])) { $o[$m[0]] = [math]::Round((Median $vals[$m[0]]), 2) } }
+    $o = [ordered]@{}; foreach ($mk in @($map | ForEach-Object { $_[0] } | Select-Object -Unique)) { if ($vals.ContainsKey($mk)) { $o[$mk] = [math]::Round((Median $vals[$mk]), 2) } }
     if ($o.Count) { $odds[[string]$r.fixture.id] = $o }
   }
 }
