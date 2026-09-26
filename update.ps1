@@ -262,7 +262,7 @@ $out = [ordered]@{
 }
 try { & (Join-Path $root 'update_us.ps1') } catch { Write-Host "US sportovi preskoceni: $($_.Exception.Message)" }
 try { & (Join-Path $root 'update_as.ps1') } catch { Write-Host "API-Sports preskocen: $($_.Exception.Message)" }
-try { & (Join-Path $root 'update_nhl.ps1') } catch { Write-Host "NHL preskocen: $($_.Exception.Message)" }
+# NHL, hokej, rukomet, odbojka, NFL i MLB iskljuceni (26.9.2026) - ostaju fudbal i kosarka
 $sports = [ordered]@{}
 foreach ($f in 'us.json','as.json','nhl.json') {
   $p = Join-Path $root $f; if (-not (Test-Path $p)) { continue }
@@ -275,6 +275,7 @@ foreach ($f in 'us.json','as.json','nhl.json') {
     } else { $sports[$prop.Name] = [ordered]@{ days = $days } }
   }
 }
+foreach ($k in @($sports.Keys)) { if ($k -ne 'basketball') { $sports.Remove($k) } }
 $out.sports = $sports
 $json = $out | ConvertTo-Json -Depth 10
 [IO.File]::WriteAllText((Join-Path $root 'data.json'), $json, (New-Object System.Text.UTF8Encoding($false)))

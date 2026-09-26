@@ -77,7 +77,7 @@ function Rate($s, $cond) { @($s.games | Where-Object -FilterScript $cond).Count 
 function RateOf($s, $cond) { if (-not $s -or -not $s.n) { return 0.0 }; return [double](@($s.games | Where-Object -FilterScript $cond).Count) / [double]$s.n }
 
 $result = [ordered]@{}
-foreach ($sport in 'hockey','handball','volleyball','basketball') {
+foreach ($sport in @('basketball')) {
   Write-Host "== $sport"
   $recFile = Join-Path $cacheDir "as_$sport.json"
   $rec = @{}; foreach ($g in (Load-Json $recFile)) { $rec[[string]$g.id] = $g }
