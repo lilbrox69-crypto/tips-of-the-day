@@ -32,6 +32,38 @@
         "al":  "https://media.api-sports.io/basketball/teams/533.png"
     },
     {
+        "id":  508589,
+        "utc":  "2026-09-25T19:00:00+02:00",
+        "final":  true,
+        "league":  "Euroleague",
+        "country":  "Europe",
+        "lid":  120,
+        "hid":  1266,
+        "aid":  2341,
+        "hn":  "Besiktas",
+        "an":  "Valencia",
+        "hs":  94,
+        "as":  96,
+        "hl":  "https://media.api-sports.io/basketball/teams/1266.png",
+        "al":  "https://media.api-sports.io/basketball/teams/2341.png"
+    },
+    {
+        "id":  508582,
+        "utc":  "2026-09-24T18:00:00+02:00",
+        "final":  true,
+        "league":  "Euroleague",
+        "country":  "Europe",
+        "lid":  120,
+        "hid":  6496,
+        "aid":  2338,
+        "hn":  "Dubai",
+        "an":  "Real Madrid",
+        "hs":  78,
+        "as":  77,
+        "hl":  "https://media.api-sports.io/basketball/teams/6496.png",
+        "al":  "https://media.api-sports.io/basketball/teams/2338.png"
+    },
+    {
         "id":  501185,
         "utc":  "2026-09-25T11:30:00+02:00",
         "final":  true,
@@ -46,6 +78,22 @@
         "as":  95,
         "hl":  "https://media.api-sports.io/basketball/teams/7.png",
         "al":  "https://media.api-sports.io/basketball/teams/6.png"
+    },
+    {
+        "id":  509292,
+        "utc":  "2026-09-25T18:30:00+02:00",
+        "final":  true,
+        "league":  "BBL",
+        "country":  "Germany",
+        "lid":  40,
+        "hid":  563,
+        "aid":  524,
+        "hn":  "Trier",
+        "an":  "Bonn",
+        "hs":  106,
+        "as":  80,
+        "hl":  "https://media.api-sports.io/basketball/teams/563.png",
+        "al":  "https://media.api-sports.io/basketball/teams/524.png"
     },
     {
         "id":  508588,
@@ -112,20 +160,20 @@
         "al":  "https://media.api-sports.io/basketball/teams/520.png"
     },
     {
-        "id":  508589,
-        "utc":  "2026-09-25T19:00:00+02:00",
+        "id":  508586,
+        "utc":  "2026-09-24T20:30:00+02:00",
         "final":  true,
         "league":  "Euroleague",
         "country":  "Europe",
         "lid":  120,
-        "hid":  1266,
-        "aid":  2341,
-        "hn":  "Besiktas",
-        "an":  "Valencia",
-        "hs":  94,
-        "as":  96,
-        "hl":  "https://media.api-sports.io/basketball/teams/1266.png",
-        "al":  "https://media.api-sports.io/basketball/teams/2341.png"
+        "hid":  2329,
+        "aid":  1263,
+        "hn":  "Barcelona",
+        "an":  "Anadolu Efes",
+        "hs":  89,
+        "as":  82,
+        "hl":  "https://media.api-sports.io/basketball/teams/2329.png",
+        "al":  "https://media.api-sports.io/basketball/teams/1263.png"
     },
     {
         "id":  495098,
@@ -240,22 +288,6 @@
         "al":  "https://media.api-sports.io/basketball/teams/1019.png"
     },
     {
-        "id":  501184,
-        "utc":  "2026-09-24T13:30:00+02:00",
-        "final":  true,
-        "league":  "NBL",
-        "country":  "Australia",
-        "lid":  1,
-        "hid":  5,
-        "aid":  8,
-        "hn":  "Perth",
-        "an":  "Adelaide",
-        "hs":  98,
-        "as":  97,
-        "hl":  "https://media.api-sports.io/basketball/teams/5.png",
-        "al":  "https://media.api-sports.io/basketball/teams/8.png"
-    },
-    {
         "id":  495102,
         "utc":  "2026-09-25T04:00:00+02:00",
         "final":  true,
@@ -304,22 +336,6 @@
         "al":  "https://media.api-sports.io/basketball/teams/550.png"
     },
     {
-        "id":  508585,
-        "utc":  "2026-09-24T20:15:00+02:00",
-        "final":  true,
-        "league":  "Euroleague",
-        "country":  "Europe",
-        "lid":  120,
-        "hid":  614,
-        "aid":  108,
-        "hn":  "Panathinaikos",
-        "an":  "Paris",
-        "hs":  91,
-        "as":  72,
-        "hl":  "https://media.api-sports.io/basketball/teams/614.png",
-        "al":  "https://media.api-sports.io/basketball/teams/108.png"
-    },
-    {
         "id":  509288,
         "utc":  "2026-09-24T18:30:00+02:00",
         "final":  true,
@@ -352,20 +368,20 @@
         "al":  "https://media.api-sports.io/basketball/teams/532.png"
     },
     {
-        "id":  509292,
-        "utc":  "2026-09-25T18:30:00+02:00",
+        "id":  501184,
+        "utc":  "2026-09-24T13:30:00+02:00",
         "final":  true,
-        "league":  "BBL",
-        "country":  "Germany",
-        "lid":  40,
-        "hid":  563,
-        "aid":  524,
-        "hn":  "Trier",
-        "an":  "Bonn",
-        "hs":  106,
-        "as":  80,
-        "hl":  "https://media.api-sports.io/basketball/teams/563.png",
-        "al":  "https://media.api-sports.io/basketball/teams/524.png"
+        "league":  "NBL",
+        "country":  "Australia",
+        "lid":  1,
+        "hid":  5,
+        "aid":  8,
+        "hn":  "Perth",
+        "an":  "Adelaide",
+        "hs":  98,
+        "as":  97,
+        "hl":  "https://media.api-sports.io/basketball/teams/5.png",
+        "al":  "https://media.api-sports.io/basketball/teams/8.png"
     },
     {
         "id":  509289,
@@ -382,22 +398,6 @@
         "as":  78,
         "hl":  "https://media.api-sports.io/basketball/teams/530.png",
         "al":  "https://media.api-sports.io/basketball/teams/561.png"
-    },
-    {
-        "id":  508586,
-        "utc":  "2026-09-24T20:30:00+02:00",
-        "final":  true,
-        "league":  "Euroleague",
-        "country":  "Europe",
-        "lid":  120,
-        "hid":  2329,
-        "aid":  1263,
-        "hn":  "Barcelona",
-        "an":  "Anadolu Efes",
-        "hs":  89,
-        "as":  82,
-        "hl":  "https://media.api-sports.io/basketball/teams/2329.png",
-        "al":  "https://media.api-sports.io/basketball/teams/1263.png"
     },
     {
         "id":  509294,
@@ -448,20 +448,20 @@
         "al":  "https://media.api-sports.io/basketball/teams/796.png"
     },
     {
-        "id":  508582,
-        "utc":  "2026-09-24T18:00:00+02:00",
+        "id":  508585,
+        "utc":  "2026-09-24T20:15:00+02:00",
         "final":  true,
         "league":  "Euroleague",
         "country":  "Europe",
         "lid":  120,
-        "hid":  6496,
-        "aid":  2338,
-        "hn":  "Dubai",
-        "an":  "Real Madrid",
-        "hs":  78,
-        "as":  77,
-        "hl":  "https://media.api-sports.io/basketball/teams/6496.png",
-        "al":  "https://media.api-sports.io/basketball/teams/2338.png"
+        "hid":  614,
+        "aid":  108,
+        "hn":  "Panathinaikos",
+        "an":  "Paris",
+        "hs":  91,
+        "as":  72,
+        "hl":  "https://media.api-sports.io/basketball/teams/614.png",
+        "al":  "https://media.api-sports.io/basketball/teams/108.png"
     },
     {
         "id":  495103,
