@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v:202609270120 -->
+<!-- v:202609270145 -->
 <html lang="bs">
 <meta charset="utf-8">
 <script>if(location.protocol==='http:'&&location.hostname.indexOf('tipsoftheday.win')>=0)location.replace('https://'+location.host+location.pathname+location.search+location.hash);</script>
@@ -164,6 +164,14 @@ body[data-m="w2"]  .decor{--pat:repeating-linear-gradient(-60deg, rgba(255,255,2
 .instbtn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media (max-width:380px){.instbtn .it{display:none}}
 .in-app{width:72px;height:72px;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.in-ol{list-style:none;margin:4px 0 16px;padding:0;text-align:left;display:grid;gap:10px}
+.in-ol li{display:flex;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.05);font-size:15.5px;line-height:1.35}
+.in-ol li span{flex:0 0 28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#0B1A12;font:800 17px var(--display)}
+.in-ol li b{color:var(--gold)}
+.intro.in-ios{align-items:center}
+.in-arrow{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);font-size:44px;line-height:1;color:var(--gold);text-shadow:0 0 18px rgba(244,196,67,.8);animation:inarrow 1s ease-in-out infinite;pointer-events:none}
+@keyframes inarrow{0%,100%{transform:translate(-50%,-8px)}50%{transform:translate(-50%,6px)}}
+@media (prefers-reduced-motion:reduce){.in-arrow{animation:none}}
 .in-steps{text-align:left;margin:0 0 14px;padding:10px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.04);font-size:15px;line-height:1.5}
 .intro{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.42);animation:tvin .3s ease}
 .intro[hidden]{display:none}
@@ -777,15 +785,56 @@ const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.
 function instRefresh(){ const b = document.getElementById('instbtn'); if (!b) return; b.hidden = isStandalone(); document.getElementById('instlbl').textContent = inx(0); }
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); instEvt = e; instRefresh(); });
 window.addEventListener('appinstalled', () => { instEvt = null; document.getElementById('instbtn').hidden = true; document.getElementById('intro').hidden = true; });
+// [korak 1 iPhone, korak 2, korak 3, poruka za Instagram/Facebook, Otvori u Safariju, Otvori u Chrome-u, ako ne ide]
+const INST2 = {
+  bs:['Dodirni <b>Podijeli</b> dolje (ili <b>⋯</b> → Podijeli)','Izaberi <b>„Dodaj na početni ekran”</b>','Dodirni <b>Dodaj</b> – gotovo!','Iz Instagrama i Facebooka ne može se dodati na telefon. Otvori stranicu u pravom pregledniku, pa dodirni 📲 ponovo.','Otvori u Safariju','Otvori u Chrome-u','Ako se ne otvori: dodirni <b>⋯</b> gore desno → <b>„Otvori u pregledniku”</b>.'],
+  en:['Tap <b>Share</b> at the bottom (or <b>⋯</b> → Share)','Choose <b>“Add to Home Screen”</b>','Tap <b>Add</b> – done!','Instagram and Facebook can’t add pages to your phone. Open this page in your real browser, then tap 📲 again.','Open in Safari','Open in Chrome','If it doesn’t open: tap <b>⋯</b> top right → <b>“Open in browser”</b>.'],
+  de:['Tippe unten auf <b>Teilen</b> (oder <b>⋯</b> → Teilen)','Wähle <b>„Zum Home-Bildschirm”</b>','Tippe auf <b>Hinzufügen</b> – fertig!','Instagram und Facebook können nichts auf den Startbildschirm legen. Öffne die Seite im echten Browser und tippe dann erneut auf 📲.','In Safari öffnen','In Chrome öffnen','Falls nichts passiert: oben rechts <b>⋯</b> → <b>„Im Browser öffnen”</b>.'],
+  it:['Tocca <b>Condividi</b> in basso (o <b>⋯</b> → Condividi)','Scegli <b>“Aggiungi alla schermata Home”</b>','Tocca <b>Aggiungi</b> – fatto!','Da Instagram e Facebook non si può aggiungere al telefono. Apri la pagina nel browser vero e tocca di nuovo 📲.','Apri in Safari','Apri in Chrome','Se non si apre: tocca <b>⋯</b> in alto a destra → <b>“Apri nel browser”</b>.'],
+  es:['Toca <b>Compartir</b> abajo (o <b>⋯</b> → Compartir)','Elige <b>“Añadir a pantalla de inicio”</b>','Toca <b>Añadir</b> – ¡listo!','Desde Instagram y Facebook no se puede añadir al móvil. Abre la página en tu navegador y toca 📲 otra vez.','Abrir en Safari','Abrir en Chrome','Si no se abre: toca <b>⋯</b> arriba a la derecha → <b>“Abrir en el navegador”</b>.'],
+  fr:['Touche <b>Partager</b> en bas (ou <b>⋯</b> → Partager)','Choisis <b>« Sur l’écran d’accueil »</b>','Touche <b>Ajouter</b> – c’est fait !','Depuis Instagram et Facebook, impossible d’ajouter au téléphone. Ouvre la page dans ton vrai navigateur, puis touche 📲 à nouveau.','Ouvrir dans Safari','Ouvrir dans Chrome','Si rien ne s’ouvre : touche <b>⋯</b> en haut à droite → <b>« Ouvrir dans le navigateur »</b>.'],
+  pt:['Toque em <b>Compartilhar</b> embaixo (ou <b>⋯</b> → Compartilhar)','Escolha <b>“Adicionar à Tela de Início”</b>','Toque em <b>Adicionar</b> – pronto!','Pelo Instagram e Facebook não dá para adicionar ao celular. Abra a página no navegador e toque em 📲 de novo.','Abrir no Safari','Abrir no Chrome','Se não abrir: toque em <b>⋯</b> no canto superior direito → <b>“Abrir no navegador”</b>.'],
+  tr:['Alttaki <b>Paylaş</b>’a dokun (veya <b>⋯</b> → Paylaş)','<b>“Ana Ekrana Ekle”</b>yi seç','<b>Ekle</b>’ye dokun – bitti!','Instagram ve Facebook’tan telefona eklenemez. Sayfayı gerçek tarayıcıda aç, sonra tekrar 📲’a dokun.','Safari’de aç','Chrome’da aç','Açılmazsa: sağ üstte <b>⋯</b> → <b>“Tarayıcıda aç”</b>.'],
+  sq:['Prek <b>Shpërnda</b> poshtë (ose <b>⋯</b> → Shpërnda)','Zgjidh <b>“Shto në ekranin bazë”</b>','Prek <b>Shto</b> – gati!','Nga Instagram dhe Facebook nuk mund të shtohet në telefon. Hape faqen në shfletuesin e vërtetë dhe prek 📲 përsëri.','Hape në Safari','Hape në Chrome','Nëse nuk hapet: prek <b>⋯</b> lart djathtas → <b>“Hape në shfletues”</b>.'],
+  pl:['Stuknij <b>Udostępnij</b> na dole (lub <b>⋯</b> → Udostępnij)','Wybierz <b>„Do ekranu początkowego”</b>','Stuknij <b>Dodaj</b> – gotowe!','Z Instagrama i Facebooka nie da się dodać do telefonu. Otwórz stronę w prawdziwej przeglądarce i stuknij 📲 jeszcze raz.','Otwórz w Safari','Otwórz w Chrome','Jeśli się nie otworzy: stuknij <b>⋯</b> w prawym górnym rogu → <b>„Otwórz w przeglądarce”</b>.'],
+  ro:['Atinge <b>Partajează</b> jos (sau <b>⋯</b> → Partajează)','Alege <b>„Adaugă pe ecranul principal”</b>','Atinge <b>Adaugă</b> – gata!','Din Instagram și Facebook nu se poate adăuga pe telefon. Deschide pagina în browserul real și atinge din nou 📲.','Deschide în Safari','Deschide în Chrome','Dacă nu se deschide: atinge <b>⋯</b> sus dreapta → <b>„Deschide în browser”</b>.'],
+  el:['Πάτησε <b>Κοινοποίηση</b> κάτω (ή <b>⋯</b> → Κοινοποίηση)','Διάλεξε <b>«Προσθήκη στην οθόνη Αφετηρίας»</b>','Πάτησε <b>Προσθήκη</b> – έτοιμο!','Από Instagram και Facebook δεν γίνεται προσθήκη στο κινητό. Άνοιξε τη σελίδα στον κανονικό browser και πάτησε ξανά 📲.','Άνοιγμα στο Safari','Άνοιγμα στο Chrome','Αν δεν ανοίξει: πάτησε <b>⋯</b> πάνω δεξιά → <b>«Άνοιγμα σε πρόγραμμα περιήγησης»</b>.'],
+  ru:['Нажми <b>Поделиться</b> внизу (или <b>⋯</b> → Поделиться)','Выбери <b>«На экран „Домой”»</b>','Нажми <b>Добавить</b> — готово!','Из Instagram и Facebook нельзя добавить на телефон. Открой страницу в обычном браузере и нажми 📲 ещё раз.','Открыть в Safari','Открыть в Chrome','Если не открывается: нажми <b>⋯</b> справа вверху → <b>«Открыть в браузере»</b>.'],
+  nl:['Tik onderaan op <b>Deel</b> (of <b>⋯</b> → Deel)','Kies <b>„Zet op beginscherm”</b>','Tik op <b>Voeg toe</b> – klaar!','Vanuit Instagram en Facebook kan niets op je telefoon worden gezet. Open de pagina in je echte browser en tik opnieuw op 📲.','Open in Safari','Open in Chrome','Opent het niet: tik rechtsboven op <b>⋯</b> → <b>„Openen in browser”</b>.'],
+  ar:['اضغط <b>مشاركة</b> في الأسفل (أو <b>⋯</b> ← مشاركة)','اختر <b>«إضافة إلى الشاشة الرئيسية»</b>','اضغط <b>إضافة</b> – تم!','لا يمكن الإضافة إلى الهاتف من إنستغرام وفيسبوك. افتح الصفحة في المتصفح الحقيقي ثم اضغط 📲 مرة أخرى.','افتح في Safari','افتح في Chrome','إن لم تُفتح: اضغط <b>⋯</b> أعلى اليمين ← <b>«فتح في المتصفح»</b>.']
+};
+function inx2(i){ return (INST2[LANG] || INST2.bs.map(loc))[i]; }
+const isInApp = () => /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger|TikTok|musical_ly|Snapchat|Line\/|Twitter|; wv\)/i.test(navigator.userAgent);
+const SHARE_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px"><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>';
+function openInBrowser(){
+  const u = location.href.split('#')[0];
+  if (isIOS()) location.href = 'x-safari-' + u;                                   // iOS 17+: otvori Safari
+  else location.href = 'intent://' + u.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(u) + ';end';
+}
 document.getElementById('instbtn').onclick = async () => {
-  const el = document.getElementById('intro'); const close = () => { el.hidden = true; };
-  const how = isIOS() ? inx(3) : inx(4);
-  el.innerHTML = `<div class="in-card"><div class="in-vis"><img class="in-app" src="icon-192.png" alt=""></div>
-    <h3>${inx(1)}</h3><p>${inx(2)}</p>${instEvt ? '' : `<div class="in-steps">${how}</div>`}
-    <div class="in-btns"><button class="in-skip" type="button">${inx(6)}</button>${instEvt ? `<button class="in-next" type="button">📲 ${inx(5)}</button>` : ''}</div></div>`;
+  const el = document.getElementById('intro'); const close = () => { el.hidden = true; el.classList.remove('in-ios'); };
+  const inApp = isInApp(), ios = isIOS();
+  let body = '', btn = '';
+  if (inApp) {
+    body = `<p>${inx2(3)}</p><div class="in-steps" style="font-size:13.5px">${inx2(6)}</div>`;
+    btn = `<button class="in-next" type="button" data-a="open">${ios ? inx2(4) : inx2(5)} ↗</button>`;
+  } else if (instEvt) {
+    body = `<p>${inx(2)}</p>`;
+    btn = `<button class="in-next" type="button" data-a="install">📲 ${inx(5)}</button>`;
+  } else if (ios) {
+    body = `<ol class="in-ol"><li><span>1</span><div>${inx2(0).replace('<b>', SHARE_SVG + ' <b>')}</div></li><li><span>2</span><div>${inx2(1)} ➕</div></li><li><span>3</span><div>${inx2(2)}</div></li></ol>`;
+  } else {
+    body = `<p>${inx(2)}</p><div class="in-steps">${inx(4)}</div>`;
+  }
+  el.innerHTML = `<div class="in-card"><div class="in-vis"><img class="in-app" src="icon-192.png" alt=""></div><h3>${inx(1)}</h3>${body}
+    <div class="in-btns"><button class="in-skip" type="button">${inx(6)}</button>${btn}</div></div>${ios && !inApp && !instEvt ? '<div class="in-arrow" aria-hidden="true">⬇</div>' : ''}`;
+  el.classList.toggle('in-ios', ios && !inApp && !instEvt);
   el.querySelector('.in-skip').onclick = close;
   const go = el.querySelector('.in-next');
-  if (go) go.onclick = async () => { const ev = instEvt; if (!ev) return close(); ev.prompt(); try { await ev.userChoice; } catch(e) {} instEvt = null; close(); };
+  if (go) go.onclick = async () => {
+    if (go.dataset.a === 'open') return openInBrowser();
+    const ev = instEvt; if (!ev) return close(); ev.prompt(); try { await ev.userChoice; } catch(e) {} instEvt = null; close();
+  };
   el.onclick = e => { if (e.target === el) close(); };
   el.hidden = false; (go || el.querySelector('.in-skip')).focus();
 };
