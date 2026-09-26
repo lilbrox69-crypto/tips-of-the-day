@@ -776,7 +776,7 @@ document.getElementById('instbtn').onclick = async () => {
   el.onclick = e => { if (e.target === el) close(); };
   el.hidden = false; (go || el.querySelector('.in-skip')).focus();
 };
-instRefresh();
+setTimeout(instRefresh, 0);
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 
 /* ---------- stranica Rezultati (#rezultati) ---------- */
