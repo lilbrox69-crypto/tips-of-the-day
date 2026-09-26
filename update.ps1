@@ -261,10 +261,10 @@ $out = [ordered]@{
   days = @($dayList)
 }
 try { & (Join-Path $root 'update_us.ps1') } catch { Write-Host "US sportovi preskoceni: $($_.Exception.Message)" }
-try { & (Join-Path $root 'update_as.ps1') } catch { Write-Host "API-Sports preskocen: $($_.Exception.Message)" }
+try { & (Join-Path $root 'update_bb.ps1') } catch { Write-Host "API-Basketball preskocen: $($_.Exception.Message)" }   # kosarka Pro (26.9.2026), zamjena za update_as.ps1
 # NHL, hokej, rukomet, odbojka, NFL i MLB iskljuceni (26.9.2026) - ostaju fudbal i kosarka
 $sports = [ordered]@{}
-foreach ($f in 'us.json','as.json','nhl.json') {
+foreach ($f in 'us.json','bb.json') {
   $p = Join-Path $root $f; if (-not (Test-Path $p)) { continue }
   $j = Get-Content -Raw -Encoding UTF8 $p | ConvertFrom-Json
   foreach ($prop in $j.PSObject.Properties) {
