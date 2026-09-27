@@ -18,6 +18,8 @@ $canLock = (@($data.days | Where-Object { $_.date -eq $today } | ForEach-Object 
 if (-not $canLock) { Write-Host "Tracker: danasnji tipovi i tiket se NE zakljucavaju (nema fudbala ili je prije 5h)" }
 $results = @{}
 if (Test-Path $resFile) { (Get-Content -Raw -Encoding UTF8 $resFile | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $results[$_.Name] = $_.Value } }
+# kosarka: isti API-Basketball id je nekad zapisan kao "as123" (stari izvor), a rezultat kao "bb123" - vazi oboje
+foreach ($k in @($results.Keys)) { if ($k -match '^basketball:(as|bb)(\d+)$') { $alt = "basketball:$(if ($matches[1] -eq 'as') { 'bb' } else { 'as' })$($matches[2])"; if (-not $results.ContainsKey($alt)) { $results[$alt] = $results[$k] } } }
 
 # 0) samokorekcija: ako neka opcija u nekom sportu (zadnjih 45 dana, bar 25 provjerenih tipova) prolazi
 #    cesce/rjedje nego sto smo rekli, pomjeri danasnje procente za tu opciju (oprezno, najvise +-12)
