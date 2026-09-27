@@ -14,7 +14,7 @@ if (Test-Path $picksFile) { $arr = Get-Content -Raw -Encoding UTF8 $picksFile | 
 $picksLocked = @($picks | Where-Object { $_.date -eq $today }).Count -gt 0   # prvo (jutarnje) pokretanje zakljucava danasnje tipove
 # zakljucava se SAMO ako ima fudbala i ako je vec 5 ujutro ili kasnije (nocna pokretanja ne smiju zakljucati dan bez fudbala)
 $hourLocal = [System.TimeZoneInfo]::ConvertTimeFromUtc([datetime]::UtcNow, [System.TimeZoneInfo]::FindSystemTimeZoneById('Central European Standard Time')).Hour
-$canLock = ($data.sports.PSObject.Properties.Name -contains 'football') -and $hourLocal -ge 5
+$canLock = (@($data.days | Where-Object { $_.date -eq $today } | ForEach-Object { $_.matches }).Count -gt 0) -and $hourLocal -ge 5   # fudbal je u data.days
 if (-not $canLock) { Write-Host "Tracker: danasnji tipovi i tiket se NE zakljucavaju (nema fudbala ili je prije 5h)" }
 $results = @{}
 if (Test-Path $resFile) { (Get-Content -Raw -Encoding UTF8 $resFile | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $results[$_.Name] = $_.Value } }
