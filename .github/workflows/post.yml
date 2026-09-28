@@ -1,0 +1,35 @@
+name: Tips of the Day - Facebook objave
+
+on:
+  schedule:
+    - cron: '5,35 4-20 * * *'   # svakih 30 min, 06:05-22:35 po nasem (ljeti)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fb-post
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Objavi zakazane objave
+        shell: pwsh
+        env:
+          MAKE_WEBHOOK: ${{ secrets.MAKE_WEBHOOK }}
+        run: ./post.ps1
+      - name: Sacuvaj stanje objava
+        shell: bash
+        run: |
+          git config user.name "tips-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cache/posted.json
+          if ! git diff --cached --quiet; then
+            git commit -m "FB objave $(date +%F)"
+            for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          fi

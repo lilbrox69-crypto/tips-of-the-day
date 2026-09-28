@@ -36,6 +36,11 @@ jobs:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: .\update.ps1
 
+      - name: Kartice i raspored za Facebook objave
+        shell: powershell
+        continue-on-error: true
+        run: .\social.ps1
+
       - name: Sacuvaj kes (istorija, pogoci, rezultati)
         shell: powershell
         run: |
@@ -51,6 +56,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force site | Out-Null
           Copy-Item index.html, analitika.html, data.json, logos.json, history.json, analytics.json, manifest.webmanifest, sw.js, icon-192.png, icon-512.png, apple-touch-icon.png site
+          if (Test-Path social) { Copy-Item social site -Recurse -Force }
 
       - uses: actions/upload-pages-artifact@v3
         with:

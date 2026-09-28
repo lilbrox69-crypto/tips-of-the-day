@@ -13,3 +13,7 @@ site/
 shadow_af.json
 shadow_bb.json
 analytics.json
+
+# FB kartice - generisu se svaki dan
+social/20*/
+social/posts.json
