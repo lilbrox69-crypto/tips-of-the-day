@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v:202609281912 -->
+<!-- v:202609281924 -->
 <html lang="bs">
 <meta charset="utf-8">
 <script>if(location.protocol==='http:'&&location.hostname.indexOf('tipsoftheday.win')>=0)location.replace('https://'+location.host+location.pathname+location.search+location.hash);</script>
@@ -924,7 +924,8 @@ function renderResDay(d){
   if (d.t) html += `<div class="rs-tk"><div class="hd"><span>🎫 ${tkw(0)} ${stIcon(d.t.r)}</span><b>${Number(d.t.odd).toFixed(2)}</b></div>${d.t.legs.map(row).join('')}</div>`;
   const groups = {};
   (d.k || []).forEach(k => { const g = k.s + '|' + k.m; (groups[g] = groups[g] || []).push(k); });
-  const keys = Object.keys(groups);
+  const sOrd = s => s.startsWith('football|') ? 0 : 1;   // prvo fudbal, pa kosarka
+  const keys = Object.keys(groups).sort((a, b) => sOrd(a) - sOrd(b));
   if (keys.length) {
     html += `<h2 class="rs-h">${rsx(8)}</h2>`;
     html += keys.map(g => { const [s, m] = g.split('|'); const sp = SPORTS.find(x => x.k === s);

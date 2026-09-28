@@ -92,7 +92,10 @@ foreach ($p in $picks) {
   $r = $results[$p.key]
   $v = if ($r) { Judge $p.sport $p.mk $r } else { $null }
   if ($v -ne $null) { $p.hit = [bool]$v }
-  elseif (([datetime]::ParseExact($p.date, 'yyyy-MM-dd', $null)) -lt $todayD.AddDays(-10)) { $p.hit = 'void' }   # rezultat nikad nije stigao (odgodjeno i sl.)
+  # utakmica zavrsena, ali liga nikad ne posalje kornere/kartone -> ne moze se ocijeniti, ne prikazuje se kao "ceka se"
+  elseif ($r -and $p.mk -in 'c8', 'y3' -and $hourLocal -ge 5) { $p.hit = 'void' }
+  # rezultat nije stigao ni 2 dana poslije (odgodjeno, prekinuto i sl.)
+  elseif (([datetime]::ParseExact($p.date, 'yyyy-MM-dd', $null)) -lt $todayD.AddDays(-1)) { $p.hit = 'void' }
 }
 
 # 2b) Tiket dana: 3 najsigurnija tipa sa kvotom (razlicite utakmice, kvota bar 1.20, procenat bar 65)
@@ -160,7 +163,8 @@ function HitVal($v) { if ($v -is [bool]) { return [int]$v } ; return $null }   #
 $hdays = New-Object System.Collections.ArrayList
 for ($i = 0; $i -le 30; $i++) {
   $ds = $todayD.AddDays(-$i).ToString('yyyy-MM-dd')
-  $dp = @($keep | Where-Object { $_.date -eq $ds -and $_.v -ne 'm' })
+  # prvo fudbal pa kosarka; poniste (void) utakmice se ne prikazuju
+  $dp = @($keep | Where-Object { $_.date -eq $ds -and $_.v -ne 'm' -and -not ($_.hit -is [string] -and $_.hit -eq 'void') } | Sort-Object @{ e = { if ($_.sport -eq 'football') { 0 } else { 1 } } })
   $tk = @($tickets | Where-Object { $_.date -eq $ds })[0]
   if (-not $dp.Count -and -not $tk) { continue }
   $day = [ordered]@{ date = $ds }
