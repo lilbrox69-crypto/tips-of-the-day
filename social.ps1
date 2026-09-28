@@ -123,9 +123,21 @@ function Top($list, $sport, $mks, $after, $n = 3, $minO = 0) {
 }
 function Pct($x) { "$([int]$x.p)%" }
 function Line($x) { "⚽ $($x.home) – $($x.away) ($($x.time)) · $($x.mk) · $([int]$x.p)%" + $(if ($x.o) { " · kvota $(('{0:0.00}' -f [double]$x.o).Replace(',', '.'))" } else { '' }) }
-$TAG = "`n`n👉 Svi tipovi dana: tipsoftheday.win`nStatistika, ne garancija · 18+ · igraj odgovorno`n#tiketdana #tipovi #fudbal #kosarka"
+$TAG = ''   # zavrsni dio (link, pitanje, 18+) dodaje AddPost
 $posts = New-Object System.Collections.ArrayList; $n = 0
-function AddPost($t, $kind, $img, $text) { [void]$posts.Add([ordered]@{ t = $t; kind = $kind; image = $img; text = $text }) }
+$NM = $fb.Count + $bb.Count
+# pitanje na kraju objave -> komentari -> Facebook objavu pokaze vecem broju ljudi
+$Q = @{ results = 'Jesi li igrao jučerašnji tiket? Pohvali se u komentaru 👇'; ticket = 'Igraš li današnji tiket? Napiši "IGRAM" u komentar 👇'
+        match = 'Šta ti kažeš – prolazi ili ne? 👇'; stats = 'Koliko tvoj tipster pogađa? 😉 Napiši u komentar 👇'; evening = 'Koju utakmicu večeras gledaš? 👇' }
+function AddPost($t, $kind, $img, $text) {
+  # 1. red = udica, 2. red = link (Facebook skrati tekst poslije 2-3 reda, link mora biti gore)
+  $lines = ([string]$text).Split("`n"); $hook = $lines[0]; $body = (($lines | Select-Object -Skip 1) -join "`n").Trim()
+  $cta = if ($kind -eq 'results') { '👉 Današnji tiket i svi tipovi: tipsoftheday.win' } else { '👉 Svi tipovi dana besplatno: tipsoftheday.win' }
+  $more = if ($NM -gt 20 -and $kind -notin 'results', 'stats') { "`n`n🔎 Danas smo analizirali $NM utakmica – ovdje su samo najbolji. Ostale opcije (golovi, korneri, kartoni, pobjede, košarka) čekaju te na stranici." } else { '' }
+  $q = if ($Q[$kind]) { $Q[$kind] } else { 'Koji od ova 3 bi ti stavio na tiket? 👇' }
+  $final = "$hook`n$cta`n`n$body$more`n`n💬 $q`n`n🔔 Zaprati stranicu – tiket dana stiže svako jutro u 7h.`nStatistika, ne garancija · 18+ · igraj odgovorno`n#tiketdana #tipovi #fudbal #kosarka #tipsoftheday"
+  [void]$posts.Add([ordered]@{ t = $t; kind = $kind; image = $img; text = $final })
+}
 
 # 1) 06:30 rezultati juče
 $yd = ([datetime]::ParseExact($today, 'yyyy-MM-dd', $null)).AddDays(-1).ToString('yyyy-MM-dd')
