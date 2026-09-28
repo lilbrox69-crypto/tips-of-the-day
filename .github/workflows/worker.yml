@@ -20,7 +20,11 @@ jobs:
           set -e
           if [ -z "$CF_API_TOKEN" ]; then echo "Nema CF_API_TOKEN secreta"; exit 1; fi
           API="https://api.cloudflare.com/client/v4/accounts/$ACC/workers/scripts/totd-live"
-          echo '{"main_module":"live.js","compatibility_date":"2026-09-01"}' > meta.json
+          KVAPI="https://api.cloudflare.com/client/v4/accounts/$ACC/storage/kv/namespaces"
+          NS=$(curl -s -H "Authorization: Bearer $CF_API_TOKEN" "$KVAPI?per_page=100" | jq -r '.result[]? | select(.title=="totd-liga") | .id')
+          if [ -z "$NS" ]; then NS=$(curl -s -X POST "$KVAPI" -H "Authorization: Bearer $CF_API_TOKEN" -H "Content-Type: application/json" --data '{"title":"totd-liga"}' | jq -r '.result.id'); fi
+          echo "KV liga: ${NS:0:6}..."
+          jq -n --arg ns "$NS" '{main_module:"live.js",compatibility_date:"2026-09-01",bindings:[{type:"kv_namespace",name:"LIGA",namespace_id:$ns}],keep_bindings:["secret_text"]}' > meta.json
           curl -sf -X PUT "$API" -H "Authorization: Bearer $CF_API_TOKEN" \
             -F "metadata=@meta.json;type=application/json" \
             -F "live.js=@worker/live.js;type=application/javascript+module" | jq '.success'
