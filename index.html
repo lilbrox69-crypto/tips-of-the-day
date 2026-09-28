@@ -164,6 +164,14 @@ body[data-m="w2"]  .decor{--pat:repeating-linear-gradient(-60deg, rgba(255,255,2
 .instbtn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media (max-width:380px){.instbtn .it{display:none}}
 .in-app{width:72px;height:72px;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+/* rezultati uzivo */
+.lv:empty{display:none}
+.lv{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:9px;font:800 12px var(--body);letter-spacing:.02em;background:rgba(255,255,255,.14);color:var(--ink);vertical-align:1px}
+.lv.run{background:rgba(255,80,80,.2);color:#ff8a8a}
+.lv.run::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff5b5b;margin-right:5px;vertical-align:1px;animation:lvp 1.2s infinite}
+.lv.ok{background:rgba(61,214,140,.25);color:var(--green)}
+.lv.no{background:rgba(255,107,107,.22);color:#ff8a8a}
+@keyframes lvp{50%{opacity:.25}}
 .in-ol{list-style:none;margin:4px 0 16px;padding:0;text-align:left;display:grid;gap:10px}
 .in-ol li{display:flex;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.05);font-size:15.5px;line-height:1.35}
 .in-ol li span{flex:0 0 28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#0B1A12;font:800 17px var(--display)}
@@ -846,6 +854,53 @@ const staleReload = () => { if (document.visibilityState === 'visible' && Date.n
 document.addEventListener('visibilitychange', staleReload);
 window.addEventListener('pageshow', e => { if (e.persisted) staleReload(); });
 
+/* ---------- rezultati uzivo (Cloudflare Worker, osvjezava se svake minute) ---------- */
+const LIVE_URL = 'https://totd-live.lilbrox69.workers.dev/';
+const LIVE_TX = { bs:['KRAJ','POL','odgođeno'], en:['FT','HT','postponed'], de:['ENDE','HZ','verlegt'], it:['FINE','INT','rinviata'], es:['FIN','DES','aplazado'], fr:['FIN','MT','reporté'], pt:['FIM','INT','adiado'], tr:['BİTTİ','İY','ertelendi'], sq:['FUND','PJ','shtyrë'], pl:['KONIEC','PRZ','przełożony'], ro:['FINAL','PAUZĂ','amânat'], el:['ΤΕΛΟΣ','ΗΜ','αναβλήθηκε'], ru:['КОНЕЦ','ПЕР','перенесён'], nl:['EINDE','RUST','uitgesteld'], ar:['نهاية','استراحة','مؤجل'] };
+function lvx(i){ return (LIVE_TX[LANG] || LIVE_TX.bs.map(loc))[i]; }
+let LIVE = null;
+const FIN_F = ['FT','AET','PEN'], FIN_B = ['FT','AOT'], OFF = ['PST','CANC','ABD','SUSP','AWD','WO'];
+// 1 = proslo, 0 = palo, null = jos se ne zna (neke opcije se odluce i prije kraja)
+function liveJudge(sp, mk, x){
+  const h = +x.h || 0, a = +x.a || 0, t = h + a;
+  if (sp === 'basketball') {
+    const fin = FIN_B.includes(x.s);
+    const early = { o220: t >= 221, h110: h >= 110, o160: t >= 161, h80: h >= 80 }[mk];
+    if (early) return 1;
+    if ((mk === 'u220' && t >= 221) || (mk === 'u160' && t >= 161)) return 0;
+    if (!fin) return null;
+    const r = { w1: h > a, w2: a > h, o220: t >= 221, u220: t <= 220, m10: Math.abs(h - a) >= 10, h110: h >= 110, o160: t >= 161, u160: t <= 160, h80: h >= 80 }[mk];
+    return r === undefined ? null : (r ? 1 : 0);
+  }
+  const fin = FIN_F.includes(x.s);
+  const early = { gg: h > 0 && a > 0, o15: t >= 2, o25: t >= 3, hs: h > 0, as: a > 0 }[mk];
+  if (early) return 1;
+  if (mk === 'u25' && t >= 3) return 0;
+  if (!fin) return null;
+  const r = { gg: h > 0 && a > 0, o15: t >= 2, o25: t >= 3, u25: t <= 2, hs: h > 0, as: a > 0, w1: h > a, x: h === a, w2: a > h }[mk];
+  return r === undefined ? null : (r ? 1 : 0);
+}
+function applyLive(){
+  if (!LIVE || LIVE.d !== TODAY) return;
+  document.querySelectorAll('[data-live]').forEach(el => {
+    const id = el.dataset.live, sp = el.dataset.sp || (id.startsWith('bb') ? 'basketball' : 'football');
+    const x = (sp === 'basketball' ? LIVE.b : LIVE.f)[id], b = el.querySelector('.lv'); if (!b) return;
+    if (!x) { b.textContent = ''; b.className = 'lv'; return; }
+    const sc = `${x.h ?? 0}:${x.a ?? 0}`;
+    if (OFF.includes(x.s)) { b.textContent = lvx(2); b.className = 'lv'; return; }
+    const fin = (sp === 'basketball' ? FIN_B : FIN_F).includes(x.s), r = liveJudge(sp, el.dataset.mk, x);
+    const clock = fin ? lvx(0) : x.s === 'HT' ? lvx(1) : (sp === 'football' && x.m ? x.m + "'" : x.s);
+    b.textContent = (r === 1 ? '✅ ' : r === 0 ? '❌ ' : '') + `${clock} ${sc}`;
+    b.className = 'lv ' + (r === 1 ? 'ok' : r === 0 ? 'no' : fin ? '' : 'run');
+  });
+}
+async function pollLive(){
+  if (document.visibilityState !== 'visible' || !TODAY) return;
+  try { const r = await fetch(LIVE_URL, { cache: 'no-store' }); if (r.ok) { LIVE = await r.json(); applyLive(); } } catch(e) {}
+}
+setInterval(pollLive, 60 * 1000); setInterval(applyLive, 3000);
+setTimeout(pollLive, 2500); document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') pollLive(); });
+
 /* ---------- stranica Rezultati (#rezultati) ---------- */
 const RES = {
   bs:['Rezultati','Kako su prošli naši tipovi','Tiketi','Tipovi','Ulog 10 po tiketu','čeka se','Još nema rezultata za ovaj dan — provjeravaju se svako jutro.','Zadnjih 30 dana','Top 3 po opciji'],
@@ -958,7 +1013,7 @@ function renderTicketView(){
           <span class="lg-t"><span class="tm">${crest(l.hl, l.home)}${esc(l.home)}</span><span class="vs">${L().vs}</span><span class="tm">${crest(l.al, l.away)}${esc(l.away)}</span></span>
           <span class="lg-o"><b>${Number(l.o).toFixed(2)}</b><small>${l.p}%</small></span>
           <span class="lg-mk">${esc(mtFor(l.sport, l.mk))}</span>
-          <span class="lg-meta">${esc(lg(l.league))} · ${l.time}</span>
+          <span class="lg-meta" data-live="${esc(String(l.key || '').split(':')[1] || '')}" data-mk="${l.mk}" data-sp="${l.sport}">${esc(lg(l.league))} · ${l.time}<b class="lv"></b></span>
           <span class="lg-bar"><i style="width:${l.p}%"></i></span></div>`).join('')}</div>
       <div class="perf"><i class="l"></i><i class="r"></i></div>
       <div class="sl-sum"><div class="sum-l"><small>${tkx(0)}</small><b>${t.odd.toFixed(2)}</b></div>
@@ -1227,7 +1282,7 @@ function build(){
             <span class="rank">${i+1}</span>
             <span class="teams"><span class="tm">${crest(g.hl, g.home)}${esc(g.home)}</span><span class="vs">${L().vs}</span><span class="tm">${crest(g.al, g.away)}${esc(g.away)}</span></span>
             <span class="pctw"><span class="pct">${g.p[mk.k]}<i>%</i></span>${oddTag(g, mk.k)}</span>
-            <span class="meta">${esc(lg(g.league))} · ${g.time}</span>
+            <span class="meta" data-live="${esc(g.id)}" data-mk="${mk.k}">${esc(lg(g.league))} · ${g.time}<b class="lv"></b></span>
             <span class="bar"><b style="width:${g.p[mk.k]}%"></b></span>
             <span class="why">${trWhy(why(mk.k, g))}</span>
           </button>`).join('') : `<div class="empty">${L().none}</div>`}</div>
