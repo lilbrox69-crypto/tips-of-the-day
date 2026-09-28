@@ -102,7 +102,7 @@ foreach ($p in $picks) {
 $legs = New-Object System.Collections.ArrayList
 foreach ($sport in $lists.Keys) { foreach ($m in @($lists[$sport] | Where-Object { $_ -and $_.o })) {
   foreach ($pr in $m.p.PSObject.Properties) { $q = $m.o.($pr.Name)
-    if ($q -and [double]$q -ge 1.15 -and $pr.Value -ne $null -and $pr.Value -ge 75 -and (100 / [double]$q * 0.95) -ge 60) {   # kandidati: nas procenat >= 75 i kladionice >= ~63%; najsigurniji se biraju po score-u
+    if ($q -and [string]$m.time -ge '09:00' -and [double]$q -ge 1.15 -and $pr.Value -ne $null -and $pr.Value -ge 75 -and (100 / [double]$q * 0.95) -ge 60) {   # kandidati: nas procenat >= 75 i kladionice >= ~63%; najsigurniji se biraju po score-u
       [void]$legs.Add([pscustomobject]@{ sport = $sport; mk = $pr.Name; key = "${sport}:$($m.id)"; home = $m.home; away = $m.away; hl = $m.hl; al = $m.al; league = $m.league; time = $m.time; p = [int]$pr.Value; o = [double]$q }) } } } }
 $ticket = New-Object System.Collections.ArrayList; $used = @{}
 # najpametniji izbor iz SVIH opcija i sportova: sigurnost = manji od (nas procenat, procenat iz kvote bez marze),

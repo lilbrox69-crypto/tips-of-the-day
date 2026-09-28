@@ -137,7 +137,7 @@ function AddPost($t, $kind, $img, $text) {
   $q = if ($Q[$kind]) { $Q[$kind] } else { 'Koji od ova 3 bi ti stavio na tiket? 👇' }
   # u pola objava jasno kazemo da je sve besplatno (bez VIP grupa i placanja - za razliku od konkurencije)
   $free = if ($kind -in 'results', 'ticket', 'stats', 'evening', 'OBA DAJU GOL', 'KOŠARKA DANA') { "`n`n💯 Tips of the Day je POTPUNO BESPLATAN – bez registracije, bez VIP grupa, bez plaćanja. Samo uđi na https://tipsoftheday.win i sve je tu." } else { '' }
-  $final = "$hook`n$cta`n`n$body$more$free`n`n💬 $q`n`n🔔 Zaprati stranicu – tiket dana stiže svako jutro u 7h.`nStatistika, ne garancija · 18+ · igraj odgovorno`n#tiketdana #tipovi #fudbal #kosarka #tipsoftheday"
+  $final = "$hook`n$cta`n`n$body$more$free`n`n💬 $q`n`n🔔 Zaprati stranicu – tiket dana stiže svako jutro u 8h.`nStatistika, ne garancija · 18+ · igraj odgovorno`n#tiketdana #tipovi #fudbal #kosarka #tipsoftheday"
   # tiket i rezultati idu kao VIDEO (Reels) ako ga je video.ps1 napravio; slika ostaje rezerva
   $vid = ''; if ($kind -in 'ticket', 'results' -and (Test-Path (Join-Path $outDir "$kind.mp4"))) { $vid = "$SITE/social/$today/$kind.mp4?v=$today" }
   [void]$posts.Add([ordered]@{ t = $t; kind = $kind; image = $img; video = $vid; text = $final })
@@ -160,7 +160,7 @@ if ($yh -and $yh.t -and $yh.t.r -ne $null) {
   Footer $g; $img = Save $cv $n
   $lines = ($legs | ForEach-Object { "$(if ([int]$_.r -eq 1) { '✅' } else { '❌' }) $($_.h) – $($_.a) · $(MkName $_.s $_.m) · $($_.sc)" }) -join "`n"
   $head = if ($ok) { "✅✅ TIKET DANA JE PROŠAO! Kvota $(('{0:0.00}' -f [double]$yh.t.odd).Replace(',', '.')) 🎉" } else { "❌ Jučerašnji tiket dana (kvota $(('{0:0.00}' -f [double]$yh.t.odd).Replace(',', '.'))) nije prošao." }
-  AddPost '06:30' 'results' $img ("$head`n`n$lines`n`n📊 Svi jučerašnji tipovi: $kh/$($kk.Count) pogođeno. Objavljujemo sve rezultate — i pogođene i promašene.$TAG")
+  AddPost '08:00' 'results' $img ("$head`n`n$lines`n`n📊 Svi jučerašnji tipovi: $kh/$($kk.Count) pogođeno. Objavljujemo sve rezultate — i pogođene i promašene.$TAG")
 }
 
 # 2) 07:00 tiket dana
@@ -175,11 +175,11 @@ if ($data.ticket -and @($data.ticket.legs).Count) {
   $g.DrawString(('{0:0.00}' -f [double]$t.odd).Replace(',', '.'), (F 80 'Bold' 'Arial Black'), (B $C.gold), (New-Object System.Drawing.RectangleF 500, ($y + 10), 510, 110), $sf)
   Footer $g; $img = Save $cv $n
   $lines = ($legs | ForEach-Object { "$(if ($_.sport -eq 'basketball') { '🏀' } else { '⚽' }) $($_.home) – $($_.away) ($($_.time))`n   ➜ $(MkName $_.sport $_.mk) @ $(('{0:0.00}' -f [double]$_.o).Replace(',', '.'))" }) -join "`n"
-  AddPost '07:00' 'ticket' $img ("🎫 TIKET DANA · ukupna kvota $(('{0:0.00}' -f [double]$t.odd).Replace(',', '.'))`n`n$lines`n`nOdabrano statistikom iz svih liga svijeta: forma, međusobni susreti, povrede i kvote. Rezultat objavljujemo sutra ujutro, prošao ili ne. 🍀$TAG")
+  AddPost '08:30' 'ticket' $img ("🎫 TIKET DANA · ukupna kvota $(('{0:0.00}' -f [double]$t.odd).Replace(',', '.'))`n`n$lines`n`nOdabrano statistikom iz svih liga svijeta: forma, međusobni susreti, povrede i kvote. Rezultat objavljujemo sutra ujutro, prošao ili ne. 🍀$TAG")
 }
 
 # 3) 08:30 utakmica dana (najsigurniji tip sa kvotom)
-$best = @(Top $fb 'football' @('o15','gg','o25','w1','w2','hs','as') '09:00' 1 1.15)
+$best = @(Top $fb 'football' @('o15','gg','o25','w1','w2','hs','as') '10:00' 1 1.15)
 if ($best.Count) {
   $x = $best[0]; $m = $x.m; $n++; $cv = Canvas @(16,60,90)
   Title $cv.g 'UTAKMICA DANA' "$($x.league)" $C.gold
@@ -193,12 +193,12 @@ if ($best.Count) {
   if ($m.xg) { $facts += "Očekivani golovi (xG): $($m.xg[0]) – $($m.xg[1])" }
   foreach ($f in $facts | Select-Object -First 5) { $g.FillEllipse((B $C.green), 64, ($y + 16), 18, 18); $g.DrawString((Fit $g $f (F 34 'Regular') 900), (F 34 'Regular'), (B $C.white), 100, $y); $y += 70 }
   Footer $g; $img = Save $cv $n
-  AddPost '08:30' 'match' $img ("⭐ UTAKMICA DANA`n`n⚽ $($x.home) – $($x.away) ($($x.time), $($x.league))`n➜ $($x.mk): $([int]$x.p)% šanse" + $(if ($x.o) { " · kvota $(('{0:0.00}' -f [double]$x.o).Replace(',', '.'))" } else { '' }) + "`n`n📊 " + ($facts -join "`n📊 ") + $TAG)
+  AddPost '09:30' 'match' $img ("⭐ UTAKMICA DANA`n`n⚽ $($x.home) – $($x.away) ($($x.time), $($x.league))`n➜ $($x.mk): $([int]$x.p)% šanse" + $(if ($x.o) { " · kvota $(('{0:0.00}' -f [double]$x.o).Replace(',', '.'))" } else { '' }) + "`n`n📊 " + ($facts -join "`n📊 ") + $TAG)
 }
 
 # 4..) top 3 po opciji - svaka u svoje vrijeme, samo utakmice koje još nisu počele
 $slots = @(
-  @{ t='10:00'; s='football'; mks=@('gg');  title='OBA DAJU GOL'; hue=@(18,84,52); emo='⚽⚽' }
+  @{ t='10:30'; s='football'; mks=@('gg');  title='OBA DAJU GOL'; hue=@(18,84,52); emo='⚽⚽' }
   @{ t='11:30'; s='football'; mks=@('o25'); title='VIŠE OD 2.5'; hue=@(92,40,20); emo='🔥' }
   @{ t='13:00'; s='football'; mks=@('w1','w2'); title='POBJEDE DANA'; hue=@(40,40,100); emo='🏆' }
   @{ t='14:30'; s='football'; mks=@('o15'); title='2+ GOLA'; hue=@(20,80,80); emo='🎯' }
