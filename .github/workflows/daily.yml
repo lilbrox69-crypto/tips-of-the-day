@@ -36,6 +36,13 @@ jobs:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: .\update.ps1
 
+      - name: Video za Reels (tiket dana i rezultati)
+        shell: powershell
+        continue-on-error: true
+        run: |
+          if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) { choco install ffmpeg -y --no-progress | Out-Null; $env:Path += ';C:\ProgramData\chocolatey\bin' }
+          .\video.ps1
+
       - name: Kartice i raspored za Facebook objave
         shell: powershell
         continue-on-error: true

@@ -17,7 +17,7 @@ foreach ($p in @($sched.posts)) {
   if ($done -contains $p.t -or $p.t -gt $hm) { continue }
   if ($p.t -lt $late) { $done += $p.t; Write-Host "Preskacem zakasnjelu $($p.t) $($p.kind)"; continue }
   if ($sent -ge 2) { break }
-  $body = @{ image = $p.image; text = $p.text; kind = $p.kind } | ConvertTo-Json -Compress
+  $body = @{ image = $p.image; video = [string]$p.video; text = $p.text; kind = $p.kind } | ConvertTo-Json -Compress
   Invoke-RestMethod -Method Post -Uri $env:MAKE_WEBHOOK -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body)) | Out-Null
   Write-Host "Objavljeno $($p.t) $($p.kind)"; $done += $p.t; $sent++
   Start-Sleep -Seconds 20
