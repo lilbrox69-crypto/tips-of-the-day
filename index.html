@@ -858,7 +858,7 @@ window.addEventListener('pageshow', e => { if (e.persisted) staleReload(); });
 const LIVE_URL = 'https://totd-live.lilbrox69.workers.dev/';
 const LIVE_TX = { bs:['KRAJ','POL','odgođeno'], en:['FT','HT','postponed'], de:['ENDE','HZ','verlegt'], it:['FINE','INT','rinviata'], es:['FIN','DES','aplazado'], fr:['FIN','MT','reporté'], pt:['FIM','INT','adiado'], tr:['BİTTİ','İY','ertelendi'], sq:['FUND','PJ','shtyrë'], pl:['KONIEC','PRZ','przełożony'], ro:['FINAL','PAUZĂ','amânat'], el:['ΤΕΛΟΣ','ΗΜ','αναβλήθηκε'], ru:['КОНЕЦ','ПЕР','перенесён'], nl:['EINDE','RUST','uitgesteld'], ar:['نهاية','استراحة','مؤجل'] };
 function lvx(i){ return (LIVE_TX[LANG] || LIVE_TX.bs.map(loc))[i]; }
-let LIVE = null;
+let LIVE = null; const STATS = {}, NEED_ST = new Set();
 const FIN_F = ['FT','AET','PEN'], FIN_B = ['FT','AOT'], OFF = ['PST','CANC','ABD','SUSP','AWD','WO'];
 // 1 = proslo, 0 = palo, null = jos se ne zna (neke opcije se odluce i prije kraja)
 function liveJudge(sp, mk, x){
@@ -888,7 +888,14 @@ function applyLive(){
     if (!x) { b.textContent = ''; b.className = 'lv'; return; }
     const sc = `${x.h ?? 0}:${x.a ?? 0}`;
     if (OFF.includes(x.s)) { b.textContent = lvx(2); b.className = 'lv'; return; }
-    const fin = (sp === 'basketball' ? FIN_B : FIN_F).includes(x.s), r = liveJudge(sp, el.dataset.mk, x);
+    const fin = (sp === 'basketball' ? FIN_B : FIN_F).includes(x.s);
+    let r = liveJudge(sp, el.dataset.mk, x);
+    // korneri / kartoni: ocjena cim utakmica zavrsi (statistiku donosi posrednik)
+    if (fin && sp === 'football' && (el.dataset.mk === 'c8' || el.dataset.mk === 'y3')) {
+      const s = STATS[id];
+      if (!s) NEED_ST.add(id);
+      else if (!s.none) r = el.dataset.mk === 'c8' ? ((s.hc + s.ac) >= 8 ? 1 : 0) : ((s.hy + s.ay) >= 3 ? 1 : 0);
+    }
     const clock = fin ? lvx(0) : x.s === 'HT' ? lvx(1) : (sp === 'football' && x.m ? x.m + "'" : x.s);
     b.textContent = (r === 1 ? '✅ ' : r === 0 ? '❌ ' : '') + `${clock} ${sc}`;
     b.className = 'lv ' + (r === 1 ? 'ok' : r === 0 ? 'no' : fin ? '' : 'run');
@@ -898,6 +905,10 @@ async function pollLive(){
   if (!TODAY) { setTimeout(pollLive, 1500); return; }   // podaci stranice jos nisu ucitani
   if (document.visibilityState !== 'visible') return;
   try { const r = await fetch(LIVE_URL, { cache: 'no-store' }); if (r.ok) { LIVE = await r.json(); applyLive(); } } catch(e) {}
+  const ids = [...NEED_ST].filter(i => !STATS[i]).slice(0, 20);
+  if (ids.length) {
+    try { const r = await fetch(LIVE_URL + 'stats?ids=' + ids.join(','), { cache: 'no-store' }); if (r.ok) { Object.assign(STATS, await r.json()); NEED_ST.clear(); applyLive(); } } catch(e) {}
+  }
 }
 setInterval(pollLive, 60 * 1000); setInterval(applyLive, 3000);
 setTimeout(pollLive, 2500); document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') pollLive(); });

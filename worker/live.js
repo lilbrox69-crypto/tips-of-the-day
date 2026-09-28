@@ -11,6 +11,29 @@ function todaySarajevo() {
 export default {
   async fetch(req, env, ctx) {
     const cache = caches.default;
+    const url = new URL(req.url);
+    // /stats?ids=af1,af2 -> korneri i zuti kartoni za zavrsene utakmice (kes 1 dan po utakmici)
+    if (url.pathname === '/stats') {
+      const ids = (url.searchParams.get('ids') || '').split(',').filter(x => /^af\d+$/.test(x)).slice(0, 20);
+      const res = {}, miss = [];
+      for (const id of ids) { const c = await cache.match(new Request('https://totd-live.cache/st/' + id)); if (c) res[id] = await c.json(); else miss.push(id); }
+      if (miss.length && env.API_KEY) {
+        try {
+          const r = await fetch('https://v3.football.api-sports.io/fixtures?ids=' + miss.map(x => x.slice(2)).join('-'), { headers: { 'x-apisports-key': env.API_KEY } });
+          const j = await r.json();
+          for (const f of (j.response || [])) {
+            const id = 'af' + f.fixture.id;
+            if (!['FT', 'AET', 'PEN'].includes(f.fixture.status.short)) continue;
+            const st = (tid, type) => { const s = (f.statistics || []).find(z => z.team.id === tid); const v = s && (s.statistics.find(q => q.type === type) || {}).value; return v == null ? null : Number(v); };
+            const hc = st(f.teams.home.id, 'Corner Kicks'), ac = st(f.teams.away.id, 'Corner Kicks');
+            const e = (hc != null && ac != null && hc + ac > 0) ? { hc, ac, hy: st(f.teams.home.id, 'Yellow Cards') || 0, ay: st(f.teams.away.id, 'Yellow Cards') || 0 } : { none: 1 };
+            res[id] = e;
+            ctx.waitUntil(cache.put(new Request('https://totd-live.cache/st/' + id), new Response(JSON.stringify(e), { headers: { 'Cache-Control': 'max-age=' + (e.none ? 1800 : 86400) } })));
+          }
+        } catch (e) {}
+      }
+      return new Response(JSON.stringify(res), { headers: { ...CORS, 'Cache-Control': 'public, max-age=60' } });
+    }
     const ck = new Request('https://totd-live.cache/v2');
     const hit = await cache.match(ck);
     if (hit) return new Response(hit.body, { headers: { ...CORS, 'Cache-Control': 'public, max-age=60' } });
