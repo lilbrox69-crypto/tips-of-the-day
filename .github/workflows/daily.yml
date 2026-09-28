@@ -64,6 +64,7 @@ jobs:
           New-Item -ItemType Directory -Force site | Out-Null
           Copy-Item index.html, analitika.html, data.json, logos.json, history.json, analytics.json, manifest.webmanifest, sw.js, icon-192.png, icon-512.png, apple-touch-icon.png site
           if (Test-Path social) { Copy-Item social site -Recurse -Force }
+          try { .\seo.ps1; Copy-Item seo_out\* site -Recurse -Force } catch { Write-Host "SEO preskocen: $($_.Exception.Message)" }
 
       - uses: actions/upload-pages-artifact@v3
         with:

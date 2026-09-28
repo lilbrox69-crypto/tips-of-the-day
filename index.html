@@ -4,7 +4,33 @@
 <meta charset="utf-8">
 <script>if(location.protocol==='http:'&&location.hostname.indexOf('tipsoftheday.win')>=0)location.replace('https://'+location.host+location.pathname+location.search+location.hash);</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Tips of the Day – 3 najsigurnija tipa dana po opciji: statistička analiza forme, međusobnih susreta i kvota. Fudbal, košarka, hokej, rukomet i više.">
+<meta name="description" content="Besplatan tiket dana i top 3 tipa po opciji, izračunati statistikom forme, međusobnih susreta i kvota. Fudbal i košarka, svako jutro – na 17 jezika.">
+<link rel="canonical" href="https://tipsoftheday.win/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tips of the Day">
+<meta property="og:title" content="Tiket dana i fudbalski tipovi za danas – statistička analiza">
+<meta property="og:description" content="Besplatan tiket dana i top 3 tipa po opciji. Statistika, ne garancija · 18+">
+<meta property="og:image" content="https://tipsoftheday.win/og.png">
+<meta property="og:url" content="https://tipsoftheday.win/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="bs" href="https://tipsoftheday.win/tiket-dana/">
+<link rel="alternate" hreflang="hr" href="https://tipsoftheday.win/hr/">
+<link rel="alternate" hreflang="sr" href="https://tipsoftheday.win/sr/">
+<link rel="alternate" hreflang="en" href="https://tipsoftheday.win/en/">
+<link rel="alternate" hreflang="de" href="https://tipsoftheday.win/de/">
+<link rel="alternate" hreflang="it" href="https://tipsoftheday.win/it/">
+<link rel="alternate" hreflang="es" href="https://tipsoftheday.win/es/">
+<link rel="alternate" hreflang="fr" href="https://tipsoftheday.win/fr/">
+<link rel="alternate" hreflang="pt" href="https://tipsoftheday.win/pt/">
+<link rel="alternate" hreflang="tr" href="https://tipsoftheday.win/tr/">
+<link rel="alternate" hreflang="sq" href="https://tipsoftheday.win/sq/">
+<link rel="alternate" hreflang="pl" href="https://tipsoftheday.win/pl/">
+<link rel="alternate" hreflang="ro" href="https://tipsoftheday.win/ro/">
+<link rel="alternate" hreflang="el" href="https://tipsoftheday.win/el/">
+<link rel="alternate" hreflang="ru" href="https://tipsoftheday.win/ru/">
+<link rel="alternate" hreflang="nl" href="https://tipsoftheday.win/nl/">
+<link rel="alternate" hreflang="ar" href="https://tipsoftheday.win/ar/">
+<link rel="alternate" hreflang="x-default" href="https://tipsoftheday.win/">
 <meta name="theme-color" content="#0f2a1c">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -12,7 +38,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Tips of Day">
-<title>Tips of the Day</title>
+<title>Tiket dana i fudbalski tipovi za danas – statistička analiza | Tips of the Day</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap">
@@ -367,6 +393,7 @@ button{-webkit-touch-callout:none;touch-action:manipulation}
 <section class="tview" id="rview" hidden role="dialog" aria-modal="true"></section>
 <section class="tview" id="tview" hidden role="dialog" aria-modal="true"></section>
 <script>
+var HOME_TITLE = document.title;   // naslov za Google (iz <title>), vraca se kad se zatvori tiket/rezultati
 const FOOTBALL = [
   {k:'gg',  t:'Oba daju gol', s:'GG', d:'I domaćin i gost postižu bar jedan gol.', h:150},
   {k:'o15', t:'Više od 1.5', s:'2+', d:'Na utakmici padnu bar 2 gola.', h:205},
@@ -1048,7 +1075,7 @@ function route(){
   const wantR = h === '#rezultati' && DATA;
   if (wantT) { renderTicketView(); v.hidden = false; v.scrollTop = 0; document.title = tkw(0) + ' · Tips of the Day'; } else v.hidden = true;
   if (wantR) { renderResults(); r.hidden = false; r.scrollTop = 0; document.title = rsx(0) + ' · Tips of the Day'; } else r.hidden = true;
-  if (!wantT && !wantR) { document.title = 'Tips of the Day'; if (h === '#tiket' && DATA) history.replaceState(null, '', location.pathname); }
+  if (!wantT && !wantR) { document.title = HOME_TITLE; if (h === '#tiket' && DATA) history.replaceState(null, '', location.pathname); }
 }window.addEventListener('hashchange', route);
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && (!$('tview').hidden || !$('rview').hidden)) location.hash = ''; });function showTrack(){
   const el = $('track'), s = DATA && DATA.track && DATA.track.sports && DATA.track.sports[SPORT];
