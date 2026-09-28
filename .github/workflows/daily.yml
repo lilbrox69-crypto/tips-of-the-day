@@ -62,7 +62,7 @@ jobs:
         shell: powershell
         run: |
           New-Item -ItemType Directory -Force site | Out-Null
-          Copy-Item index.html, analitika.html, data.json, logos.json, history.json, analytics.json, manifest.webmanifest, sw.js, icon-192.png, icon-512.png, apple-touch-icon.png site
+          Copy-Item index.html, analitika.html, data.json, logos.json, history.json, analytics.json, manifest.webmanifest, sw.js, icon-192.png, icon-512.png, apple-touch-icon.png, googleb5f2670d5b0efca3.html site
           if (Test-Path social) { Copy-Item social site -Recurse -Force }
           try { .\seo.ps1; Copy-Item seo_out\* site -Recurse -Force } catch { Write-Host "SEO preskocen: $($_.Exception.Message)" }
 
