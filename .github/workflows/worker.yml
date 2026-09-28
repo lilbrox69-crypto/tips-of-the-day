@@ -1,0 +1,32 @@
+name: Tips of the Day - rezultati uzivo (Cloudflare Worker)
+
+on:
+  push:
+    paths: ['worker/live.js', '.github/workflows/worker.yml']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Postavi worker i API kljuc na Cloudflare
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CFG: ${{ secrets.CONFIG_JSON }}
+          ACC: cebe60636baa9a78290edc49ba7e1e15
+        run: |
+          set -e
+          if [ -z "$CF_API_TOKEN" ]; then echo "Nema CF_API_TOKEN secreta"; exit 1; fi
+          API="https://api.cloudflare.com/client/v4/accounts/$ACC/workers/scripts/totd-live"
+          echo '{"main_module":"live.js","compatibility_date":"2026-09-01"}' > meta.json
+          curl -sf -X PUT "$API" -H "Authorization: Bearer $CF_API_TOKEN" \
+            -F "metadata=@meta.json;type=application/json" \
+            -F "live.js=@worker/live.js;type=application/javascript+module" | jq '.success'
+          KEY=$(echo "$CFG" | jq -r '.apiSportsKey')
+          jq -n --arg t "$KEY" '{name:"API_KEY",text:$t,type:"secret_text"}' > sec.json
+          curl -sf -X PUT "$API/secrets" -H "Authorization: Bearer $CF_API_TOKEN" -H "Content-Type: application/json" --data @sec.json | jq '.success'
+          rm -f sec.json
+          sleep 5
+          curl -s https://totd-live.lilbrox69.workers.dev/ | head -c 300
