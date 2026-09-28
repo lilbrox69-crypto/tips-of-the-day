@@ -30,6 +30,7 @@ export default {
           out.f['af' + x.fixture.id] = { s, m: x.fixture.status.elapsed, h: x.goals.home, a: x.goals.away };
         }
         out.left = left;
+        if (!j.results) out.fe = j.errors;   // za dijagnozu ako API nista ne vrati
         if (left && left < MIN_LEFT) ctx.waitUntil(cache.put(new Request('https://totd-live.cache/pause'), new Response('1', { headers: { 'Cache-Control': 'max-age=3600' } })));
       } catch (e) { out.ferr = 1; }
       try {
