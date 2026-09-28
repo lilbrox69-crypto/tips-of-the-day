@@ -82,7 +82,7 @@ function periodDates(p) {
 async function handleApi(req, env, ctx, url) {
   if (req.method === 'OPTIONS') return new Response(null, { headers: { ...CORS, 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' } });
   if (!env.LIGA) return J({ err: 'noliga' }, 503);
-  const path = url.pathname.slice(4);
+  const path = url.pathname.slice(5);
   let body = {}; if (req.method === 'POST') { try { body = JSON.parse(await req.text()); } catch (e) { return J({ err: 'bad' }, 400); } }
   const auth = async () => { const t = String(body.tok || url.searchParams.get('tok') || ''); if (!/^[0-9a-f]{40}$/.test(t)) return null; return env.LIGA.get('sess:' + t); };
   const newSess = async (nk) => { const t = hex(crypto.getRandomValues(new Uint8Array(20))); await env.LIGA.put('sess:' + t, nk, { expirationTtl: 60 * 60 * 24 * 180 }); return t; };
