@@ -135,7 +135,9 @@ function AddPost($t, $kind, $img, $text) {
   $cta = if ($kind -eq 'results') { '👉 Današnji tiket i svi tipovi: tipsoftheday.win' } else { '👉 Svi tipovi dana besplatno: tipsoftheday.win' }
   $more = if ($NM -gt 20 -and $kind -notin 'results', 'stats') { "`n`n🔎 Danas smo analizirali $NM utakmica – ovdje su samo najbolji. Ostale opcije (golovi, korneri, kartoni, pobjede, košarka) čekaju te na stranici." } else { '' }
   $q = if ($Q[$kind]) { $Q[$kind] } else { 'Koji od ova 3 bi ti stavio na tiket? 👇' }
-  $final = "$hook`n$cta`n`n$body$more`n`n💬 $q`n`n🔔 Zaprati stranicu – tiket dana stiže svako jutro u 7h.`nStatistika, ne garancija · 18+ · igraj odgovorno`n#tiketdana #tipovi #fudbal #kosarka #tipsoftheday"
+  # u pola objava jasno kazemo da je sve besplatno (bez VIP grupa i placanja - za razliku od konkurencije)
+  $free = if ($kind -in 'results', 'ticket', 'stats', 'evening', 'OBA DAJU GOL', 'KOŠARKA DANA') { "`n`n💯 Tips of the Day je POTPUNO BESPLATAN – bez registracije, bez VIP grupa, bez plaćanja. Samo uđi na tipsoftheday.win i sve je tu." } else { '' }
+  $final = "$hook`n$cta`n`n$body$more$free`n`n💬 $q`n`n🔔 Zaprati stranicu – tiket dana stiže svako jutro u 7h.`nStatistika, ne garancija · 18+ · igraj odgovorno`n#tiketdana #tipovi #fudbal #kosarka #tipsoftheday"
   [void]$posts.Add([ordered]@{ t = $t; kind = $kind; image = $img; text = $final })
 }
 
