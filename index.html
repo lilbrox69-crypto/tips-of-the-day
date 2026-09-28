@@ -895,7 +895,8 @@ function applyLive(){
   });
 }
 async function pollLive(){
-  if (document.visibilityState !== 'visible' || !TODAY) return;
+  if (!TODAY) { setTimeout(pollLive, 1500); return; }   // podaci stranice jos nisu ucitani
+  if (document.visibilityState !== 'visible') return;
   try { const r = await fetch(LIVE_URL, { cache: 'no-store' }); if (r.ok) { LIVE = await r.json(); applyLive(); } } catch(e) {}
 }
 setInterval(pollLive, 60 * 1000); setInterval(applyLive, 3000);
