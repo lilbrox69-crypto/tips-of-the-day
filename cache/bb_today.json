@@ -2,210 +2,768 @@
     "basketball":  {
                        "days":  [
                                     {
-                                        "date":  "2026-09-28",
+                                        "date":  "2026-09-29",
                                         "matches":  [
                                                         {
-                                                            "id":  "bb523335",
-                                                            "league":  "MPBL (Philippines)",
-                                                            "time":  "11:00",
-                                                            "home":  "Imus Braderhood",
-                                                            "away":  "Zamboanga Sikat",
-                                                            "hl":  "https://media.api-sports.io/basketball/teams/7359.png",
-                                                            "al":  "https://media.api-sports.io/basketball/teams/7376.png",
+                                                            "id":  "bb520705",
+                                                            "league":  "WASL (Asia)",
+                                                            "time":  "16:45",
+                                                            "home":  "Al Arabi",
+                                                            "away":  "Shahrdari Gorgan",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/960.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/3749.png",
                                                             "p":  {
-                                                                      "w1":  26,
-                                                                      "w2":  74,
-                                                                      "m10":  58,
-                                                                      "h80":  77,
-                                                                      "o160":  86,
-                                                                      "u160":  14
-                                                                  },
-                                                            "why":  {
-                                                                        "w1":  "Zadnjih 10: Imus Braderhood 2-8, prosjek 87.9:107 \u0026middot; Zamboanga Sikat 6-4, 87.2:80.2",
-                                                                        "w2":  "Zadnjih 10: Imus Braderhood 2-8, prosjek 87.9:107 \u0026middot; Zamboanga Sikat 6-4, 87.2:80.2",
-                                                                        "o160":  "161+ poena: Imus Braderhood 10/10, Zamboanga Sikat 6/10\u003cbr\u003eOcekivano oko 181 poena",
-                                                                        "u160":  "161+ poena: Imus Braderhood 10/10, Zamboanga Sikat 6/10\u003cbr\u003eOcekivano oko 181 poena",
-                                                                        "o220":  "Preko 220.5 bilo: Imus Braderhood 1/10, Zamboanga Sikat 0/10\u003cbr\u003eOcekivano oko 181 poena",
-                                                                        "u220":  "Preko 220.5 bilo: Imus Braderhood 1/10, Zamboanga Sikat 0/10\u003cbr\u003eOcekivano oko 181 poena",
-                                                                        "m10":  "Ocekivana razlika oko 9\u003cbr\u003eZadnjih 10: Imus Braderhood 2-8, prosjek 87.9:107 \u0026middot; Zamboanga Sikat 6-4, 87.2:80.2",
-                                                                        "h80":  "Imus Braderhood daje prosjecno 87.9, Zamboanga Sikat prima 80.2",
-                                                                        "h110":  "Imus Braderhood daje prosjecno 87.9, Zamboanga Sikat prima 80.2"
-                                                                    }
-                                                        },
-                                                        {
-                                                            "id":  "bb523336",
-                                                            "league":  "MPBL (Philippines)",
-                                                            "time":  "13:00",
-                                                            "home":  "Mindoro Tamaraws",
-                                                            "away":  "Basilan Steel",
-                                                            "hl":  "https://media.api-sports.io/basketball/teams/7362.png",
-                                                            "al":  "https://media.api-sports.io/basketball/teams/7887.png",
-                                                            "p":  {
-                                                                      "w1":  74,
-                                                                      "w2":  26,
-                                                                      "m10":  51,
-                                                                      "h80":  74,
-                                                                      "o160":  56,
-                                                                      "u160":  44
-                                                                  },
-                                                            "why":  {
-                                                                        "w1":  "Zadnjih 10: Mindoro Tamaraws 6-4, prosjek 79.3:74.9 \u0026middot; Basilan Steel 6-4, 84.6:87.3",
-                                                                        "w2":  "Zadnjih 10: Mindoro Tamaraws 6-4, prosjek 79.3:74.9 \u0026middot; Basilan Steel 6-4, 84.6:87.3",
-                                                                        "o160":  "161+ poena: Mindoro Tamaraws 5/10, Basilan Steel 6/10\u003cbr\u003eOcekivano oko 163 poena",
-                                                                        "u160":  "161+ poena: Mindoro Tamaraws 5/10, Basilan Steel 6/10\u003cbr\u003eOcekivano oko 163 poena",
-                                                                        "o220":  "Preko 220.5 bilo: Mindoro Tamaraws 0/10, Basilan Steel 0/10\u003cbr\u003eOcekivano oko 163 poena",
-                                                                        "u220":  "Preko 220.5 bilo: Mindoro Tamaraws 0/10, Basilan Steel 0/10\u003cbr\u003eOcekivano oko 163 poena",
-                                                                        "m10":  "Ocekivana razlika oko 7.5\u003cbr\u003eZadnjih 10: Mindoro Tamaraws 6-4, prosjek 79.3:74.9 \u0026middot; Basilan Steel 6-4, 84.6:87.3",
-                                                                        "h80":  "Mindoro Tamaraws daje prosjecno 79.3, Basilan Steel prima 87.3",
-                                                                        "h110":  "Mindoro Tamaraws daje prosjecno 79.3, Basilan Steel prima 87.3"
-                                                                    }
-                                                        },
-                                                        {
-                                                            "id":  "bb520860",
-                                                            "league":  "NBL (Singapore)",
-                                                            "time":  "13:30",
-                                                            "home":  "Eng Tat Hornets",
-                                                            "away":  "SG Basketball",
-                                                            "hl":  "https://media.api-sports.io/basketball/teams/6367.png",
-                                                            "al":  "https://media.api-sports.io/basketball/teams/6371.png",
-                                                            "p":  {
-                                                                      "w1":  65,
-                                                                      "w2":  35,
-                                                                      "m10":  42,
-                                                                      "h80":  37,
-                                                                      "o160":  21,
-                                                                      "u160":  79
-                                                                  },
-                                                            "why":  {
-                                                                        "w1":  "Zadnjih 10: Eng Tat Hornets 9-1, prosjek 78:66.9 \u0026middot; SG Basketball 9-1, 81.4:70.9",
-                                                                        "w2":  "Zadnjih 10: Eng Tat Hornets 9-1, prosjek 78:66.9 \u0026middot; SG Basketball 9-1, 81.4:70.9",
-                                                                        "o160":  "161+ poena: Eng Tat Hornets 2/10, SG Basketball 2/10\u003cbr\u003eOcekivano oko 149 poena",
-                                                                        "u160":  "161+ poena: Eng Tat Hornets 2/10, SG Basketball 2/10\u003cbr\u003eOcekivano oko 149 poena",
-                                                                        "o220":  "Preko 220.5 bilo: Eng Tat Hornets 0/10, SG Basketball 0/10\u003cbr\u003eOcekivano oko 149 poena",
-                                                                        "u220":  "Preko 220.5 bilo: Eng Tat Hornets 0/10, SG Basketball 0/10\u003cbr\u003eOcekivano oko 149 poena",
-                                                                        "m10":  "Ocekivana razlika oko 4.3\u003cbr\u003eZadnjih 10: Eng Tat Hornets 9-1, prosjek 78:66.9 \u0026middot; SG Basketball 9-1, 81.4:70.9",
-                                                                        "h80":  "Eng Tat Hornets daje prosjecno 78, SG Basketball prima 70.9",
-                                                                        "h110":  "Eng Tat Hornets daje prosjecno 78, SG Basketball prima 70.9"
-                                                                    }
-                                                        },
-                                                        {
-                                                            "id":  "bb520861",
-                                                            "league":  "NBL (Singapore)",
-                                                            "time":  "15:15",
-                                                            "home":  "SBA",
-                                                            "away":  "Xin Hua",
-                                                            "hl":  "https://media.api-sports.io/basketball/teams/6370.png",
-                                                            "al":  "https://media.api-sports.io/basketball/teams/6376.png",
-                                                            "p":  {
-                                                                      "w1":  54,
-                                                                      "w2":  46,
-                                                                      "m10":  39,
-                                                                      "h80":  27,
-                                                                      "o160":  21,
-                                                                      "u160":  79
-                                                                  },
-                                                            "why":  {
-                                                                        "w1":  "Zadnjih 10: SBA 5-5, prosjek 70.3:76.2 \u0026middot; Xin Hua 3-7, 73.5:73.5",
-                                                                        "w2":  "Zadnjih 10: SBA 5-5, prosjek 70.3:76.2 \u0026middot; Xin Hua 3-7, 73.5:73.5",
-                                                                        "o160":  "161+ poena: SBA 2/10, Xin Hua 3/10\u003cbr\u003eOcekivano oko 147 poena",
-                                                                        "u160":  "161+ poena: SBA 2/10, Xin Hua 3/10\u003cbr\u003eOcekivano oko 147 poena",
-                                                                        "o220":  "Preko 220.5 bilo: SBA 0/10, Xin Hua 0/10\u003cbr\u003eOcekivano oko 147 poena",
-                                                                        "u220":  "Preko 220.5 bilo: SBA 0/10, Xin Hua 0/10\u003cbr\u003eOcekivano oko 147 poena",
-                                                                        "m10":  "Ocekivana razlika oko 1.1\u003cbr\u003eZadnjih 10: SBA 5-5, prosjek 70.3:76.2 \u0026middot; Xin Hua 3-7, 73.5:73.5",
-                                                                        "h80":  "SBA daje prosjecno 70.3, Xin Hua prima 73.5",
-                                                                        "h110":  "SBA daje prosjecno 70.3, Xin Hua prima 73.5"
-                                                                    }
-                                                        },
-                                                        {
-                                                            "id":  "bb523216",
-                                                            "league":  "League Cup (Israel)",
-                                                            "time":  "19:00",
-                                                            "home":  "Nes Ziona",
-                                                            "away":  "Galil Elyon",
-                                                            "hl":  "https://media.api-sports.io/basketball/teams/688.png",
-                                                            "al":  "https://media.api-sports.io/basketball/teams/2725.png",
-                                                            "p":  {
-                                                                      "w1":  43,
-                                                                      "w2":  57,
+                                                                      "w1":  41,
+                                                                      "w2":  59,
                                                                       "m10":  43,
-                                                                      "h80":  56,
-                                                                      "o160":  54,
-                                                                      "u160":  46
+                                                                      "h80":  63,
+                                                                      "o160":  69,
+                                                                      "u160":  31
                                                                   },
                                                             "why":  {
-                                                                        "w1":  "Zadnjih 6: Nes Ziona 2-4, prosjek 80.8:93.3 \u0026middot; Galil Elyon 3-3, 76.2:76.7",
-                                                                        "w2":  "Zadnjih 6: Nes Ziona 2-4, prosjek 80.8:93.3 \u0026middot; Galil Elyon 3-3, 76.2:76.7",
-                                                                        "o160":  "161+ poena: Nes Ziona 4/6, Galil Elyon 2/6\u003cbr\u003eOcekivano oko 164 poena",
-                                                                        "u160":  "161+ poena: Nes Ziona 4/6, Galil Elyon 2/6\u003cbr\u003eOcekivano oko 164 poena",
-                                                                        "o220":  "Preko 220.5 bilo: Nes Ziona 0/6, Galil Elyon 0/6\u003cbr\u003eOcekivano oko 164 poena",
-                                                                        "u220":  "Preko 220.5 bilo: Nes Ziona 0/6, Galil Elyon 0/6\u003cbr\u003eOcekivano oko 164 poena",
-                                                                        "m10":  "Ocekivana razlika oko 2\u003cbr\u003eZadnjih 6: Nes Ziona 2-4, prosjek 80.8:93.3 \u0026middot; Galil Elyon 3-3, 76.2:76.7",
-                                                                        "h80":  "Nes Ziona daje prosjecno 80.8, Galil Elyon prima 76.7",
-                                                                        "h110":  "Nes Ziona daje prosjecno 80.8, Galil Elyon prima 76.7"
-                                                                    }
+                                                                        "w1":  "Zadnjih 10: Al Arabi 4-6, prosjek 81.3:87.2 \u0026middot; Shahrdari Gorgan 3-5, 80.2:79.9",
+                                                                        "w2":  "Zadnjih 10: Al Arabi 4-6, prosjek 81.3:87.2 \u0026middot; Shahrdari Gorgan 3-5, 80.2:79.9",
+                                                                        "o160":  "161+ poena: Al Arabi 7/10, Shahrdari Gorgan 7/8\u003cbr\u003eOcekivano oko 164 poena",
+                                                                        "u160":  "161+ poena: Al Arabi 7/10, Shahrdari Gorgan 7/8\u003cbr\u003eOcekivano oko 164 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Al Arabi 0/10, Shahrdari Gorgan 0/8\u003cbr\u003eOcekivano oko 164 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Al Arabi 0/10, Shahrdari Gorgan 0/8\u003cbr\u003eOcekivano oko 164 poena",
+                                                                        "m10":  "Ocekivana razlika oko 0.9\u003cbr\u003eZadnjih 10: Al Arabi 4-6, prosjek 81.3:87.2 \u0026middot; Shahrdari Gorgan 3-5, 80.2:79.9",
+                                                                        "h80":  "Al Arabi daje prosjecno 81.3, Shahrdari Gorgan prima 79.9",
+                                                                        "h110":  "Al Arabi daje prosjecno 81.3, Shahrdari Gorgan prima 79.9"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  5.07,
+                                                                      "w2":  1.12
+                                                                  }
                                                         },
                                                         {
-                                                            "id":  "bb521648",
-                                                            "league":  "Latvia-Estonian League (Europe)",
-                                                            "time":  "19:30",
-                                                            "home":  "Latvijas Universitate",
-                                                            "away":  "Ventspils",
-                                                            "hl":  "https://media.api-sports.io/basketball/teams/2745.png",
-                                                            "al":  "https://media.api-sports.io/basketball/teams/2747.png",
+                                                            "id":  "bb511769",
+                                                            "league":  "Korisliiga (Finland)",
+                                                            "time":  "17:30",
+                                                            "home":  "Salon Vilpas",
+                                                            "away":  "Honka",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/495.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/3632.png",
                                                             "p":  {
-                                                                      "w1":  39,
-                                                                      "w2":  61,
+                                                                      "w1":  83,
+                                                                      "w2":  17,
+                                                                      "m10":  57,
+                                                                      "h80":  82,
+                                                                      "o160":  67,
+                                                                      "u160":  33
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Salon Vilpas 6-4, prosjek 80.1:74.6 \u0026middot; Honka 3-7, 84.6:91.1",
+                                                                        "w2":  "Zadnjih 10: Salon Vilpas 6-4, prosjek 80.1:74.6 \u0026middot; Honka 3-7, 84.6:91.1",
+                                                                        "o160":  "161+ poena: Salon Vilpas 5/10, Honka 7/10\u003cbr\u003eOcekivano oko 165 poena",
+                                                                        "u160":  "161+ poena: Salon Vilpas 5/10, Honka 7/10\u003cbr\u003eOcekivano oko 165 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Salon Vilpas 0/10, Honka 0/10\u003cbr\u003eOcekivano oko 165 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Salon Vilpas 0/10, Honka 0/10\u003cbr\u003eOcekivano oko 165 poena",
+                                                                        "m10":  "Ocekivana razlika oko 10\u003cbr\u003eZadnjih 10: Salon Vilpas 6-4, prosjek 80.1:74.6 \u0026middot; Honka 3-7, 84.6:91.1",
+                                                                        "h80":  "Salon Vilpas daje prosjecno 80.1, Honka prima 91.1",
+                                                                        "h110":  "Salon Vilpas daje prosjecno 80.1, Honka prima 91.1"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.06,
+                                                                      "o160":  1.16,
+                                                                      "u160":  4.5,
+                                                                      "w2":  7.77
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb511768",
+                                                            "league":  "Korisliiga (Finland)",
+                                                            "time":  "17:30",
+                                                            "home":  "KTP Kotka Basket",
+                                                            "away":  "Bisons Loimaa",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/488.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/3071.png",
+                                                            "p":  {
+                                                                      "w1":  58,
+                                                                      "w2":  42,
                                                                       "m10":  47,
-                                                                      "h80":  87,
+                                                                      "h80":  73,
+                                                                      "o160":  70,
+                                                                      "u160":  30
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: KTP Kotka Basket 5-5, prosjek 81.4:82.3 \u0026middot; Bisons Loimaa 5-5, 93.5:84.7",
+                                                                        "w2":  "Zadnjih 10: KTP Kotka Basket 5-5, prosjek 81.4:82.3 \u0026middot; Bisons Loimaa 5-5, 93.5:84.7",
+                                                                        "o160":  "161+ poena: KTP Kotka Basket 5/10, Bisons Loimaa 8/10\u003cbr\u003eOcekivano oko 171 poena",
+                                                                        "u160":  "161+ poena: KTP Kotka Basket 5/10, Bisons Loimaa 8/10\u003cbr\u003eOcekivano oko 171 poena",
+                                                                        "o220":  "Preko 220.5 bilo: KTP Kotka Basket 0/10, Bisons Loimaa 0/10\u003cbr\u003eOcekivano oko 171 poena",
+                                                                        "u220":  "Preko 220.5 bilo: KTP Kotka Basket 0/10, Bisons Loimaa 0/10\u003cbr\u003eOcekivano oko 171 poena",
+                                                                        "m10":  "Ocekivana razlika oko 0.8\u003cbr\u003eZadnjih 10: KTP Kotka Basket 5-5, prosjek 81.4:82.3 \u0026middot; Bisons Loimaa 5-5, 93.5:84.7",
+                                                                        "h80":  "KTP Kotka Basket daje prosjecno 81.4, Bisons Loimaa prima 84.7",
+                                                                        "h110":  "KTP Kotka Basket daje prosjecno 81.4, Bisons Loimaa prima 84.7"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.2,
+                                                                      "o160":  1.35,
+                                                                      "u160":  2.95,
+                                                                      "w2":  4.16
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb511767",
+                                                            "league":  "Korisliiga (Finland)",
+                                                            "time":  "17:30",
+                                                            "home":  "Kataja",
+                                                            "away":  "Helsinki Seagulls",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/490.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/487.png",
+                                                            "p":  {
+                                                                      "w1":  59,
+                                                                      "w2":  41,
+                                                                      "m10":  40,
+                                                                      "h80":  43,
+                                                                      "o160":  46,
+                                                                      "u160":  54
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Kataja 5-5, prosjek 71.3:75.8 \u0026middot; Helsinki Seagulls 5-5, 78.3:80.6",
+                                                                        "w2":  "Zadnjih 10: Kataja 5-5, prosjek 71.3:75.8 \u0026middot; Helsinki Seagulls 5-5, 78.3:80.6",
+                                                                        "o160":  "161+ poena: Kataja 3/10, Helsinki Seagulls 6/10\u003cbr\u003eOcekivano oko 153 poena",
+                                                                        "u160":  "161+ poena: Kataja 3/10, Helsinki Seagulls 6/10\u003cbr\u003eOcekivano oko 153 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Kataja 0/10, Helsinki Seagulls 0/10\u003cbr\u003eOcekivano oko 153 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Kataja 0/10, Helsinki Seagulls 0/10\u003cbr\u003eOcekivano oko 153 poena",
+                                                                        "m10":  "Ocekivana razlika oko 2.9\u003cbr\u003eZadnjih 10: Kataja 5-5, prosjek 71.3:75.8 \u0026middot; Helsinki Seagulls 5-5, 78.3:80.6",
+                                                                        "h80":  "Kataja daje prosjecno 71.3, Helsinki Seagulls prima 80.6",
+                                                                        "h110":  "Kataja daje prosjecno 71.3, Helsinki Seagulls prima 80.6"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.62,
+                                                                      "o160":  1.52,
+                                                                      "u160":  2.36,
+                                                                      "w2":  2.15
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb514735",
+                                                            "league":  "Liga Nova KBM (Slovenia)",
+                                                            "time":  "18:00",
+                                                            "home":  "KK Krka Novo mesto",
+                                                            "away":  "Zlatorog Lasko",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/1094.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/1101.png",
+                                                            "p":  {
+                                                                      "w1":  87,
+                                                                      "w2":  13,
+                                                                      "m10":  62,
+                                                                      "h80":  77,
+                                                                      "o160":  49,
+                                                                      "u160":  51
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: KK Krka Novo mesto 6-4, prosjek 86.4:78.8 \u0026middot; Zlatorog Lasko 3-7, 73.4:82.1",
+                                                                        "w2":  "Zadnjih 10: KK Krka Novo mesto 6-4, prosjek 86.4:78.8 \u0026middot; Zlatorog Lasko 3-7, 73.4:82.1",
+                                                                        "o160":  "161+ poena: KK Krka Novo mesto 6/10, Zlatorog Lasko 3/10\u003cbr\u003eOcekivano oko 160 poena",
+                                                                        "u160":  "161+ poena: KK Krka Novo mesto 6/10, Zlatorog Lasko 3/10\u003cbr\u003eOcekivano oko 160 poena",
+                                                                        "o220":  "Preko 220.5 bilo: KK Krka Novo mesto 0/10, Zlatorog Lasko 0/10\u003cbr\u003eOcekivano oko 160 poena",
+                                                                        "u220":  "Preko 220.5 bilo: KK Krka Novo mesto 0/10, Zlatorog Lasko 0/10\u003cbr\u003eOcekivano oko 160 poena",
+                                                                        "m10":  "Ocekivana razlika oko 12.2\u003cbr\u003eZadnjih 10: KK Krka Novo mesto 6-4, prosjek 86.4:78.8 \u0026middot; Zlatorog Lasko 3-7, 73.4:82.1",
+                                                                        "h80":  "KK Krka Novo mesto daje prosjecno 86.4, Zlatorog Lasko prima 82.1",
+                                                                        "h110":  "KK Krka Novo mesto daje prosjecno 86.4, Zlatorog Lasko prima 82.1"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.01,
+                                                                      "o160":  1.74,
+                                                                      "u160":  1.88,
+                                                                      "w2":  13.5
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb521649",
+                                                            "league":  "Latvia-Estonian League (Europe)",
+                                                            "time":  "18:00",
+                                                            "home":  "Valmiera Glass Via",
+                                                            "away":  "Keila Coolbet",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/2746.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/6559.png",
+                                                            "p":  {
+                                                                      "w1":  91,
+                                                                      "w2":  9,
+                                                                      "m10":  75,
+                                                                      "h80":  98,
                                                                       "o160":  87,
                                                                       "u160":  13
                                                                   },
                                                             "why":  {
-                                                                        "w1":  "Zadnjih 10: Latvijas Universitate 2-8, prosjek 87.8:103.8 \u0026middot; Ventspils 3-7, 78.5:87.7",
-                                                                        "w2":  "Zadnjih 10: Latvijas Universitate 2-8, prosjek 87.8:103.8 \u0026middot; Ventspils 3-7, 78.5:87.7",
-                                                                        "o160":  "161+ poena: Latvijas Universitate 9/10, Ventspils 8/10\u003cbr\u003eOcekivano oko 179 poena",
-                                                                        "u160":  "161+ poena: Latvijas Universitate 9/10, Ventspils 8/10\u003cbr\u003eOcekivano oko 179 poena",
-                                                                        "o220":  "Preko 220.5 bilo: Latvijas Universitate 1/10, Ventspils 0/10\u003cbr\u003eOcekivano oko 179 poena",
-                                                                        "u220":  "Preko 220.5 bilo: Latvijas Universitate 1/10, Ventspils 0/10\u003cbr\u003eOcekivano oko 179 poena",
-                                                                        "m10":  "Ocekivana razlika oko 0.6\u003cbr\u003eZadnjih 10: Latvijas Universitate 2-8, prosjek 87.8:103.8 \u0026middot; Ventspils 3-7, 78.5:87.7",
-                                                                        "h80":  "Latvijas Universitate daje prosjecno 87.8, Ventspils prima 87.7",
-                                                                        "h110":  "Latvijas Universitate daje prosjecno 87.8, Ventspils prima 87.7"
+                                                                        "w1":  "Zadnjih 10: Valmiera Glass Via 9-1, prosjek 93.1:81.5 \u0026middot; Keila Coolbet 1-9, 83.3:98.9",
+                                                                        "w2":  "Zadnjih 10: Valmiera Glass Via 9-1, prosjek 93.1:81.5 \u0026middot; Keila Coolbet 1-9, 83.3:98.9",
+                                                                        "o160":  "161+ poena: Valmiera Glass Via 7/10, Keila Coolbet 10/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "u160":  "161+ poena: Valmiera Glass Via 7/10, Keila Coolbet 10/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Valmiera Glass Via 0/10, Keila Coolbet 0/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Valmiera Glass Via 0/10, Keila Coolbet 0/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "m10":  "Ocekivana razlika oko 17.6\u003cbr\u003eZadnjih 10: Valmiera Glass Via 9-1, prosjek 93.1:81.5 \u0026middot; Keila Coolbet 1-9, 83.3:98.9",
+                                                                        "h80":  "Valmiera Glass Via daje prosjecno 93.1, Keila Coolbet prima 98.9",
+                                                                        "h110":  "Valmiera Glass Via daje prosjecno 93.1, Keila Coolbet prima 98.9"
                                                                     },
                                                             "o":  {
-                                                                      "w1":  6.67,
-                                                                      "w2":  1.06
+                                                                      "w1":  1.02,
+                                                                      "w2":  11.37
                                                                   }
                                                         },
                                                         {
-                                                            "id":  "bb520704",
-                                                            "league":  "WASL (Asia)",
-                                                            "time":  "19:45",
-                                                            "home":  "Kuwait SC",
-                                                            "away":  "Al-Riyadi",
-                                                            "hl":  "https://media.api-sports.io/basketball/teams/5998.png",
-                                                            "al":  "https://media.api-sports.io/basketball/teams/4418.png",
+                                                            "id":  "bb521650",
+                                                            "league":  "Latvia-Estonian League (Europe)",
+                                                            "time":  "18:00",
+                                                            "home":  "VEF Riga",
+                                                            "away":  "Keila KK",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/1663.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/5599.png",
                                                             "p":  {
-                                                                      "w1":  49,
-                                                                      "w2":  51,
+                                                                      "w1":  89,
+                                                                      "w2":  11,
+                                                                      "m10":  71,
+                                                                      "h80":  93,
+                                                                      "o160":  75,
+                                                                      "u160":  25
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: VEF Riga 7-3, prosjek 85.4:73.5 \u0026middot; Keila KK 2-8, 84.9:96.2",
+                                                                        "w2":  "Zadnjih 10: VEF Riga 7-3, prosjek 85.4:73.5 \u0026middot; Keila KK 2-8, 84.9:96.2",
+                                                                        "o160":  "161+ poena: VEF Riga 5/10, Keila KK 9/10\u003cbr\u003eOcekivano oko 170 poena",
+                                                                        "u160":  "161+ poena: VEF Riga 5/10, Keila KK 9/10\u003cbr\u003eOcekivano oko 170 poena",
+                                                                        "o220":  "Preko 220.5 bilo: VEF Riga 0/10, Keila KK 1/10\u003cbr\u003eOcekivano oko 170 poena",
+                                                                        "u220":  "Preko 220.5 bilo: VEF Riga 0/10, Keila KK 1/10\u003cbr\u003eOcekivano oko 170 poena",
+                                                                        "m10":  "Ocekivana razlika oko 15.6\u003cbr\u003eZadnjih 10: VEF Riga 7-3, prosjek 85.4:73.5 \u0026middot; Keila KK 2-8, 84.9:96.2",
+                                                                        "h80":  "VEF Riga daje prosjecno 85.4, Keila KK prima 96.2",
+                                                                        "h110":  "VEF Riga daje prosjecno 85.4, Keila KK prima 96.2"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.02,
+                                                                      "o160":  1.16,
+                                                                      "u160":  4.5,
+                                                                      "w2":  11.67
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb503464",
+                                                            "league":  "Eurocup (Europe)",
+                                                            "time":  "18:00",
+                                                            "home":  "Neptunas",
+                                                            "away":  "Trento",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/791.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/727.png",
+                                                            "p":  {
+                                                                      "w1":  51,
+                                                                      "w2":  49,
                                                                       "m10":  47,
-                                                                      "h80":  86,
+                                                                      "h80":  87,
+                                                                      "o160":  82,
+                                                                      "u160":  18
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Neptunas 4-6, prosjek 93:96.9 \u0026middot; Trento 7-3, 84.4:82.5",
+                                                                        "w2":  "Zadnjih 10: Neptunas 4-6, prosjek 93:96.9 \u0026middot; Trento 7-3, 84.4:82.5",
+                                                                        "o160":  "161+ poena: Neptunas 9/10, Trento 6/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "u160":  "161+ poena: Neptunas 9/10, Trento 6/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Neptunas 1/10, Trento 0/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Neptunas 1/10, Trento 0/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "m10":  "Ocekivana razlika oko 1.1\u003cbr\u003eZadnjih 10: Neptunas 4-6, prosjek 93:96.9 \u0026middot; Trento 7-3, 84.4:82.5",
+                                                                        "h80":  "Neptunas daje prosjecno 93, Trento prima 82.5",
+                                                                        "h110":  "Neptunas daje prosjecno 93, Trento prima 82.5"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.97,
+                                                                      "w2":  1.74
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb508592",
+                                                            "league":  "Euroleague (Europe)",
+                                                            "time":  "18:00",
+                                                            "home":  "Dubai",
+                                                            "away":  "Barcelona",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/6496.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/2329.png",
+                                                            "p":  {
+                                                                      "w1":  64,
+                                                                      "w2":  36,
+                                                                      "m10":  48,
+                                                                      "h80":  74,
+                                                                      "o160":  67,
+                                                                      "u160":  33
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Dubai 5-5, prosjek 87.5:88 \u0026middot; Barcelona 6-4, 80.6:79.2",
+                                                                        "w2":  "Zadnjih 10: Dubai 5-5, prosjek 87.5:88 \u0026middot; Barcelona 6-4, 80.6:79.2",
+                                                                        "o160":  "161+ poena: Dubai 7/10, Barcelona 5/10\u003cbr\u003eOcekivano oko 168 poena",
+                                                                        "u160":  "161+ poena: Dubai 7/10, Barcelona 5/10\u003cbr\u003eOcekivano oko 168 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Dubai 0/10, Barcelona 0/10\u003cbr\u003eOcekivano oko 168 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Dubai 0/10, Barcelona 0/10\u003cbr\u003eOcekivano oko 168 poena",
+                                                                        "m10":  "Ocekivana razlika oko 3\u003cbr\u003eZadnjih 10: Dubai 5-5, prosjek 87.5:88 \u0026middot; Barcelona 6-4, 80.6:79.2",
+                                                                        "h80":  "Dubai daje prosjecno 87.5, Barcelona prima 79.2",
+                                                                        "h110":  "Dubai daje prosjecno 87.5, Barcelona prima 79.2"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.29,
+                                                                      "o160":  1.27,
+                                                                      "u160":  3.4,
+                                                                      "w2":  3.58
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb513841",
+                                                            "league":  "NB I A (Hungary)",
+                                                            "time":  "18:00",
+                                                            "home":  "Szolnoki Olaj",
+                                                            "away":  "Kaposvari",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/630.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/624.png",
+                                                            "p":  {
+                                                                      "w1":  72,
+                                                                      "w2":  28,
+                                                                      "m10":  52,
+                                                                      "h80":  88,
                                                                       "o160":  80,
                                                                       "u160":  20
                                                                   },
                                                             "why":  {
-                                                                        "w1":  "Zadnjih 10: Kuwait SC 7-3, prosjek 92.1:83.5 \u0026middot; Al-Riyadi 8-2, 94.6:82.7",
-                                                                        "w2":  "Zadnjih 10: Kuwait SC 7-3, prosjek 92.1:83.5 \u0026middot; Al-Riyadi 8-2, 94.6:82.7",
-                                                                        "o160":  "161+ poena: Kuwait SC 6/10, Al-Riyadi 9/10\u003cbr\u003eOcekivano oko 176 poena",
-                                                                        "u160":  "161+ poena: Kuwait SC 6/10, Al-Riyadi 9/10\u003cbr\u003eOcekivano oko 176 poena",
-                                                                        "o220":  "Preko 220.5 bilo: Kuwait SC 1/10, Al-Riyadi 0/10\u003cbr\u003eOcekivano oko 176 poena",
-                                                                        "u220":  "Preko 220.5 bilo: Kuwait SC 1/10, Al-Riyadi 0/10\u003cbr\u003eOcekivano oko 176 poena",
-                                                                        "m10":  "Ocekivana razlika oko 2.4\u003cbr\u003eZadnjih 10: Kuwait SC 7-3, prosjek 92.1:83.5 \u0026middot; Al-Riyadi 8-2, 94.6:82.7",
-                                                                        "h80":  "Kuwait SC daje prosjecno 92.1, Al-Riyadi prima 82.7",
-                                                                        "h110":  "Kuwait SC daje prosjecno 92.1, Al-Riyadi prima 82.7"
+                                                                        "w1":  "Zadnjih 10: Szolnoki Olaj 7-3, prosjek 88.3:84.6 \u0026middot; Kaposvari 5-5, 86.2:87.6",
+                                                                        "w2":  "Zadnjih 10: Szolnoki Olaj 7-3, prosjek 88.3:84.6 \u0026middot; Kaposvari 5-5, 86.2:87.6",
+                                                                        "o160":  "161+ poena: Szolnoki Olaj 8/10, Kaposvari 8/10\u003cbr\u003eOcekivano oko 173 poena",
+                                                                        "u160":  "161+ poena: Szolnoki Olaj 8/10, Kaposvari 8/10\u003cbr\u003eOcekivano oko 173 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Szolnoki Olaj 0/10, Kaposvari 0/10\u003cbr\u003eOcekivano oko 173 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Szolnoki Olaj 0/10, Kaposvari 0/10\u003cbr\u003eOcekivano oko 173 poena",
+                                                                        "m10":  "Ocekivana razlika oko 6.5\u003cbr\u003eZadnjih 10: Szolnoki Olaj 7-3, prosjek 88.3:84.6 \u0026middot; Kaposvari 5-5, 86.2:87.6",
+                                                                        "h80":  "Szolnoki Olaj daje prosjecno 88.3, Kaposvari prima 87.6",
+                                                                        "h110":  "Szolnoki Olaj daje prosjecno 88.3, Kaposvari prima 87.6"
                                                                     },
                                                             "o":  {
-                                                                      "w1":  2.63,
-                                                                      "w2":  1.42
+                                                                      "w1":  1.21,
+                                                                      "w2":  3.95
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb508594",
+                                                            "league":  "Euroleague (Europe)",
+                                                            "time":  "19:00",
+                                                            "home":  "Zalgiris Kaunas",
+                                                            "away":  "Olympiacos",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/796.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/1542.png",
+                                                            "p":  {
+                                                                      "w1":  40,
+                                                                      "w2":  60,
+                                                                      "m10":  44,
+                                                                      "h80":  58,
+                                                                      "o160":  64,
+                                                                      "u160":  36
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Zalgiris Kaunas 6-4, prosjek 81.4:80.7 \u0026middot; Olympiacos 10-0, 92.5:77.4",
+                                                                        "w2":  "Zadnjih 10: Zalgiris Kaunas 6-4, prosjek 81.4:80.7 \u0026middot; Olympiacos 10-0, 92.5:77.4",
+                                                                        "o160":  "161+ poena: Zalgiris Kaunas 4/10, Olympiacos 7/10\u003cbr\u003eOcekivano oko 166 poena",
+                                                                        "u160":  "161+ poena: Zalgiris Kaunas 4/10, Olympiacos 7/10\u003cbr\u003eOcekivano oko 166 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Zalgiris Kaunas 0/10, Olympiacos 0/10\u003cbr\u003eOcekivano oko 166 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Zalgiris Kaunas 0/10, Olympiacos 0/10\u003cbr\u003eOcekivano oko 166 poena",
+                                                                        "m10":  "Ocekivana razlika oko 3.2\u003cbr\u003eZadnjih 10: Zalgiris Kaunas 6-4, prosjek 81.4:80.7 \u0026middot; Olympiacos 10-0, 92.5:77.4",
+                                                                        "h80":  "Zalgiris Kaunas daje prosjecno 81.4, Olympiacos prima 77.4",
+                                                                        "h110":  "Zalgiris Kaunas daje prosjecno 81.4, Olympiacos prima 77.4"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  2.23,
+                                                                      "o160":  1.3,
+                                                                      "u160":  3.25,
+                                                                      "w2":  1.67
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb508593",
+                                                            "league":  "Euroleague (Europe)",
+                                                            "time":  "19:00",
+                                                            "home":  "Anadolu Efes",
+                                                            "away":  "Real Madrid",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/1263.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/2338.png",
+                                                            "p":  {
+                                                                      "w1":  48,
+                                                                      "w2":  52,
+                                                                      "m10":  47,
+                                                                      "h80":  67,
+                                                                      "o160":  68,
+                                                                      "u160":  32
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Anadolu Efes 3-7, prosjek 80.1:85.9 \u0026middot; Real Madrid 6-4, 87.6:82.7",
+                                                                        "w2":  "Zadnjih 10: Anadolu Efes 3-7, prosjek 80.1:85.9 \u0026middot; Real Madrid 6-4, 87.6:82.7",
+                                                                        "o160":  "161+ poena: Anadolu Efes 5/10, Real Madrid 7/10\u003cbr\u003eOcekivano oko 168 poena",
+                                                                        "u160":  "161+ poena: Anadolu Efes 5/10, Real Madrid 7/10\u003cbr\u003eOcekivano oko 168 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Anadolu Efes 0/10, Real Madrid 0/10\u003cbr\u003eOcekivano oko 168 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Anadolu Efes 0/10, Real Madrid 0/10\u003cbr\u003eOcekivano oko 168 poena",
+                                                                        "m10":  "Ocekivana razlika oko 1.3\u003cbr\u003eZadnjih 10: Anadolu Efes 3-7, prosjek 80.1:85.9 \u0026middot; Real Madrid 6-4, 87.6:82.7",
+                                                                        "h80":  "Anadolu Efes daje prosjecno 80.1, Real Madrid prima 82.7",
+                                                                        "h110":  "Anadolu Efes daje prosjecno 80.1, Real Madrid prima 82.7"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.83,
+                                                                      "o160":  1.24,
+                                                                      "u160":  3.55,
+                                                                      "w2":  1.97
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb505787",
+                                                            "league":  "BLNO (Norway)",
+                                                            "time":  "19:00",
+                                                            "home":  "Baerum",
+                                                            "away":  "Kongsberg Miners",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/874.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/879.png",
+                                                            "p":  {
+                                                                      "w1":  47,
+                                                                      "w2":  53,
+                                                                      "m10":  49,
+                                                                      "h80":  84,
+                                                                      "o160":  74,
+                                                                      "u160":  26
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Baerum 4-6, prosjek 89.5:84.4 \u0026middot; Kongsberg Miners 6-4, 87.1:83.5",
+                                                                        "w2":  "Zadnjih 10: Baerum 4-6, prosjek 89.5:84.4 \u0026middot; Kongsberg Miners 6-4, 87.1:83.5",
+                                                                        "o160":  "161+ poena: Baerum 7/10, Kongsberg Miners 7/10\u003cbr\u003eOcekivano oko 172 poena",
+                                                                        "u160":  "161+ poena: Baerum 7/10, Kongsberg Miners 7/10\u003cbr\u003eOcekivano oko 172 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Baerum 0/10, Kongsberg Miners 0/10\u003cbr\u003eOcekivano oko 172 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Baerum 0/10, Kongsberg Miners 0/10\u003cbr\u003eOcekivano oko 172 poena",
+                                                                        "m10":  "Ocekivana razlika oko 4.8\u003cbr\u003eZadnjih 10: Baerum 4-6, prosjek 89.5:84.4 \u0026middot; Kongsberg Miners 6-4, 87.1:83.5",
+                                                                        "h80":  "Baerum daje prosjecno 89.5, Kongsberg Miners prima 83.5",
+                                                                        "h110":  "Baerum daje prosjecno 89.5, Kongsberg Miners prima 83.5"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  6.28,
+                                                                      "w2":  1.08
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb499941",
+                                                            "league":  "Basketligan (Sweden)",
+                                                            "time":  "19:04",
+                                                            "home":  "Nassjo",
+                                                            "away":  "Norrkoping",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/1203.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/1204.png",
+                                                            "p":  {
+                                                                      "w1":  36,
+                                                                      "w2":  64,
+                                                                      "m10":  47,
+                                                                      "h80":  83,
+                                                                      "o160":  87,
+                                                                      "u160":  13
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Nassjo 4-6, prosjek 85.8:95.1 \u0026middot; Norrkoping 5-5, 89.3:86.1",
+                                                                        "w2":  "Zadnjih 10: Nassjo 4-6, prosjek 85.8:95.1 \u0026middot; Norrkoping 5-5, 89.3:86.1",
+                                                                        "o160":  "161+ poena: Nassjo 8/10, Norrkoping 9/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "u160":  "161+ poena: Nassjo 8/10, Norrkoping 9/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Nassjo 0/10, Norrkoping 0/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Nassjo 0/10, Norrkoping 0/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "m10":  "Ocekivana razlika oko 2.2\u003cbr\u003eZadnjih 10: Nassjo 4-6, prosjek 85.8:95.1 \u0026middot; Norrkoping 5-5, 89.3:86.1",
+                                                                        "h80":  "Nassjo daje prosjecno 85.8, Norrkoping prima 86.1",
+                                                                        "h110":  "Nassjo daje prosjecno 85.8, Norrkoping prima 86.1"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  4.1,
+                                                                      "w2":  1.18
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb499942",
+                                                            "league":  "Basketligan (Sweden)",
+                                                            "time":  "19:04",
+                                                            "home":  "Umea",
+                                                            "away":  "Sodertalje",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/1206.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/1205.png",
+                                                            "p":  {
+                                                                      "w1":  32,
+                                                                      "w2":  68,
+                                                                      "m10":  51,
+                                                                      "h80":  62,
+                                                                      "o160":  64,
+                                                                      "u160":  36
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Umea 1-9, prosjek 82:96.3 \u0026middot; Sodertalje 5-5, 84.7:78.6",
+                                                                        "w2":  "Zadnjih 10: Umea 1-9, prosjek 82:96.3 \u0026middot; Sodertalje 5-5, 84.7:78.6",
+                                                                        "o160":  "161+ poena: Umea 7/10, Sodertalje 5/10\u003cbr\u003eOcekivano oko 171 poena",
+                                                                        "u160":  "161+ poena: Umea 7/10, Sodertalje 5/10\u003cbr\u003eOcekivano oko 171 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Umea 1/10, Sodertalje 0/10\u003cbr\u003eOcekivano oko 171 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Umea 1/10, Sodertalje 0/10\u003cbr\u003eOcekivano oko 171 poena",
+                                                                        "m10":  "Ocekivana razlika oko 6.2\u003cbr\u003eZadnjih 10: Umea 1-9, prosjek 82:96.3 \u0026middot; Sodertalje 5-5, 84.7:78.6",
+                                                                        "h80":  "Umea daje prosjecno 82, Sodertalje prima 78.6",
+                                                                        "h110":  "Umea daje prosjecno 82, Sodertalje prima 78.6"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  2.92,
+                                                                      "o160":  1.64,
+                                                                      "u160":  2.07,
+                                                                      "w2":  1.34
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb499939",
+                                                            "league":  "Basketligan (Sweden)",
+                                                            "time":  "19:04",
+                                                            "home":  "Hogsbo",
+                                                            "away":  "Boras",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/1222.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/1199.png",
+                                                            "p":  {
+                                                                      "w1":  33,
+                                                                      "w2":  67,
+                                                                      "m10":  47,
+                                                                      "h80":  82,
+                                                                      "o160":  86,
+                                                                      "u160":  14
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Hogsbo 2-8, prosjek 83.4:95 \u0026middot; Boras 5-5, 89.3:88.3",
+                                                                        "w2":  "Zadnjih 10: Hogsbo 2-8, prosjek 83.4:95 \u0026middot; Boras 5-5, 89.3:88.3",
+                                                                        "o160":  "161+ poena: Hogsbo 8/10, Boras 9/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "u160":  "161+ poena: Hogsbo 8/10, Boras 9/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Hogsbo 0/10, Boras 0/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Hogsbo 0/10, Boras 0/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "m10":  "Ocekivana razlika oko 2.3\u003cbr\u003eZadnjih 10: Hogsbo 2-8, prosjek 83.4:95 \u0026middot; Boras 5-5, 89.3:88.3",
+                                                                        "h80":  "Hogsbo daje prosjecno 83.4, Boras prima 88.3",
+                                                                        "h110":  "Hogsbo daje prosjecno 83.4, Boras prima 88.3"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  6.53,
+                                                                      "w2":  1.06
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb499940",
+                                                            "league":  "Basketligan (Sweden)",
+                                                            "time":  "19:04",
+                                                            "home":  "Jamtland",
+                                                            "away":  "BC Lulea",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/1201.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/1198.png",
+                                                            "p":  {
+                                                                      "w1":  65,
+                                                                      "w2":  35,
+                                                                      "m10":  49,
+                                                                      "h80":  90,
+                                                                      "o160":  84,
+                                                                      "u160":  16
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Jamtland 6-4, prosjek 92.7:93.6 \u0026middot; BC Lulea 5-5, 84:85.6",
+                                                                        "w2":  "Zadnjih 10: Jamtland 6-4, prosjek 92.7:93.6 \u0026middot; BC Lulea 5-5, 84:85.6",
+                                                                        "o160":  "161+ poena: Jamtland 9/10, BC Lulea 7/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "u160":  "161+ poena: Jamtland 9/10, BC Lulea 7/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Jamtland 0/10, BC Lulea 0/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Jamtland 0/10, BC Lulea 0/10\u003cbr\u003eOcekivano oko 178 poena",
+                                                                        "m10":  "Ocekivana razlika oko 4.4\u003cbr\u003eZadnjih 10: Jamtland 6-4, prosjek 92.7:93.6 \u0026middot; BC Lulea 5-5, 84:85.6",
+                                                                        "h80":  "Jamtland daje prosjecno 92.7, BC Lulea prima 85.6",
+                                                                        "h110":  "Jamtland daje prosjecno 92.7, BC Lulea prima 85.6"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.35,
+                                                                      "w2":  2.92
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb520706",
+                                                            "league":  "WASL (Asia)",
+                                                            "time":  "19:45",
+                                                            "home":  "Sagesse Beirut",
+                                                            "away":  "AlUla",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/6465.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/6627.png",
+                                                            "p":  {
+                                                                      "w1":  42,
+                                                                      "w2":  58,
+                                                                      "m10":  47,
+                                                                      "h80":  81,
+                                                                      "o160":  79,
+                                                                      "u160":  21
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Sagesse Beirut 5-5, prosjek 89.7:87.3 \u0026middot; AlUla 5-2, 96.9:81",
+                                                                        "w2":  "Zadnjih 10: Sagesse Beirut 5-5, prosjek 89.7:87.3 \u0026middot; AlUla 5-2, 96.9:81",
+                                                                        "o160":  "161+ poena: Sagesse Beirut 7/10, AlUla 5/7\u003cbr\u003eOcekivano oko 177 poena",
+                                                                        "u160":  "161+ poena: Sagesse Beirut 7/10, AlUla 5/7\u003cbr\u003eOcekivano oko 177 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Sagesse Beirut 0/10, AlUla 1/7\u003cbr\u003eOcekivano oko 177 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Sagesse Beirut 0/10, AlUla 1/7\u003cbr\u003eOcekivano oko 177 poena",
+                                                                        "m10":  "Ocekivana razlika oko 2.8\u003cbr\u003eZadnjih 10: Sagesse Beirut 5-5, prosjek 89.7:87.3 \u0026middot; AlUla 5-2, 96.9:81",
+                                                                        "h80":  "Sagesse Beirut daje prosjecno 89.7, AlUla prima 81",
+                                                                        "h110":  "Sagesse Beirut daje prosjecno 89.7, AlUla prima 81"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  2.15,
+                                                                      "w2":  1.61
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb508595",
+                                                            "league":  "Euroleague (Europe)",
+                                                            "time":  "19:45",
+                                                            "home":  "Fenerbahce",
+                                                            "away":  "Bayern",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/1270.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/522.png",
+                                                            "p":  {
+                                                                      "w1":  69,
+                                                                      "w2":  31,
+                                                                      "m10":  45,
+                                                                      "h80":  65,
+                                                                      "o160":  60,
+                                                                      "u160":  40
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Fenerbahce 5-5, prosjek 79.2:80 \u0026middot; Bayern 6-4, 82.2:82.8",
+                                                                        "w2":  "Zadnjih 10: Fenerbahce 5-5, prosjek 79.2:80 \u0026middot; Bayern 6-4, 82.2:82.8",
+                                                                        "o160":  "161+ poena: Fenerbahce 4/10, Bayern 9/10\u003cbr\u003eOcekivano oko 162 poena",
+                                                                        "u160":  "161+ poena: Fenerbahce 4/10, Bayern 9/10\u003cbr\u003eOcekivano oko 162 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Fenerbahce 0/10, Bayern 0/10\u003cbr\u003eOcekivano oko 162 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Fenerbahce 0/10, Bayern 0/10\u003cbr\u003eOcekivano oko 162 poena",
+                                                                        "m10":  "Ocekivana razlika oko 3.9\u003cbr\u003eZadnjih 10: Fenerbahce 5-5, prosjek 79.2:80 \u0026middot; Bayern 6-4, 82.2:82.8",
+                                                                        "h80":  "Fenerbahce daje prosjecno 79.2, Bayern prima 82.8",
+                                                                        "h110":  "Fenerbahce daje prosjecno 79.2, Bayern prima 82.8"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.2,
+                                                                      "o160":  1.53,
+                                                                      "u160":  2.32,
+                                                                      "w2":  4.5
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb508596",
+                                                            "league":  "Euroleague (Europe)",
+                                                            "time":  "20:00",
+                                                            "home":  "Crvena Zvezda Meridianbet",
+                                                            "away":  "Hapoel Tel Aviv",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/1065.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/682.png",
+                                                            "p":  {
+                                                                      "w1":  60,
+                                                                      "w2":  40,
+                                                                      "m10":  48,
+                                                                      "h80":  83,
+                                                                      "o160":  73,
+                                                                      "u160":  27
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Crvena Zvezda Meridianbet 4-6, prosjek 86.2:87.6 \u0026middot; Hapoel Tel Aviv 4-6, 84.7:85.9",
+                                                                        "w2":  "Zadnjih 10: Crvena Zvezda Meridianbet 4-6, prosjek 86.2:87.6 \u0026middot; Hapoel Tel Aviv 4-6, 84.7:85.9",
+                                                                        "o160":  "161+ poena: Crvena Zvezda Meridianbet 6/10, Hapoel Tel Aviv 8/10\u003cbr\u003eOcekivano oko 172 poena",
+                                                                        "u160":  "161+ poena: Crvena Zvezda Meridianbet 6/10, Hapoel Tel Aviv 8/10\u003cbr\u003eOcekivano oko 172 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Crvena Zvezda Meridianbet 0/10, Hapoel Tel Aviv 0/10\u003cbr\u003eOcekivano oko 172 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Crvena Zvezda Meridianbet 0/10, Hapoel Tel Aviv 0/10\u003cbr\u003eOcekivano oko 172 poena",
+                                                                        "m10":  "Ocekivana razlika oko 3.9\u003cbr\u003eZadnjih 10: Crvena Zvezda Meridianbet 4-6, prosjek 86.2:87.6 \u0026middot; Hapoel Tel Aviv 4-6, 84.7:85.9",
+                                                                        "h80":  "Crvena Zvezda Meridianbet daje prosjecno 86.2, Hapoel Tel Aviv prima 85.9",
+                                                                        "h110":  "Crvena Zvezda Meridianbet daje prosjecno 86.2, Hapoel Tel Aviv prima 85.9"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.7,
+                                                                      "o160":  1.3,
+                                                                      "u160":  3.25,
+                                                                      "w2":  2.15
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb508598",
+                                                            "league":  "Euroleague (Europe)",
+                                                            "time":  "20:30",
+                                                            "home":  "Valencia",
+                                                            "away":  "Baskonia",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/2341.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/2331.png",
+                                                            "p":  {
+                                                                      "w1":  73,
+                                                                      "w2":  27,
+                                                                      "m10":  57,
+                                                                      "h80":  97,
+                                                                      "o160":  90,
+                                                                      "u160":  10
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Valencia 7-3, prosjek 91.8:87.6 \u0026middot; Baskonia 4-6, 92.2:96.7",
+                                                                        "w2":  "Zadnjih 10: Valencia 7-3, prosjek 91.8:87.6 \u0026middot; Baskonia 4-6, 92.2:96.7",
+                                                                        "o160":  "161+ poena: Valencia 8/10, Baskonia 9/10\u003cbr\u003eOcekivano oko 184 poena",
+                                                                        "u160":  "161+ poena: Valencia 8/10, Baskonia 9/10\u003cbr\u003eOcekivano oko 184 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Valencia 0/10, Baskonia 1/10\u003cbr\u003eOcekivano oko 184 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Valencia 0/10, Baskonia 1/10\u003cbr\u003eOcekivano oko 184 poena",
+                                                                        "m10":  "Ocekivana razlika oko 8.3\u003cbr\u003eZadnjih 10: Valencia 7-3, prosjek 91.8:87.6 \u0026middot; Baskonia 4-6, 92.2:96.7",
+                                                                        "h80":  "Valencia daje prosjecno 91.8, Baskonia prima 96.7",
+                                                                        "h110":  "Valencia daje prosjecno 91.8, Baskonia prima 96.7"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.25,
+                                                                      "w2":  4
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb508597",
+                                                            "league":  "Euroleague (Europe)",
+                                                            "time":  "20:30",
+                                                            "home":  "Olimpia Milano",
+                                                            "away":  "Virtus Bologna",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/722.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/732.png",
+                                                            "p":  {
+                                                                      "w1":  71,
+                                                                      "w2":  29,
+                                                                      "m10":  54,
+                                                                      "h80":  91,
+                                                                      "o160":  74,
+                                                                      "u160":  26
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Olimpia Milano 3-7, prosjek 87.1:90.3 \u0026middot; Virtus Bologna 1-9, 81.6:91.9",
+                                                                        "w2":  "Zadnjih 10: Olimpia Milano 3-7, prosjek 87.1:90.3 \u0026middot; Virtus Bologna 1-9, 81.6:91.9",
+                                                                        "o160":  "161+ poena: Olimpia Milano 9/10, Virtus Bologna 8/10\u003cbr\u003eOcekivano oko 175 poena",
+                                                                        "u160":  "161+ poena: Olimpia Milano 9/10, Virtus Bologna 8/10\u003cbr\u003eOcekivano oko 175 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Olimpia Milano 0/10, Virtus Bologna 0/10\u003cbr\u003eOcekivano oko 175 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Olimpia Milano 0/10, Virtus Bologna 0/10\u003cbr\u003eOcekivano oko 175 poena",
+                                                                        "m10":  "Ocekivana razlika oko 7.6\u003cbr\u003eZadnjih 10: Olimpia Milano 3-7, prosjek 87.1:90.3 \u0026middot; Virtus Bologna 1-9, 81.6:91.9",
+                                                                        "h80":  "Olimpia Milano daje prosjecno 87.1, Virtus Bologna prima 91.9",
+                                                                        "h110":  "Olimpia Milano daje prosjecno 87.1, Virtus Bologna prima 91.9"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.36,
+                                                                      "o160":  1.7,
+                                                                      "u160":  2.05,
+                                                                      "w2":  3.1
+                                                                  }
+                                                        },
+                                                        {
+                                                            "id":  "bb508599",
+                                                            "league":  "Euroleague (Europe)",
+                                                            "time":  "20:45",
+                                                            "home":  "Paris",
+                                                            "away":  "Partizan Mozzart Bet",
+                                                            "hl":  "https://media.api-sports.io/basketball/teams/108.png",
+                                                            "al":  "https://media.api-sports.io/basketball/teams/1068.png",
+                                                            "p":  {
+                                                                      "w1":  55,
+                                                                      "w2":  45,
+                                                                      "m10":  47,
+                                                                      "h80":  81,
+                                                                      "o160":  81,
+                                                                      "u160":  19
+                                                                  },
+                                                            "why":  {
+                                                                        "w1":  "Zadnjih 10: Paris 4-6, prosjek 89.1:89.3 \u0026middot; Partizan Mozzart Bet 8-2, 87.3:81.8",
+                                                                        "w2":  "Zadnjih 10: Paris 4-6, prosjek 89.1:89.3 \u0026middot; Partizan Mozzart Bet 8-2, 87.3:81.8",
+                                                                        "o160":  "161+ poena: Paris 10/10, Partizan Mozzart Bet 7/10\u003cbr\u003eOcekivano oko 174 poena",
+                                                                        "u160":  "161+ poena: Paris 10/10, Partizan Mozzart Bet 7/10\u003cbr\u003eOcekivano oko 174 poena",
+                                                                        "o220":  "Preko 220.5 bilo: Paris 0/10, Partizan Mozzart Bet 0/10\u003cbr\u003eOcekivano oko 174 poena",
+                                                                        "u220":  "Preko 220.5 bilo: Paris 0/10, Partizan Mozzart Bet 0/10\u003cbr\u003eOcekivano oko 174 poena",
+                                                                        "m10":  "Ocekivana razlika oko 1.1\u003cbr\u003eZadnjih 10: Paris 4-6, prosjek 89.1:89.3 \u0026middot; Partizan Mozzart Bet 8-2, 87.3:81.8",
+                                                                        "h80":  "Paris daje prosjecno 89.1, Partizan Mozzart Bet prima 81.8",
+                                                                        "h110":  "Paris daje prosjecno 89.1, Partizan Mozzart Bet prima 81.8"
+                                                                    },
+                                                            "o":  {
+                                                                      "w1":  1.67,
+                                                                      "o160":  1.21,
+                                                                      "u160":  3.85,
+                                                                      "w2":  2.21
                                                                   }
                                                         }
                                                     ]
