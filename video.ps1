@@ -78,6 +78,7 @@ function LegCard($g, [float]$x, [float]$y, $l, $res, [double]$pop) {
       $g.FillPath((B $gold 70), (RR ($x + 26) ($y + 190) $mw 42 21)); $g.DrawString($mk, (F 28), (B $white), ($x + 44), ($y + 193)) }
   } else {
     $g.DrawString(('{0:0.00}' -f [double]$l.o).Replace(',', '.'), (F 64 'Bold' 'Arial Black'), (B $gold), (New-Object System.Drawing.RectangleF ($x + 640), ($y + 30), 340, 90), $sfR)
+    if ($l.tag) { $g.DrawString([string]$l.tag, (F 28), (B $muted), (New-Object System.Drawing.RectangleF ($x + 640), ($y + 108), 340, 40), $sfR) }
     $mk = [string]$l.mkName; $mw = $g.MeasureString($mk, (F 30)).Width + 40
     $g.FillPath((B $gold 60), (RR ($x + 980 - $mw) ($y + 150) $mw 58 29))
     $g.DrawString($mk, (F 30), (B $white), ($x + 1000 - $mw), ($y + 158))
@@ -127,6 +128,33 @@ if ($data.ticket -and @($data.ticket.legs).Count -and $Only -ne 'results') {
       $g.FillPath((B $gold ([int](90 * $p))), (RR $bx $by $bw $bh (30 * $sc)))
       $g.DrawString('UKUPNA KVOTA', (F (44 * $sc)), (B $white ([int](255 * $p))), ($bx + 40 * $sc), ($by + 58 * $sc))
       $g.DrawString(('{0:0.00}' -f [double]$t0.odd).Replace(',', '.'), (F (104 * $sc) 'Bold' 'Arial Black'), (B $gold ([int](255 * $p))), (New-Object System.Drawing.RectangleF $bx, ($by + 10 * $sc), ($bw - 40 * $sc), $bh), $sfR)
+    }
+    Cta $g (Ease (($t - $tot - 1.0) / 0.5)) $t
+  }
+}
+
+# ---------- 1b) petkom: tiket vikenda (cache\weekend.json pravi weekend.ps1) ----------
+$wf = Join-Path $root 'cache\weekend.json'
+$wk = if (Test-Path $wf) { Get-Content -Raw -Encoding UTF8 $wf | ConvertFrom-Json } else { $null }
+if ($wk -and $wk.date -eq $today -and @($wk.legs).Count -and $Only -ne 'results') {
+  $legs = @($wk.legs | ForEach-Object { $_ | Add-Member -NotePropertyName mkName -NotePropertyValue (MkName $_.sport $_.mk) -Force -PassThru |
+    Add-Member -NotePropertyName tag -NotePropertyValue "$(if ($_.day -eq 'SUB') { 'Subota' } else { 'Nedjelja' }) $($_.time)" -Force -PassThru })
+  $d1 = [datetime]::ParseExact($wk.sat, 'yyyy-MM-dd', $null); $d2 = [datetime]::ParseExact($wk.sun, 'yyyy-MM-dd', $null)
+  $legStart = 1.3; $legGap = 1.0; $tot = $legStart + $legs.Count * $legGap + 0.4; $dur = $tot + 4.5
+  Render 'weekend' $dur {
+    param($g, $t)
+    Background $g $t ([System.Drawing.Color]::FromArgb(20,46,96))
+    Brand $g (Ease ($t / 0.5))
+    $e = Ease (($t - 0.2) / 0.6); $g.DrawString('TIKET VIKENDA', (F 96 'Bold' 'Arial Black'), (B $gold ([int](255 * $e))), (New-Object System.Drawing.RectangleF 0, (200 + 60 * (1 - $e)), $W, 160), $sfC)
+    $g.DrawString("Subota i nedjelja $($d1.Day).–$($d2.Day).$($d2.Month).  ·  $($legs.Count) para", (F 42 'Regular'), (B $white ([int](255 * $e))), (New-Object System.Drawing.RectangleF 0, 370, $W, 70), $sfC)
+    $y = 450; $step = if ($legs.Count -gt 3) { 250 } else { 280 }
+    for ($k = 0; $k -lt $legs.Count; $k++) { $p = Ease (($t - $legStart - $k * $legGap) / 0.55); if ($p -gt 0) { LegCard $g (40 + 1100 * (1 - $p)) ($y + $k * $step) $legs[$k] $null 0 } }
+    $p = Ease (($t - $tot) / 0.5)
+    if ($p -gt 0) {
+      $sc = 0.6 + 0.4 * $p; $bw = 1000 * $sc; $bh = 170 * $sc; $bx = ($W - $bw) / 2; $by = $y + $legs.Count * $step + 10
+      $g.FillPath((B $gold ([int](90 * $p))), (RR $bx $by $bw $bh (30 * $sc)))
+      $g.DrawString('UKUPNA KVOTA', (F (44 * $sc)), (B $white ([int](255 * $p))), ($bx + 40 * $sc), ($by + 58 * $sc))
+      $g.DrawString(('{0:0.00}' -f [double]$wk.odd).Replace(',', '.'), (F (104 * $sc) 'Bold' 'Arial Black'), (B $gold ([int](255 * $p))), (New-Object System.Drawing.RectangleF $bx, ($by + 10 * $sc), ($bw - 40 * $sc), $bh), $sfR)
     }
     Cta $g (Ease (($t - $tot - 1.0) / 0.5)) $t
   }

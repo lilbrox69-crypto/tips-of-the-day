@@ -128,6 +128,7 @@ $posts = New-Object System.Collections.ArrayList; $n = 0
 $NM = $fb.Count + $bb.Count
 # pitanje na kraju objave -> komentari -> Facebook objavu pokaze vecem broju ljudi
 $Q = @{ results = 'Jesi li igrao jučerašnji tiket? Pohvali se u komentaru 👇'; ticket = 'Igraš li današnji tiket? Napiši "IGRAM" u komentar 👇'
+        weekend = 'Igraš li tiket vikenda? Napiši "IGRAM" u komentar 👇'
         match = 'Šta ti kažeš – prolazi ili ne? 👇'; stats = 'Koliko tvoj tipster pogađa? 😉 Napiši u komentar 👇'; evening = 'Koju utakmicu večeras gledaš? 👇' }
 function AddPost($t, $kind, $img, $text) {
   # 1. red = udica, 2. red = link (Facebook skrati tekst poslije 2-3 reda, link mora biti gore)
@@ -136,10 +137,10 @@ function AddPost($t, $kind, $img, $text) {
   $more = if ($NM -gt 20 -and $kind -notin 'results', 'stats') { "`n`n🔎 Danas smo analizirali $NM utakmica – ovdje su samo najbolji. Ostale opcije (golovi, korneri, kartoni, pobjede, košarka) čekaju te na stranici." } else { '' }
   $q = if ($Q[$kind]) { $Q[$kind] } else { 'Koji od ova 3 bi ti stavio na tiket? 👇' }
   # u pola objava jasno kazemo da je sve besplatno (bez VIP grupa i placanja - za razliku od konkurencije)
-  $free = if ($kind -in 'results', 'ticket', 'stats', 'evening', 'OBA DAJU GOL', 'KOŠARKA DANA') { "`n`n💯 Tips of the Day je POTPUNO BESPLATAN – bez registracije, bez VIP grupa, bez plaćanja. Samo uđi na https://tipsoftheday.win i sve je tu." } else { '' }
+  $free = if ($kind -in 'results', 'ticket', 'stats', 'evening', 'OBA DAJU GOL', 'KOŠARKA DANA', 'weekend') { "`n`n💯 Tips of the Day je POTPUNO BESPLATAN – bez registracije, bez VIP grupa, bez plaćanja. Samo uđi na https://tipsoftheday.win i sve je tu." } else { '' }
   $final = "$hook`n$cta`n`n$body$more$free`n`n💬 $q`n`n🔔 Zaprati stranicu – tiket dana stiže svako jutro u 8h.`nStatistika, ne garancija · 18+ · igraj odgovorno`n#tiketdana #tipovi #fudbal #kosarka #tipsoftheday"
   # tiket i rezultati idu kao VIDEO (Reels) ako ga je video.ps1 napravio; slika ostaje rezerva
-  $vid = ''; if ($kind -in 'ticket', 'results' -and (Test-Path (Join-Path $outDir "$kind.mp4"))) { $vid = "$SITE/social/$today/$kind.mp4?v=$today" }
+  $vid = ''; if ($kind -in 'ticket', 'results', 'weekend' -and (Test-Path (Join-Path $outDir "$kind.mp4"))) { $vid = "$SITE/social/$today/$kind.mp4?v=$today" }
   [void]$posts.Add([ordered]@{ t = $t; kind = $kind; image = $img; video = $vid; text = $final })
 }
 
@@ -217,6 +218,22 @@ foreach ($sl in $slots) {
   $ic = if ($sl.s -eq 'basketball') { '🏀' } else { '⚽' }
   $lines = ($top | ForEach-Object { "$ic $($_.home) – $($_.away) ($($_.time))`n   ➜ $($_.mk): $([int]$_.p)%" + $(if ($_.o) { " · kvota $(('{0:0.00}' -f [double]$_.o).Replace(',', '.'))" } else { '' }) }) -join "`n"
   AddPost $sl.t $sl.title $img "$($sl.emo) $($sl.title) – top 3 za danas`n`n$lines$TAG"
+}
+
+# 12:00 petkom: tiket vikenda (subota + nedjelja; jake lige, a u reprezentativnoj pauzi sve)
+$wf = Join-Path $root 'cache\weekend.json'
+$wk = if (Test-Path $wf) { Get-Content -Raw -Encoding UTF8 $wf | ConvertFrom-Json } else { $null }
+if ($wk -and $wk.date -eq $today -and @($wk.legs).Count) {
+  $n++; $cv = Canvas @(20,46,96); $legs = @($wk.legs)
+  $d1 = [datetime]::ParseExact($wk.sat, 'yyyy-MM-dd', $null); $d2 = [datetime]::ParseExact($wk.sun, 'yyyy-MM-dd', $null)
+  $cv.g.DrawString('TIKET VIKENDA', (F 76 'Bold' 'Arial Black'), (B $C.gold), 52, 134)
+  $cv.g.DrawString("Subota i nedjelja $($d1.Day).–$($d2.Day).$($d2.Month). · $($legs.Count) para · kvota $(('{0:0.00}' -f [double]$wk.odd).Replace(',', '.'))", (F 34 'Bold'), (B $C.white), 60, 250)
+  # ukupna kvota je u podnaslovu, pa 4 para stanu sa opcijom i danom
+  $rh = if ($legs.Count -gt 3) { 200 } else { 232 }; $y = 320
+  foreach ($l in $legs) { Row $cv.g $y $rh ([pscustomobject]@{ home = $l.home; away = $l.away; hl = $l.hl; al = $l.al; league = $null; time = "$(if ($l.day -eq 'SUB') { 'Sub' } else { 'Ned' }) $($l.time)"; mk = (MkName $l.sport $l.mk); p = $l.p; o = $l.o }) $null; $y += $rh + 16 }
+  $g = $cv.g; Footer $g; $img = Save $cv $n
+  $lines = ($legs | ForEach-Object { "⚽ $($_.home) – $($_.away) ($(if ($_.day -eq 'SUB') { 'subota' } else { 'nedjelja' }) $($_.time))`n   ➜ $(MkName $_.sport $_.mk) @ $(('{0:0.00}' -f [double]$_.o).Replace(',', '.'))" }) -join "`n"
+  AddPost '12:00' 'weekend' $img ("📅 TIKET VIKENDA · ukupna kvota $(('{0:0.00}' -f [double]$wk.odd).Replace(',', '.'))`n`n$lines`n`nNajsigurniji parovi za subotu i nedjelju: forma, međusobni susreti, povrede i kvote. Tiket dana stiže i u subotu i u nedjelju ujutro. 🍀$TAG")
 }
 
 # 17:30 statistika zadnjih 30 dana

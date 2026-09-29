@@ -1,11 +1,13 @@
 # Fudbal preko API-Football (Pro plan): sve lige, statistika zadnjih 10 utakmica, korneri/kartoni i kvote (Bet365).
 # Pise af.json (samo danasnje utakmice) i rezultate za pracenje pogodaka. Poziva se iz update.ps1.
+# Tiket vikenda (petkom): -Date <subota/nedjelja> -OutFile af_sat.json -Top = samo jake lige, bez sjene i bez starih tipova.
+param([string]$Date = '', [string]$OutFile = 'af.json', [switch]$Top)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $key = (Get-Content -Raw -Encoding UTF8 (Join-Path $root 'config.json') | ConvertFrom-Json).apiSportsKey
 $tz = [System.TimeZoneInfo]::FindSystemTimeZoneById('Central European Standard Time')
 $todayD = [System.TimeZoneInfo]::ConvertTimeFromUtc([datetime]::UtcNow, $tz).Date
-$today = $todayD.ToString('yyyy-MM-dd')
+$today = if ($Date) { $Date } else { $todayD.ToString('yyyy-MM-dd') }
 $enc = New-Object System.Text.UTF8Encoding($false)
 $cacheDir = Join-Path $root 'cache'
 . (Join-Path $root 'results_lib.ps1')
@@ -41,9 +43,14 @@ function Compact($f) {
 
 # ---------- 1) danasnje utakmice ----------
 $fx = Get-One "fixtures?date=$today&timezone=Europe/Sarajevo"
-$skip = 'Women|Femen|Femin|Frauen|Feminine|Damallsvenskan|Friendl|U1[5-9]|U2[0-3]|Youth|Junior|Reserve|Primavera|Premier League 2|Professional Development|Amateur|Regionalliga|Oberliga'
-$teamSkip = '\sII$|\sIII$|\sB$|\sU\d\d$|\sReserves?$|\s2$'
+$skip = 'Women|WSL|Femen|Femin|Frauen|Feminine|Damallsvenskan|Friendl|U1[5-9]|U2[0-3]|Youth|Junior|Reserve|Primavera|Premier League 2|Professional Development|Amateur|Regionalliga|Oberliga'
+$teamSkip = '\sII$|\sIII$|\sB$|\sW$|\sU\d\d$|\sReserves?$|\s2$'
 $games = @($fx.response | Where-Object { $_.fixture.status.short -in 'NS','TBD' -and $_.league.name -notmatch $skip -and $_.teams.home.name -notmatch $teamSkip -and $_.teams.away.name -notmatch $teamSkip })
+# jake lige: Engleska 1-2, Spanija, Italija, Njemacka 1-2, Francuska, Portugal, Holandija, Turska, Belgija, Skotska, Austrija, Svicarska, HNL, Srbija, BiH, Danska, Grcka, Poljska, Ceska, Saudijska, Brazil, Argentina, MLS, Meksiko
+$TOPL = @(39,40,140,135,78,79,61,94,88,203,144,179,218,207,210,286,315,119,197,106,345,307,71,128,253,262)
+# + Liga nacija i kvalifikacije. Ako je reprezentativna pauza (manje od 15 utakmica jakih liga) -> sve lige kao tiket dana
+$TOPL += 5, 32
+if ($Top) { $tg = @($games | Where-Object { [int]$_.league.id -in $TOPL }); if ($tg.Count -ge 15) { $games = $tg } else { Write-Host "  jake lige: samo $($tg.Count) utakmica - uzimam sve lige" } }
 Write-Host "API-Football: $(@($fx.response).Count) utakmica danas, $($games.Count) u obzir"
 
 # ---------- 2) istorija: liga-sezona (1 poziv po ligi), pa po timu gdje fali ----------
@@ -90,10 +97,10 @@ function Save-FxStats($resp) {
 $ids = @($last.Values | ForEach-Object { $_ } | ForEach-Object { $_.id } | Select-Object -Unique | Where-Object { -not $fxStats.ContainsKey($_) })
 # + jucerasnji i stariji nasi tipovi koji jos cekaju rezultat
 $pf = Join-Path $cacheDir 'picks.json'
-if (Test-Path $pf) { $parr = Get-Content -Raw -Encoding UTF8 $pf | ConvertFrom-Json; foreach ($pp in $parr) { if ($pp -and $pp.hit -eq $null -and $pp.date -lt $today -and [string]$pp.key -like 'football:af*') { $ids += ([string]$pp.key).Substring(11) } } }
+if (-not $Date -and (Test-Path $pf)) { $parr = Get-Content -Raw -Encoding UTF8 $pf | ConvertFrom-Json; foreach ($pp in $parr) { if ($pp -and $pp.hit -eq $null -and $pp.date -lt $today -and [string]$pp.key -like 'football:af*') { $ids += ([string]$pp.key).Substring(11) } } }
 # + utakmice iz tiketa koje jos cekaju rezultat
 $tfile = Join-Path $cacheDir 'tickets.json'
-if (Test-Path $tfile) { $tarr = Get-Content -Raw -Encoding UTF8 $tfile | ConvertFrom-Json; foreach ($t in $tarr) { if ($t -and $t.hit -eq $null -and $t.date -lt $today) { foreach ($l in $t.legs) { if ([string]$l.key -like 'football:af*') { $ids += ([string]$l.key).Substring(11) } } } } }
+if (-not $Date -and (Test-Path $tfile)) { $tarr = Get-Content -Raw -Encoding UTF8 $tfile | ConvertFrom-Json; foreach ($t in $tarr) { if ($t -and $t.hit -eq $null -and $t.date -lt $today) { foreach ($l in $t.legs) { if ([string]$l.key -like 'football:af*') { $ids += ([string]$l.key).Substring(11) } } } } }
 $ids = @($ids | Select-Object -Unique)
 $idPaths = @(); for ($i = 0; $i -lt $ids.Count; $i += 20) { $idPaths += 'fixtures?ids=' + (($ids[$i..([math]::Min($i + 19, $ids.Count - 1))]) -join '-') }
 $sres = Get-Many $idPaths
@@ -252,7 +259,7 @@ $sh = New-Object System.Collections.ArrayList
 foreach ($mk in 'gg','o15','o25','u25','hs','as','w1','x','w2','c8','y3') {
   foreach ($m in @($list | Where-Object { $_.p[$mk] -ne $null } | Sort-Object { - [int]$_.p[$mk] } | Select-Object -First 3)) {
     [void]$sh.Add([ordered]@{ sport = 'football'; mk = $mk; key = "football:$($m.id)"; home = $m.home; away = $m.away; p = [int]$m.p[$mk] }) } }
-[IO.File]::WriteAllText((Join-Path $root 'shadow_af.json'), (([ordered]@{ date = $today; picks = @($sh) }) | ConvertTo-Json -Depth 4 -Compress), $enc)
+if (-not $Date) { [IO.File]::WriteAllText((Join-Path $root 'shadow_af.json'), (([ordered]@{ date = $today; picks = @($sh) }) | ConvertTo-Json -Depth 4 -Compress), $enc) }
 # ---------- 7) sigurnije: mijesanje sa trzistem (kvote) i samo utakmice koje kladionice nude ----------
 function Imp($o, $k) { if ($o.Contains($k) -and $o[$k] -gt 1) { return 1 / [double]$o[$k] } ; return $null }
 foreach ($m in $list) {
@@ -268,5 +275,5 @@ foreach ($m in $list) {
 $withOdds = @($list | Where-Object { $_.o })
 if ($withOdds.Count -ge 20) { Write-Host "  samo utakmice sa kvotama: $($withOdds.Count) od $($list.Count)"; $list = New-Object System.Collections.ArrayList (, $withOdds) }
 $out = [ordered]@{ date = $today; days = @([ordered]@{ date = $today; matches = @($list | Sort-Object { $_.time }) }) }
-[IO.File]::WriteAllText((Join-Path $root 'af.json'), ($out | ConvertTo-Json -Depth 8), $enc)
+[IO.File]::WriteAllText((Join-Path $root $OutFile), ($out | ConvertTo-Json -Depth 8), $enc)
 Write-Host "API-Football gotovo: $($list.Count) utakmica sa statistikom, $(@($list | Where-Object { $_.o }).Count) sa kvotama, $($script:calls) poziva"
