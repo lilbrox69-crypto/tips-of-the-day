@@ -156,7 +156,7 @@ export default {
   async fetch(req, env, ctx) {
     const cache = caches.default;
     const url = new URL(req.url);
-    if (url.pathname.startsWith('/api/')) return handleApi(req, env, ctx, url);
+    if (url.pathname.startsWith('/api/')) return J({ err: 'off' }, 404);   // liga/nalozi ugaseni (Bilal, 29.9.)
     // /stats?ids=af1,af2 -> korneri i zuti kartoni za zavrsene utakmice (kes 1 dan po utakmici)
     if (url.pathname === '/stats') {
       const ids = (url.searchParams.get('ids') || '').split(',').filter(x => /^af\d+$/.test(x)).slice(0, 20);
