@@ -185,10 +185,10 @@ export default {
 
     const pause = await cache.match(new Request('https://totd-live.cache/pause'));
     const out = { t: Date.now(), d: todaySarajevo(), f: {}, b: {}, paused: !!pause };
-    if (!pause && env.API_KEY) {
+    if (env.API_KEY) {
       const H = { 'x-apisports-key': env.API_KEY };
       const d = out.d;
-      try {
+      if (!pause) try {   // kocnica vazi samo za fudbal; kosarka ima svoj limit
         const r = await fetch(`https://v3.football.api-sports.io/fixtures?date=${d}&timezone=Europe/Sarajevo`, { headers: H });
         const left = Number(r.headers.get('x-ratelimit-requests-remaining'));
         const j = await r.json();
@@ -201,15 +201,25 @@ export default {
         if (!j.results) out.fe = j.errors;   // za dijagnozu ako API nista ne vrati
         if (left && left < MIN_LEFT) ctx.waitUntil(cache.put(new Request('https://totd-live.cache/pause'), new Response('1', { headers: { 'Cache-Control': 'max-age=3600' } })));
       } catch (e) { out.ferr = 1; }
-      try {
-        const r = await fetch(`https://v1.basketball.api-sports.io/games?date=${d}&timezone=Europe/Sarajevo`, { headers: H });
-        const j = await r.json();
-        for (const g of (j.response || [])) {
-          const s = g.status.short;
-          if (s === 'NS' || s === 'TBD') continue;
-          out.b['bb' + g.id] = { s, m: g.status.timer, h: g.scores.home.total, a: g.scores.away.total };
-        }
-      } catch (e) { out.berr = 1; }
+      // kosarka: do 2 pokusaja; ako API ne vrati nista, ostaju zadnji dobri rezultati (da rezultat nikad ne "nestane")
+      const lastK = new Request('https://totd-live.cache/lastb');
+      let okB = false;
+      for (let i = 0; i < 2 && !okB; i++) {
+        try {
+          const r = await fetch(`https://v1.basketball.api-sports.io/games?date=${d}&timezone=Europe/Sarajevo`, { headers: H });
+          out.bl = Number(r.headers.get('x-ratelimit-requests-remaining'));
+          const j = await r.json();
+          if (!j.results) { out.be = j.errors; continue; }
+          for (const g of (j.response || [])) {
+            const s = g.status.short;
+            if (s === 'NS' || s === 'TBD') continue;
+            out.b['bb' + g.id] = { s, m: g.status.timer, h: g.scores.home.total, a: g.scores.away.total };
+          }
+          okB = true;
+        } catch (e) { out.berr = String(e).slice(0, 80); }
+      }
+      if (okB && Object.keys(out.b).length) ctx.waitUntil(cache.put(lastK, new Response(JSON.stringify({ d, b: out.b }), { headers: { 'Cache-Control': 'max-age=86400' } })));
+      if (!okB) { const lh = await cache.match(lastK); if (lh) { const lb = await lh.json(); if (lb.d === d) { out.b = lb.b; out.bOld = 1; } } }
     }
     const body = JSON.stringify(out);
     ctx.waitUntil(cache.put(ck, new Response(body, { headers: { 'Cache-Control': `max-age=${TTL}` } })));
