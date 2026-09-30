@@ -188,53 +188,47 @@ export default {
     if (env.API_KEY) {
       const H = { 'x-apisports-key': env.API_KEY };
       const d = out.d;
-      if (!pause) try {   // kocnica vazi samo za fudbal; kosarka ima svoj limit
-        const r = await fetch(`https://v3.football.api-sports.io/fixtures?date=${d}&timezone=Europe/Sarajevo`, { headers: H });
-        const left = Number(r.headers.get('x-ratelimit-requests-remaining'));
-        const j = await r.json();
-        for (const x of (j.response || [])) {
-          const s = x.fixture.status.short;
-          if (s === 'NS' || s === 'TBD') continue;
-          out.f['af' + x.fixture.id] = { s, m: x.fixture.status.elapsed, h: x.goals.home, a: x.goals.away };
+      // API-Sports iz Cloudflare-a cesto vrati "too many requests" (dijeljene IP adrese), pa za oba sporta:
+      // do 4 pokusaja, a zadnji dobri rezultati se cuvaju u kes + KV (globalno) da rezultat nikad ne "nestane".
+      async function grab(url, kvKey, parse, errKey) {
+        let ok = false, res = {}, left = null;
+        for (let i = 0; i < 4 && !ok; i++) {
+          if (i) await new Promise(r => setTimeout(r, 700 * i));
+          try {
+            const r = await fetch(url, { headers: H });
+            left = Number(r.headers.get('x-ratelimit-requests-remaining'));
+            const j = await r.json();
+            if (!j.results) { out[errKey] = j.errors; continue; }
+            res = parse(j.response || []); ok = true; delete out[errKey];
+          } catch (e) { out[errKey] = String(e).slice(0, 80); }
         }
-        out.left = left;
-        if (!j.results) out.fe = j.errors;   // za dijagnozu ako API nista ne vrati
-        if (left && left < MIN_LEFT) ctx.waitUntil(cache.put(new Request('https://totd-live.cache/pause'), new Response('1', { headers: { 'Cache-Control': 'max-age=3600' } })));
-      } catch (e) { out.ferr = 1; }
-      // kosarka: API-Basketball iz Cloudflare-a cesto vrati "too many requests" (dijeljene IP adrese), pa: do 4 pokusaja,
-      // a zadnji dobri rezultati se cuvaju u KV (globalno, za sve lokacije) da rezultat nikad ne "nestane"
-      const lastK = new Request('https://totd-live.cache/lastb');
-      let okB = false;
-      for (let i = 0; i < 4 && !okB; i++) {
-        if (i) await new Promise(res => setTimeout(res, 700 * i));
-        try {
-          const r = await fetch(`https://v1.basketball.api-sports.io/games?date=${d}&timezone=Europe/Sarajevo`, { headers: H });
-          out.bl = Number(r.headers.get('x-ratelimit-requests-remaining'));
-          const j = await r.json();
-          if (!j.results) { out.be = j.errors; continue; }
-          for (const g of (j.response || [])) {
-            const s = g.status.short;
-            if (s === 'NS' || s === 'TBD') continue;
-            out.b['bb' + g.id] = { s, m: g.status.timer, h: g.scores.home.total, a: g.scores.away.total };
-          }
-          okB = true;
-        } catch (e) { out.berr = String(e).slice(0, 80); }
+        const ck2 = new Request('https://totd-live.cache/' + kvKey);
+        if (ok && Object.keys(res).length) {
+          const val = JSON.stringify({ d, t: Date.now(), v: res });
+          ctx.waitUntil(cache.put(ck2, new Response(val, { headers: { 'Cache-Control': 'max-age=86400' } })));
+          // KV: najvise jedan upis svakih 5 minuta po sportu (besplatni limit 1000 upisa dnevno)
+          if (env.LIGA) ctx.waitUntil((async () => { const cur = await env.LIGA.get(kvKey, 'json'); if (!cur || cur.d !== d || Date.now() - cur.t > 300000) await env.LIGA.put(kvKey, val, { expirationTtl: 172800 }); })().catch(() => {}));
+        }
+        if (!ok) {
+          let lb = null; const lh = await cache.match(ck2); if (lh) lb = await lh.json();
+          if ((!lb || lb.d !== d) && env.LIGA) lb = await env.LIGA.get(kvKey, 'json').catch(() => null);
+          if (lb && lb.d === d) { res = lb.v; out.old = 1; }
+        }
+        return { res, left, ok };
       }
-      if (okB && Object.keys(out.b).length) {
-        const val = JSON.stringify({ d, t: Date.now(), b: out.b });
-        ctx.waitUntil(cache.put(lastK, new Response(val, { headers: { 'Cache-Control': 'max-age=86400' } })));
-        // KV: najvise jedan upis svake 3 minute (besplatni limit 1000 upisa dnevno)
-        if (env.LIGA) ctx.waitUntil((async () => { const cur = await env.LIGA.get('liveb', 'json'); if (!cur || cur.d !== d || Date.now() - cur.t > 180000) await env.LIGA.put('liveb', val, { expirationTtl: 172800 }); })().catch(() => {}));
+      if (!pause) {   // kocnica vazi samo za fudbal; kosarka ima svoj limit
+        const g = await grab(`https://v3.football.api-sports.io/fixtures?date=${d}&timezone=Europe/Sarajevo`, 'livef', arr => {
+          const o = {}; for (const x of arr) { const s = x.fixture.status.short; if (s === 'NS' || s === 'TBD') continue; o['af' + x.fixture.id] = { s, m: x.fixture.status.elapsed, h: x.goals.home, a: x.goals.away }; } return o; }, 'fe');
+        out.f = g.res; if (g.ok) out.left = g.left;
+        if (g.ok && g.left && g.left < MIN_LEFT) ctx.waitUntil(cache.put(new Request('https://totd-live.cache/pause'), new Response('1', { headers: { 'Cache-Control': 'max-age=3600' } })));
       }
-      if (!okB) {
-        let lb = null; const lh = await cache.match(lastK); if (lh) lb = await lh.json();
-        if ((!lb || lb.d !== d) && env.LIGA) lb = await env.LIGA.get('liveb', 'json').catch(() => null);
-        if (lb && lb.d === d) { out.b = lb.b; out.bOld = 1; }
-      }
+      const gb = await grab(`https://v1.basketball.api-sports.io/games?date=${d}&timezone=Europe/Sarajevo`, 'liveb2', arr => {
+        const o = {}; for (const x of arr) { const s = x.status.short; if (s === 'NS' || s === 'TBD') continue; o['bb' + x.id] = { s, m: x.status.timer, h: x.scores.home.total, a: x.scores.away.total }; } return o; }, 'be');
+      out.b = gb.res; out.bl = gb.left;
     }
     const body = JSON.stringify(out);
     // ako kosarka nije stigla, pokusaj ponovo vec za 45 s (inace 2 minute)
-    ctx.waitUntil(cache.put(ck, new Response(body, { headers: { 'Cache-Control': `max-age=${out.bOld || out.be || out.berr ? 45 : TTL}` } })));
+    ctx.waitUntil(cache.put(ck, new Response(body, { headers: { 'Cache-Control': `max-age=${out.old || out.be || out.fe ? 45 : TTL}` } })));
     return new Response(body, { headers: { ...CORS, 'Cache-Control': 'public, max-age=60' } });
   }
 };
