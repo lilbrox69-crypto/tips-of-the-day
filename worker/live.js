@@ -201,10 +201,12 @@ export default {
         if (!j.results) out.fe = j.errors;   // za dijagnozu ako API nista ne vrati
         if (left && left < MIN_LEFT) ctx.waitUntil(cache.put(new Request('https://totd-live.cache/pause'), new Response('1', { headers: { 'Cache-Control': 'max-age=3600' } })));
       } catch (e) { out.ferr = 1; }
-      // kosarka: do 2 pokusaja; ako API ne vrati nista, ostaju zadnji dobri rezultati (da rezultat nikad ne "nestane")
+      // kosarka: API-Basketball iz Cloudflare-a cesto vrati "too many requests" (dijeljene IP adrese), pa: do 4 pokusaja,
+      // a zadnji dobri rezultati se cuvaju u KV (globalno, za sve lokacije) da rezultat nikad ne "nestane"
       const lastK = new Request('https://totd-live.cache/lastb');
       let okB = false;
-      for (let i = 0; i < 2 && !okB; i++) {
+      for (let i = 0; i < 4 && !okB; i++) {
+        if (i) await new Promise(res => setTimeout(res, 700 * i));
         try {
           const r = await fetch(`https://v1.basketball.api-sports.io/games?date=${d}&timezone=Europe/Sarajevo`, { headers: H });
           out.bl = Number(r.headers.get('x-ratelimit-requests-remaining'));
@@ -218,11 +220,21 @@ export default {
           okB = true;
         } catch (e) { out.berr = String(e).slice(0, 80); }
       }
-      if (okB && Object.keys(out.b).length) ctx.waitUntil(cache.put(lastK, new Response(JSON.stringify({ d, b: out.b }), { headers: { 'Cache-Control': 'max-age=86400' } })));
-      if (!okB) { const lh = await cache.match(lastK); if (lh) { const lb = await lh.json(); if (lb.d === d) { out.b = lb.b; out.bOld = 1; } } }
+      if (okB && Object.keys(out.b).length) {
+        const val = JSON.stringify({ d, t: Date.now(), b: out.b });
+        ctx.waitUntil(cache.put(lastK, new Response(val, { headers: { 'Cache-Control': 'max-age=86400' } })));
+        // KV: najvise jedan upis svake 3 minute (besplatni limit 1000 upisa dnevno)
+        if (env.LIGA) ctx.waitUntil((async () => { const cur = await env.LIGA.get('liveb', 'json'); if (!cur || cur.d !== d || Date.now() - cur.t > 180000) await env.LIGA.put('liveb', val, { expirationTtl: 172800 }); })().catch(() => {}));
+      }
+      if (!okB) {
+        let lb = null; const lh = await cache.match(lastK); if (lh) lb = await lh.json();
+        if ((!lb || lb.d !== d) && env.LIGA) lb = await env.LIGA.get('liveb', 'json').catch(() => null);
+        if (lb && lb.d === d) { out.b = lb.b; out.bOld = 1; }
+      }
     }
     const body = JSON.stringify(out);
-    ctx.waitUntil(cache.put(ck, new Response(body, { headers: { 'Cache-Control': `max-age=${TTL}` } })));
+    // ako kosarka nije stigla, pokusaj ponovo vec za 45 s (inace 2 minute)
+    ctx.waitUntil(cache.put(ck, new Response(body, { headers: { 'Cache-Control': `max-age=${out.bOld || out.be || out.berr ? 45 : TTL}` } })));
     return new Response(body, { headers: { ...CORS, 'Cache-Control': 'public, max-age=60' } });
   }
 };
