@@ -1,0 +1,56 @@
+{
+    "date":  "2026-10-02",
+    "sat":  "2026-10-03",
+    "sun":  "2026-10-04",
+    "odd":  1.71,
+    "p":  59,
+    "n":  130,
+    "legs":  [
+                 {
+                     "sport":  "football",
+                     "mk":  "hs",
+                     "key":  "football:af1624069",
+                     "home":  "Ligorna",
+                     "away":  "Saluzzo",
+                     "hl":  "https://media.api-sports.io/football/teams/9437.png",
+                     "al":  "https://media.api-sports.io/football/teams/17814.png",
+                     "league":  "Serie D - Girone A (Italy)",
+                     "time":  "15:00",
+                     "day":  "NED",
+                     "date":  "2026-10-04",
+                     "p":  84,
+                     "o":  1.2
+                 },
+                 {
+                     "sport":  "football",
+                     "mk":  "o15",
+                     "key":  "football:af1558955",
+                     "home":  "Bistrica",
+                     "away":  "Rudar",
+                     "hl":  "https://media.api-sports.io/football/teams/6718.png",
+                     "al":  "https://media.api-sports.io/football/teams/4361.png",
+                     "league":  "2. SNL (Slovenia)",
+                     "time":  "15:00",
+                     "day":  "NED",
+                     "date":  "2026-10-04",
+                     "p":  85,
+                     "o":  1.19
+                 },
+                 {
+                     "sport":  "football",
+                     "mk":  "o15",
+                     "key":  "football:af1561670",
+                     "home":  "Górnik Łęczna",
+                     "away":  "Chojniczanka Chojnice",
+                     "hl":  "https://media.api-sports.io/football/teams/6941.png",
+                     "al":  "https://media.api-sports.io/football/teams/3482.png",
+                     "league":  "II Liga - East (Poland)",
+                     "time":  "17:00",
+                     "day":  "NED",
+                     "date":  "2026-10-04",
+                     "p":  83,
+                     "o":  1.2
+                 }
+             ],
+    "hit":  null
+}
