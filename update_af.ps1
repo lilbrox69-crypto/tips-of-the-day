@@ -202,7 +202,7 @@ foreach ($g in $games) {
   $c = CalcP $hs $as $hc $ac 0 0
   $utc = [datetime]::Parse($g.fixture.date, [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::AdjustToUniversal)
   $local = [System.TimeZoneInfo]::ConvertTimeFromUtc($utc, $tz)
-  $m = [ordered]@{ id = "af$($g.fixture.id)"; league = "$($g.league.name) ($($g.league.country))"; time = $local.ToString('HH:mm')
+  $m = [ordered]@{ id = "af$($g.fixture.id)"; lid = [int]$g.league.id; league = "$($g.league.name) ($($g.league.country))"; time = $local.ToString('HH:mm')
     home = $g.teams.home.name; away = $g.teams.away.name; hl = $g.teams.home.logo; al = $g.teams.away.logo
     xg = $c.xg; p = $c.p
     hs = ($hs | Select-Object * -ExcludeProperty wr); as = ($as | Select-Object * -ExcludeProperty wr); hc = $hc; ac = $ac }
@@ -270,7 +270,7 @@ foreach ($m in $list) {
   $ov = Imp $o 'o25'; $un = Imp $o 'u25'
   if ($ov -and $un) { $imp.o25 = $ov / ($ov + $un); $imp.u25 = $un / ($ov + $un) } elseif ($ov) { $imp.o25 = $ov * 0.95 } elseif ($un) { $imp.u25 = $un * 0.95 }
   foreach ($k in 'o15','gg','hs','as','c8','y3') { $v = Imp $o $k; if ($v) { $imp[$k] = [math]::Min(0.99, $v * 0.95) } }   # 5% marza kladionice
-  foreach ($k in $imp.Keys) { if ($m.p[$k] -ne $null) { $m.p[$k] = [int][math]::Round(0.65 * $m.p[$k] + 0.35 * $imp[$k] * 100) } }
+  foreach ($k in $imp.Keys) { if ($m.p[$k] -ne $null) { $m.p[$k] = [int][math]::Round(0.45 * $m.p[$k] + 0.55 * $imp[$k] * 100) } }
 }
 $withOdds = @($list | Where-Object { $_.o })
 if ($withOdds.Count -ge 20) { Write-Host "  samo utakmice sa kvotama: $($withOdds.Count) od $($list.Count)"; $list = New-Object System.Collections.ArrayList (, $withOdds) }

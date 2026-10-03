@@ -108,9 +108,9 @@ foreach ($g in $games) {
   # mijesanje sa trzistem (kvote), kao u fudbalu: 65% nasa statistika, 35% kvote
   $o = $odds[[string]$g.id]
   if ($o) {
-    if ($o.Contains('w1') -and $o.Contains('w2')) { $i1 = 1 / $o.w1; $i2 = 1 / $o.w2; $p.w1 = [int][math]::Round(0.65 * $p.w1 + 0.35 * 100 * $i1 / ($i1 + $i2)); $p.w2 = 100 - $p.w1 }
+    if ($o.Contains('w1') -and $o.Contains('w2')) { $i1 = 1 / $o.w1; $i2 = 1 / $o.w2; $p.w1 = [int][math]::Round(0.45 * $p.w1 + 0.55 * 100 * $i1 / ($i1 + $i2)); $p.w2 = 100 - $p.w1 }
     foreach ($pair in @(@('o160', 'u160'), @('o220', 'u220'))) { if ($o.Contains($pair[0]) -and $o.Contains($pair[1]) -and $p.Contains($pair[0])) {
-      $io = 1 / $o[$pair[0]]; $iu = 1 / $o[$pair[1]]; $p[$pair[0]] = [int][math]::Round(0.65 * $p[$pair[0]] + 0.35 * 100 * $io / ($io + $iu)); $p[$pair[1]] = 100 - $p[$pair[0]] } }
+      $io = 1 / $o[$pair[0]]; $iu = 1 / $o[$pair[1]]; $p[$pair[0]] = [int][math]::Round(0.45 * $p[$pair[0]] + 0.55 * 100 * $io / ($io + $iu)); $p[$pair[1]] = 100 - $p[$pair[0]] } }
   }
   $HN = Esc $g.teams.home.name; $AN = Esc $g.teams.away.name
   $recTxt = "Zadnjih $($h.n): $HN $($h.w)-$($h.n - $h.w), prosjek $($h.pf):$($h.pa) &middot; $AN $($a.w)-$($a.n - $a.w), $($a.pf):$($a.pa)"

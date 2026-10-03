@@ -98,28 +98,40 @@ foreach ($p in $picks) {
   elseif (([datetime]::ParseExact($p.date, 'yyyy-MM-dd', $null)) -lt $todayD.AddDays(-1)) { $p.hit = 'void' }
 }
 
-# 2b) Tiket dana: 3 najsigurnija tipa sa kvotom (razlicite utakmice, kvota bar 1.20, procenat bar 65)
+# 2b) Tiket dana (izmjena 2026-10-03, Bilal: "uradi sve a b i c"):
+#  A) samo JAKE lige (prve/druge lige poznatih zemalja, evropska i reprezentativna takmicenja) - u slabim ligama je malo podataka i previse iznenadjenja
+#  B) 2 para (manje parova = manje kladionicke marze), ukupna kvota NIKAD ispod 1.70; tek ako nema -> 3, pa 4 para; ako ni u jakim ligama nema -> sve lige
+$TOP_FB = @(1,2,3,4,5,9,11,13,32,34,39,40,61,62,71,72,78,79,88,89,94,98,103,106,113,119,128,135,136,140,141,144,179,188,197,203,207,210,218,235,253,262,271,283,286,292,307,315,333,345,848)
+$TOP_RX = '^(Premier League \(England\)|Championship \(England\)|La Liga \(Spain\)|Segunda Divisi.n \(Spain\)|Serie A \(Italy\)|Serie B \(Italy\)|Bundesliga \(Germany\)|2\. Bundesliga \(Germany\)|Ligue 1 \(France\)|Ligue 2 \(France\)|Primeira Liga \(Portugal\)|Eredivisie \(Netherlands\)|S.per Lig \(Turkey\)|Jupiler Pro League \(Belgium\)|Premiership \(Scotland\)|Bundesliga \(Austria\)|Super League \(Switzerland\)|HNL \(Croatia\)|Super Liga \(Serbia\)|Premijer Liga \(Bosnia.*\)|Superliga \(Denmark\)|Super League 1 \(Greece\)|Ekstraklasa \(Poland\)|Czech Liga \(Czech-Republic\)|Pro League \(Saudi-Arabia\)|Serie A \(Brazil\)|Liga Profesional Argentina \(Argentina\)|Major League Soccer \(USA\)|Liga MX \(Mexico\)|Allsvenskan \(Sweden\)|Eliteserien \(Norway\)|J1 League \(Japan\)|K League 1 \(South-Korea\)|A-League \(Australia\)|UEFA .*|World Cup.*|Euro Championship.*|CONMEBOL .*)$'
+$TOP_BB = '^(NBA \(USA\)|Euroleague \(Europe\)|Eurocup \(Europe\)|EuroCup \(Europe\)|Champions League \(Europe\)|ACB \(Spain\)|Lega A \(Italy\)|BBL \(Germany\)|LNB \(France\)|Pro A \(France\)|Super Ligi \(Turkey\)|Basket League \(Greece\)|ABA League \(Europe\)|NBL \(Australia\)|VTB United League \(Russia\))$'
+function Strong($sport, $m) {
+  if ($sport -eq 'football') { if ($m.lid) { return ([int]$m.lid -in $TOP_FB) }; return ([string]$m.league -match $TOP_RX) }
+  if ($sport -eq 'basketball') { return ([string]$m.league -match $TOP_BB) }
+  return $false }
 $legs = New-Object System.Collections.ArrayList
 foreach ($sport in $lists.Keys) { foreach ($m in @($lists[$sport] | Where-Object { $_ -and $_.o })) {
+  $strong = Strong $sport $m
   foreach ($pr in $m.p.PSObject.Properties) { $q = $m.o.($pr.Name)
-    if ($q -and [string]$m.time -ge '09:00' -and [double]$q -ge 1.15 -and $pr.Value -ne $null -and $pr.Value -ge 75 -and (100 / [double]$q * 0.95) -ge 60) {   # kandidati: nas procenat >= 75 i kladionice >= ~63%; najsigurniji se biraju po score-u
-      [void]$legs.Add([pscustomobject]@{ sport = $sport; mk = $pr.Name; key = "${sport}:$($m.id)"; home = $m.home; away = $m.away; hl = $m.hl; al = $m.al; league = $m.league; time = $m.time; p = [int]$pr.Value; o = [double]$q }) } } } }
+    if ($q -and [string]$m.time -ge '09:00' -and [double]$q -ge 1.15 -and $pr.Value -ne $null -and $pr.Value -ge 75 -and (100 / [double]$q * 0.95) -ge 60) {   # kandidati: nas procenat >= 75 i kladionice >= ~60%
+      [void]$legs.Add([pscustomobject]@{ sport = $sport; mk = $pr.Name; key = "${sport}:$($m.id)"; home = $m.home; away = $m.away; hl = $m.hl; al = $m.al; league = $m.league; time = $m.time; p = [int]$pr.Value; o = [double]$q; strong = $strong }) } } } }
 $ticket = New-Object System.Collections.ArrayList; $used = @{}
-# najpametniji izbor iz SVIH opcija i sportova: sigurnost = manji od (nas procenat, procenat iz kvote bez marze),
-# plus pola nase prednosti nad kladionicom. Tako ulaze tipovi gdje se statistika i trziste slazu.
+# sigurnost = manji od (nas procenat, procenat iz kvote bez marze) + pola nase prednosti nad kladionicom
 foreach ($l in $legs) { $imp = 100 / $l.o * 0.95; $l | Add-Member -NotePropertyName score -NotePropertyValue ([math]::Min($l.p, $imp) + 0.5 * [math]::Max(0, $l.p - $imp)) }
-# TIKET: 3 para, ukupna kvota NIKAD ispod 1.70. Od svih kombinacija 3 para (razlicite utakmice) sa kvotom >= 1.70
-# bira onu sa najvecom sansom (proizvod score-ova). Ako 3 nikako ne daju 1.70 -> 4 para, pa 2 para.
-$top = @($legs | Sort-Object @{ e = { $_.score }; Descending = $true }, @{ e = { $_.o }; Descending = $true } | Select-Object -First 22)
-$n = $top.Count; $best = $null; $bestS = -1
+$script:best = $null; $script:bestS = -1
 function Try-Set($set) {
   if (@($set | ForEach-Object { $_.key } | Select-Object -Unique).Count -ne $set.Count) { return }
   $odd = 1.0; $s = 1.0; foreach ($z in $set) { $odd *= $z.o; $s *= $z.score / 100 }
   if ($odd -ge 1.70 -and $s -gt $script:bestS) { $script:bestS = $s; $script:best = $set } }
-for ($a = 0; $a -lt $n; $a++) { for ($b = $a + 1; $b -lt $n; $b++) { for ($c = $b + 1; $c -lt $n; $c++) { Try-Set @($top[$a], $top[$b], $top[$c]) } } }
-if (-not $best) { for ($a = 0; $a -lt $n; $a++) { for ($b = $a + 1; $b -lt $n; $b++) { for ($c = $b + 1; $c -lt $n; $c++) { for ($d = $c + 1; $d -lt $n; $d++) { Try-Set @($top[$a], $top[$b], $top[$c], $top[$d]) } } } } }
-if (-not $best) { for ($a = 0; $a -lt $n; $a++) { for ($b = $a + 1; $b -lt $n; $b++) { Try-Set @($top[$a], $top[$b]) } } }
-if ($best) { foreach ($l in $best) { [void]$ticket.Add($l) } }
+function Find-Ticket($pool) {
+  $top = @($pool | Sort-Object @{ e = { $_.score }; Descending = $true }, @{ e = { $_.o }; Descending = $true } | Select-Object -First 22)
+  $n = $top.Count; $script:best = $null; $script:bestS = -1
+  for ($a = 0; $a -lt $n; $a++) { for ($b = $a + 1; $b -lt $n; $b++) { Try-Set @($top[$a], $top[$b]) } }
+  if (-not $script:best) { for ($a = 0; $a -lt $n; $a++) { for ($b = $a + 1; $b -lt $n; $b++) { for ($c = $b + 1; $c -lt $n; $c++) { Try-Set @($top[$a], $top[$b], $top[$c]) } } } }
+  if (-not $script:best) { for ($a = 0; $a -lt $n; $a++) { for ($b = $a + 1; $b -lt $n; $b++) { for ($c = $b + 1; $c -lt $n; $c++) { for ($d = $c + 1; $d -lt $n; $d++) { Try-Set @($top[$a], $top[$b], $top[$c], $top[$d]) } } } } }
+  return $script:best }
+$best = Find-Ticket @($legs | Where-Object { $_.strong })
+if (-not $best) { Write-Host 'Tiket: u jakim ligama nema dovoljno parova - uzimam sve lige'; $best = Find-Ticket @($legs) }
+if ($best) { foreach ($l in $best) { [void]$ticket.Add(($l | Select-Object * -ExcludeProperty strong)) } }
 $tFile = Join-Path $root 'cache\tickets.json'
 $tickets = New-Object System.Collections.ArrayList
 if (Test-Path $tFile) { $arr = Get-Content -Raw -Encoding UTF8 $tFile | ConvertFrom-Json; foreach ($t in $arr) { if ($t -and $t.date) { [void]$tickets.Add($t) } } }
