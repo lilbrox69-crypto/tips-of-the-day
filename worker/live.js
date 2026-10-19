@@ -226,9 +226,9 @@ export default {
       const gb = d >= '2026-10-26' ? { res: {} } : await grab(`https://v1.basketball.api-sports.io/games?date=${d}&timezone=Europe/Sarajevo`, 'liveb2', arr => {
         const o = {}; for (const x of arr) { const s = x.status.short; if (s === 'NS' || s === 'TBD') continue; o['bb' + x.id] = { s, m: x.status.timer, h: x.scores.home.total, a: x.scores.away.total }; } return o; }, 'be');
       out.b = gb.res; out.bl = gb.left;
-      // NBA / NHL / NFL uzivo preko ESPN-a (besplatno, bez kljuca, ne trosi API-Football)
+      // NBA / NHL / NFL / MLB uzivo preko ESPN-a (besplatno, bez kljuca, ne trosi API-Football)
       out.u = {};
-      await Promise.all([['basketball', 'nba'], ['hockey', 'nhl'], ['football', 'nfl']].map(async ([s, l]) => {
+      await Promise.all([['basketball', 'nba'], ['hockey', 'nhl'], ['football', 'nfl'], ['baseball', 'mlb']].map(async ([s, l]) => {
         try {
           const j = await (await fetch(`https://site.api.espn.com/apis/site/v2/sports/${s}/${l}/scoreboard`)).json();
           for (const e of j.events || []) {

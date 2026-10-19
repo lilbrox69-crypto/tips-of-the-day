@@ -451,10 +451,10 @@ const NFL = [
   {k:'un',  t:'Manje poena od linije', s:'U', d:'Ukupno manje poena od linije kladionice (linija piše uz kvotu).', h:190}
 ];
 const MLB = [
-  {k:'w1',  t:'Pobjeda domaćina', s:'1', d:'Domaćin pobjeđuje.', h:5},
-  {k:'w2',  t:'Pobjeda gosta', s:'2', d:'Gost pobjeđuje.', h:210},
-  {k:'o85', t:'Više od 8.5 runova', s:'9+', d:'Na utakmici padne bar 9 runova.', h:270},
-  {k:'u85', t:'Manje od 8.5 runova', s:'−8', d:'Na utakmici padne najviše 8 runova.', h:175}
+  {k:'w1',  t:'Pobjeda domaćina', s:'1', d:'Domaćin pobjeđuje (s produžecima).', h:5},
+  {k:'w2',  t:'Pobjeda gosta', s:'2', d:'Gost pobjeđuje (s produžecima).', h:210},
+  {k:'ov',  t:'Više runova od linije', s:'O', d:'Ukupno više runova od linije kladionice (linija piše uz kvotu).', h:270},
+  {k:'un',  t:'Manje runova od linije', s:'U', d:'Ukupno manje runova od linije kladionice (linija piše uz kvotu).', h:175}
 ];
 const IC = {
   tennis:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9.5"/><path d="M4.2 6.5c3.8 2.2 3.8 8.8 0 11M19.8 6.5c-3.8 2.2-3.8 8.8 0 11"/></svg>',
@@ -471,6 +471,7 @@ const SPORTS = [
   {k:'basketball', n:'Košarka', markets:BASKET,   soon:'Danas i sutra nema utakmica u pokrivenim ligama (NBA, Euroliga, ABA, ACB…).'},
   {k:'hockey',     n:'Hokej',   markets:HOCKEY,   soon:'Večeras nema NHL utakmica s kvotama.'},
   {k:'nfl',        n:'Američki fudbal', markets:NFL, soon:'Danas nema NFL utakmica (igra se uglavnom četvrtkom, nedjeljom i ponedjeljkom).'},
+  {k:'mlb',        n:'Bejzbol', markets:MLB, soon:'MLB sezona počinje krajem marta.'},
 ];
 let MARKETS = FOOTBALL, DATA = null, SPORT = 'football';
 /* ---------- jezici / languages ---------- */
@@ -915,6 +916,7 @@ function espJudge(mk, x, ln){
   if (mk === 'ov' && L && t > L) return 1;
   if (mk === 'un' && L && t > L) return 0;
   if (!fin) return null;
+  if ((mk === 'ov' || mk === 'un') && t === L) return null;   // cijela linija (npr. 7.0) pogodjena tacno = povrat uloga
   const r = { w1: h > a, w2: a > h, ov: L ? t > L : undefined, un: L ? t < L : undefined }[mk];
   return r === undefined ? null : (r ? 1 : 0);
 }
@@ -1310,7 +1312,7 @@ for (const [k, D] of Object.entries(XL)) {
 }
 
 for (const [k, v] of Object.entries(LINE_TR)) { const M = M_TR[k]; if (!M) continue;
-  for (const sp of ['basketball', 'hockey', 'nfl']) { M[sp] = M[sp] || {}; M[sp].ov = [v[0], v[2]]; M[sp].un = [v[1], v[3]]; } }
+  for (const sp of ['basketball', 'hockey', 'nfl', 'mlb']) { M[sp] = M[sp] || {}; M[sp].ov = [v[0], v[2]]; M[sp].un = [v[1], v[3]]; } }
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let DAYS = [], TODAY = '', di = 0, mi = 0, syncing = false;
@@ -1433,9 +1435,11 @@ function togglePanel(open){
 function renderSports(){
   // bez dugmeta za izbor sporta ako osim fudbala nema nijednog sporta
   $('sportbtn').style.display = DATA && !(DATA.sports && Object.keys(DATA.sports).length) ? 'none' : '';
-  $('sportpanel').innerHTML = '<h3>' + L().pick + '</h3><div class="spgrid">' + SPORTS.map(s =>
+  // u izboru samo fudbal + sportovi koji danas imaju utakmice (npr. MLB van sezone se ne vidi)
+  const shown = SPORTS.filter(s => s.k === 'football' || !DATA || (DATA.sports && DATA.sports[s.k]));
+  $('sportpanel').innerHTML = '<h3>' + L().pick + '</h3><div class="spgrid">' + shown.map(s =>
     `<button class="sp" type="button" id="sp-${s.k}" aria-pressed="${s.k === SPORT}">${IC[s.k]}<span>${sname(s)}</span>${hasData(s.k) ? '' : '<small>' + (s.k === 'tennis' || s.k === 'volleyball' ? L().soon : L().noGames) + '</small>'}</button>`).join('') + '</div>';
-  SPORTS.forEach(s => { $('sp-' + s.k).onclick = () => { togglePanel(false); if (s.k !== SPORT) setSport(s.k); }; });
+  shown.forEach(s => { $('sp-' + s.k).onclick = () => { togglePanel(false); if (s.k !== SPORT) setSport(s.k); }; });
 }
 $('sportbtn').onclick = e => { e.stopPropagation(); langMenu(false); togglePanel(); };
 document.addEventListener('click', e => { if (!$('sportpanel').hidden && !$('sportpanel').contains(e.target)) togglePanel(false); });

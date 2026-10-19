@@ -295,7 +295,7 @@ foreach ($f in @('espn.json') + @(if ($BB_ON) { 'bb.json' })) {
     } else { $sports[$prop.Name] = [ordered]@{ days = $days } }
   }
 }
-foreach ($k in @($sports.Keys)) { if ($k -notin 'basketball', 'hockey', 'nfl') { $sports.Remove($k) } }
+foreach ($k in @($sports.Keys)) { if ($k -notin 'basketball', 'hockey', 'nfl', 'mlb') { $sports.Remove($k) } }
 $out.sports = $sports
 $json = $out | ConvertTo-Json -Depth 10
 [IO.File]::WriteAllText((Join-Path $root 'data.json'), $json, (New-Object System.Text.UTF8Encoding($false)))

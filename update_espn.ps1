@@ -1,4 +1,4 @@
-﻿# NBA, NHL i NFL preko ESPN-a (besplatno, bez kljuca) - dodano 19.10.2026 umjesto balldontlie (update_us.ps1).
+﻿# NBA, NHL, NFL i MLB preko ESPN-a (besplatno, bez kljuca) - dodano 19.10.2026 umjesto balldontlie (update_us.ps1).
 # Kvote su prave kvote DraftKingsa (ESPN): pobjednik (s produzecima) i vise/manje od linije kladionice.
 # Samo prikaz na stranici - NE ulazi u statistiku, Rezultate ni Tiket dana (Bilal: "statistika samo fudbal").
 # Prikazuju se utakmice "veceras/noceras": pocetak od danas 10:00 do sutra 07:00 po nasem vremenu, samo one koje imaju kvote.
@@ -43,6 +43,8 @@ function Logo([string]$path, [string]$abbr) {
 $LEAGUES = @(
   @{ key = 'basketball'; path = 'basketball/nba'; logo = 'nba'; name = 'NBA'; back = 14; sdT = 18.0; sdM = 12.5; adv = 2.0; pois = $false; unit = 'poena' }
   @{ key = 'hockey'; path = 'hockey/nhl'; logo = 'nhl'; name = 'NHL'; back = 14; sdT = 0; sdM = 2.1; adv = 0.15; pois = $true; unit = 'golova' }
+  # MLB (dodano 19.10.2026): sezona od kraja marta do oktobra - van sezone ESPN nema utakmica s kvotama pa se nista ne prikazuje
+  @{ key = 'mlb'; path = 'baseball/mlb'; logo = 'mlb'; name = 'MLB'; back = 14; sdT = 4.4; sdM = 4.2; adv = 0.25; pois = $false; unit = 'runova' }
   @{ key = 'nfl'; path = 'football/nfl'; logo = 'nfl'; name = 'NFL'; back = 42; sdT = 13.5; sdM = 13.5; adv = 1.5; pois = $false; unit = 'poena' }
 )
 $out = [ordered]@{}
