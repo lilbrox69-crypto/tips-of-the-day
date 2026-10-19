@@ -45,7 +45,8 @@ if ($calib.Count) {
 # 1) danasnje top 3 po opciji (isto kao na stranici)
 $lists = @{ football = @(($data.days | Where-Object { $_.date -eq $today }).matches) }
 foreach ($p in $data.sports.PSObject.Properties) { $lists[$p.Name] = @(($p.Value.days | Where-Object { $_.date -eq $today }).matches) }
-foreach ($sport in @(if ($picksLocked) { } else { $lists.Keys })) {
+# STATISTIKA SAMO FUDBAL (Bilal 19.10.2026): NBA/NHL/NFL i kosarka se samo prikazuju, ne prate se
+foreach ($sport in @(if ($picksLocked) { } else { 'football' })) {
   $ms = @($lists[$sport] | Where-Object { $_ })
   if (-not $ms.Count) { continue }
   $markets = @($ms | ForEach-Object { $_.p.PSObject.Properties.Name } | Sort-Object -Unique)
@@ -111,7 +112,7 @@ function Strong($sport, $m) {
   if ($sport -eq 'basketball') { return ([string]$m.league -match $TOP_BB) }
   return $false }
 $legs = New-Object System.Collections.ArrayList
-foreach ($sport in $lists.Keys) { foreach ($m in @($lists[$sport] | Where-Object { $_ -and $_.o })) {
+foreach ($sport in @('football')) { foreach ($m in @($lists[$sport] | Where-Object { $_ -and $_.o })) {   # tiket samo fudbal
   $strong = Strong $sport $m
   foreach ($pr in $m.p.PSObject.Properties) { $q = $m.o.($pr.Name)
     if ($q -and [string]$m.time -ge '09:00' -and [double]$q -ge 1.15 -and $pr.Value -ne $null -and $pr.Value -ge 75 -and (100 / [double]$q * 0.95) -ge 60) {   # kandidati: nas procenat >= 75 i kladionice >= ~60%
@@ -170,10 +171,10 @@ $ticketTrack = [ordered]@{ n = $tw.Count; hit = @($tw | Where-Object { $_.hit })
 $keep = @($picks | Where-Object { ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-60) })
 $keepSave = if (-not $canLock -and -not $picksLocked) { @($keep | Where-Object { $_.date -ne $today }) } else { $keep }
 [IO.File]::WriteAllText($picksFile, (ConvertTo-Json @($keepSave) -Depth 3 -Compress), $enc)
-$win = @($keep | Where-Object { $_.v -ne 'm' -and $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-30) })
+$win = @($keep | Where-Object { $_.sport -eq 'football' -and $_.v -ne 'm' -and $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-30) })
 $bySport = [ordered]@{}
 foreach ($g in ($win | Group-Object sport)) { $bySport[$g.Name] = [ordered]@{ n = $g.Count; hit = @($g.Group | Where-Object { $_.hit }).Count } }
-$shw = @($keep | Where-Object { $_.v -eq 'm' -and $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-30) })
+$shw = @($keep | Where-Object { $_.sport -eq 'football' -and $_.v -eq 'm' -and $_.hit -is [bool] -and ([datetime]::ParseExact($_.date, 'yyyy-MM-dd', $null)) -ge $todayD.AddDays(-30) })
 $cmp = [ordered]@{ saKvotama = [ordered]@{ n = $win.Count; hit = @($win | Where-Object { $_.hit }).Count }; bezKvota = [ordered]@{ n = $shw.Count; hit = @($shw | Where-Object { $_.hit }).Count } }
 Write-Host "Poredjenje: sa kvotama $($cmp.saKvotama.hit)/$($cmp.saKvotama.n), samo statistika $($cmp.bezKvota.hit)/$($cmp.bezKvota.n)"
 $track = [ordered]@{ days = 30; n = $win.Count; hit = @($win | Where-Object { $_.hit }).Count; sports = $bySport; ticket = $ticketTrack; cmp = $cmp }
@@ -186,7 +187,7 @@ $hdays = New-Object System.Collections.ArrayList
 for ($i = 0; $i -le 30; $i++) {
   $ds = $todayD.AddDays(-$i).ToString('yyyy-MM-dd')
   # prvo fudbal pa kosarka; poniste (void) utakmice se ne prikazuju
-  $dp = @($keep | Where-Object { $_.date -eq $ds -and $_.v -ne 'm' -and -not ($_.hit -is [string] -and $_.hit -eq 'void') } | Sort-Object @{ e = { if ($_.sport -eq 'football') { 0 } else { 1 } } })
+  $dp = @($keep | Where-Object { $_.sport -eq 'football' -and $_.date -eq $ds -and $_.v -ne 'm' -and -not ($_.hit -is [string] -and $_.hit -eq 'void') } | Sort-Object @{ e = { if ($_.sport -eq 'football') { 0 } else { 1 } } })
   $tk = @($tickets | Where-Object { $_.date -eq $ds })[0]
   if (-not $dp.Count -and -not $tk) { continue }
   $day = [ordered]@{ date = $ds }

@@ -416,15 +416,15 @@ const BASKET = [
   {k:'h110', t:'Domaćin 110+ (NBA)', s:'D110', d:'NBA: domaćin postigne bar 110 poena.', h:38},
   {k:'o160', t:'Više od 160.5 (Evropa)', s:'161+', d:'Evropske lige: na utakmici padne bar 161 poen.', h:280},
   {k:'u160', t:'Manje od 160.5 (Evropa)', s:'−160', d:'Evropske lige: na utakmici padne najviše 160 poena.', h:170},
+  {k:'ov',   t:'Više od linije (NBA)', s:'O', d:'Ukupno više poena od linije kladionice (linija piše uz kvotu).', h:250},
+  {k:'un',   t:'Manje od linije (NBA)', s:'U', d:'Ukupno manje poena od linije kladionice (linija piše uz kvotu).', h:175},
   {k:'h80',  t:'Domaćin 80+ (Evropa)', s:'D80', d:'Evropske lige: domaćin postigne bar 80 poena.', h:55}
 ];
 const HOCKEY = [
-  {k:'gg',  t:'Oba daju gol', s:'GG', d:'Oba tima postignu bar jedan gol.', h:200},
-  {k:'o55', t:'Više od 5.5', s:'6+', d:'Na utakmici padne bar 6 golova.', h:270},
-  {k:'o45', t:'Više od 4.5', s:'5+', d:'Na utakmici padne bar 5 golova.', h:230},
-  {k:'u55', t:'Manje od 5.5', s:'0–5', d:'Na utakmici padne najviše 5 golova.', h:180},
-  {k:'w1',  t:'Pobjeda domaćina', s:'1', d:'Domaćin pobjeđuje (s produžecima).', h:215},
-  {k:'w2',  t:'Pobjeda gosta', s:'2', d:'Gost pobjeđuje (s produžecima).', h:320}
+  {k:'w1',  t:'Pobjeda domaćina', s:'1', d:'Domaćin pobjeđuje (s produžecima i penalima).', h:215},
+  {k:'w2',  t:'Pobjeda gosta', s:'2', d:'Gost pobjeđuje (s produžecima i penalima).', h:320},
+  {k:'ov',  t:'Više golova od linije', s:'O', d:'Ukupno više golova od linije kladionice (linija piše uz kvotu).', h:270},
+  {k:'un',  t:'Manje golova od linije', s:'U', d:'Ukupno manje golova od linije kladionice (linija piše uz kvotu).', h:180}
 ];
 const TENNIS = [
   {k:'w1',   t:'Pobjeda igrača 1', s:'1', d:'Prvi igrač (lijevo) dobija meč.', h:95},
@@ -445,10 +445,10 @@ const VOLLEY = [
   {k:'s5',  t:'Ide u 5. set', s:'5. S', d:'Utakmica ide u tie-break, peti set.', h:350}
 ];
 const NFL = [
-  {k:'w1',  t:'Pobjeda domaćina', s:'1', d:'Domaćin pobjeđuje.', h:25},
-  {k:'w2',  t:'Pobjeda gosta', s:'2', d:'Gost pobjeđuje.', h:220},
-  {k:'o45', t:'Više od 45.5 poena', s:'46+', d:'Na utakmici padne bar 46 poena.', h:265},
-  {k:'u45', t:'Manje od 45.5 poena', s:'−45', d:'Na utakmici padne najviše 45 poena.', h:190}
+  {k:'w1',  t:'Pobjeda domaćina', s:'1', d:'Domaćin pobjeđuje (s produžecima).', h:25},
+  {k:'w2',  t:'Pobjeda gosta', s:'2', d:'Gost pobjeđuje (s produžecima).', h:220},
+  {k:'ov',  t:'Više poena od linije', s:'O', d:'Ukupno više poena od linije kladionice (linija piše uz kvotu).', h:265},
+  {k:'un',  t:'Manje poena od linije', s:'U', d:'Ukupno manje poena od linije kladionice (linija piše uz kvotu).', h:190}
 ];
 const MLB = [
   {k:'w1',  t:'Pobjeda domaćina', s:'1', d:'Domaćin pobjeđuje.', h:5},
@@ -469,6 +469,8 @@ const IC = {
 const SPORTS = [
   {k:'football',   n:'Fudbal',  markets:FOOTBALL, soon:''},
   {k:'basketball', n:'Košarka', markets:BASKET,   soon:'Danas i sutra nema utakmica u pokrivenim ligama (NBA, Euroliga, ABA, ACB…).'},
+  {k:'hockey',     n:'Hokej',   markets:HOCKEY,   soon:'Večeras nema NHL utakmica s kvotama.'},
+  {k:'nfl',        n:'Američki fudbal', markets:NFL, soon:'Danas nema NFL utakmica (igra se uglavnom četvrtkom, nedjeljom i ponedjeljkom).'},
 ];
 let MARKETS = FOOTBALL, DATA = null, SPORT = 'football';
 /* ---------- jezici / languages ---------- */
@@ -1087,7 +1089,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && (!$('tview
 function oddTag(g, k){
   const q = g.o && g.o[k]; if (!q) return '';
   const value = g.p[k] >= 55 && g.p[k] / 100 * q >= 1.05;
-  return `<span class="odd">${ODW[LANG] || 'odds'} ${q.toFixed(2)}${value ? `<b>${VAL[LANG] || 'value'}</b>` : ''}</span>`;
+  const ln = (k === 'ov' || k === 'un') && g.ln != null ? `${k === 'ov' ? '&gt;' : '&lt;'} ${Number(g.ln).toFixed(1)} · ` : '';
+  return `<span class="odd">${ln}${ODW[LANG] || 'odds'} ${q.toFixed(2)}${value ? `<b>${VAL[LANG] || 'value'}</b>` : ''}</span>`;
 }
 function trWhy(s){
   if (!s || LANG === 'bs') return s;
@@ -1266,11 +1269,30 @@ function genM(D){
     mlb: { o85:[ov('8.5', lu.runs), s(D.least(u.runs(9)))], u85:[un('8.5', lu.runs), s(D.most(u.runs(8)))] }
   };
 }
+/* NBA/NHL/NFL: vise/manje od linije kladionice (linija se vidi uz kvotu) */
+const LINE_TR = {
+  en:['Over the line','Under the line','Total above the bookmaker’s line (line shown next to the odds).','Total below the bookmaker’s line (line shown next to the odds).'],
+  de:['Über der Linie','Unter der Linie','Gesamt über der Linie des Buchmachers (Linie neben der Quote).','Gesamt unter der Linie des Buchmachers (Linie neben der Quote).'],
+  it:['Over sulla linea','Under sulla linea','Totale sopra la linea del bookmaker (linea accanto alla quota).','Totale sotto la linea del bookmaker (linea accanto alla quota).'],
+  es:['Más de la línea','Menos de la línea','Total por encima de la línea de la casa (línea junto a la cuota).','Total por debajo de la línea de la casa (línea junto a la cuota).'],
+  fr:['Plus que la ligne','Moins que la ligne','Total au-dessus de la ligne du bookmaker (ligne à côté de la cote).','Total en dessous de la ligne du bookmaker (ligne à côté de la cote).'],
+  pt:['Mais que a linha','Menos que a linha','Total acima da linha da casa (linha ao lado da odd).','Total abaixo da linha da casa (linha ao lado da odd).'],
+  tr:['Barem üstü','Barem altı','Toplam, bahis şirketinin bareminin üstünde (barem oranın yanında).','Toplam, bahis şirketinin bareminin altında (barem oranın yanında).'],
+  sq:['Mbi vijën','Nën vijën','Totali mbi vijën e bastores (vija pranë koeficientit).','Totali nën vijën e bastores (vija pranë koeficientit).'],
+  pl:['Powyżej linii','Poniżej linii','Suma powyżej linii bukmachera (linia obok kursu).','Suma poniżej linii bukmachera (linia obok kursu).'],
+  ro:['Peste linie','Sub linie','Total peste linia casei de pariuri (linia lângă cotă).','Total sub linia casei de pariuri (linia lângă cotă).'],
+  el:['Πάνω από τη γραμμή','Κάτω από τη γραμμή','Σύνολο πάνω από τη γραμμή της στοιχηματικής (η γραμμή δίπλα στην απόδοση).','Σύνολο κάτω από τη γραμμή της στοιχηματικής (η γραμμή δίπλα στην απόδοση).'],
+  ru:['Больше линии','Меньше линии','Тотал больше линии букмекера (линия рядом с коэффициентом).','Тотал меньше линии букмекера (линия рядом с коэффициентом).'],
+  nl:['Boven de lijn','Onder de lijn','Totaal boven de lijn van de bookmaker (lijn naast de quotering).','Totaal onder de lijn van de bookmaker (lijn naast de quotering).'],
+  ar:['أكثر من الخط','أقل من الخط','المجموع أعلى من خط المراهنات (الخط بجانب الاحتمال).','المجموع أقل من خط المراهنات (الخط بجانب الاحتمال).']
+};
 for (const [k, D] of Object.entries(XL)) {
   T[k] = Object.assign({vs:'vs'}, D.T); SPORT_TR[k] = D.sp; SOON_TR[k] = D.soon;
   LEAGUE_TR[k] = {'Premier liga':'Premier League', 'Liga prvaka':D.cl}; M_TR[k] = genM(D);
 }
 
+for (const [k, v] of Object.entries(LINE_TR)) { const M = M_TR[k]; if (!M) continue;
+  for (const sp of ['basketball', 'hockey', 'nfl']) { M[sp] = M[sp] || {}; M[sp].ov = [v[0], v[2]]; M[sp].un = [v[1], v[3]]; } }
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let DAYS = [], TODAY = '', di = 0, mi = 0, syncing = false;
@@ -1391,8 +1413,8 @@ function togglePanel(open){
   p.hidden = !open; b.setAttribute('aria-expanded', open);
 }
 function renderSports(){
-  // samo fudbal (kosarka nije produzena od 26.10.2026): bez dugmeta za izbor sporta
-  $('sportbtn').style.display = DATA && !(DATA.sports && DATA.sports.basketball) ? 'none' : '';
+  // bez dugmeta za izbor sporta ako osim fudbala nema nijednog sporta
+  $('sportbtn').style.display = DATA && !(DATA.sports && Object.keys(DATA.sports).length) ? 'none' : '';
   $('sportpanel').innerHTML = '<h3>' + L().pick + '</h3><div class="spgrid">' + SPORTS.map(s =>
     `<button class="sp" type="button" id="sp-${s.k}" aria-pressed="${s.k === SPORT}">${IC[s.k]}<span>${sname(s)}</span>${hasData(s.k) ? '' : '<small>' + (s.k === 'tennis' || s.k === 'volleyball' ? L().soon : L().noGames) + '</small>'}</button>`).join('') + '</div>';
   SPORTS.forEach(s => { $('sp-' + s.k).onclick = () => { togglePanel(false); if (s.k !== SPORT) setSport(s.k); }; });
@@ -1402,11 +1424,12 @@ document.addEventListener('click', e => { if (!$('sportpanel').hidden && !$('spo
 document.addEventListener('keydown', e => { if (e.key === 'Escape') togglePanel(false); });
 function setSport(k){
   SPORT = k; const sp = SPORTS.find(s => s.k === k);
-  MARKETS = sp.markets; di = 0; mi = 0;
+  di = 0; mi = 0;
   document.querySelectorAll('.sp').forEach(b => b.setAttribute('aria-pressed', b.id === 'sp-' + k));
   $('sporticon').innerHTML = IC[k]; $('sportname').textContent = sname(sp); $('pickl').textContent = L().pick;
   const src = DATA && DATA.sports && DATA.sports[k] ? DATA.sports[k].days : (k === 'football' && DATA ? DATA.days : []);
   DAYS = (src || []).filter(d => d.date === TODAY && d.matches.length);
+  MARKETS = sp.markets.filter(mk => !DAYS.length || DAYS.some(d => d.matches.some(g => g.p[mk.k] != null)));
   const note = $('note'); note.hidden = true; showTrack(); renderTicket();
   const days = $('days'); days.scrollTop = 0;
   if (!DAYS.length){

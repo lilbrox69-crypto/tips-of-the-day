@@ -16,9 +16,9 @@ $MAP = [ordered]@{
   'Liga prvaka' = 'soccer_uefa_champs_league'; 'Premier liga' = 'soccer_epl'; 'La Liga' = 'soccer_spain_la_liga'; 'Serie A' = 'soccer_italy_serie_a'
   'Bundesliga' = 'soccer_germany_bundesliga'; 'Ligue 1' = 'soccer_france_ligue_one'; 'Eredivisie' = 'soccer_netherlands_eredivisie'
   'Primeira Liga' = 'soccer_portugal_primeira_liga'; 'Championship' = 'soccer_efl_champ'; 'Brasileirao' = 'soccer_brazil_campeonato'; 'Copa Libertadores' = 'soccer_conmebol_copa_libertadores'
-  'NBA' = 'basketball_nba'; 'Euroleague (Europe)' = 'basketball_euroleague'
+  'Euroleague (Europe)' = 'basketball_euroleague'
   'NHL (USA)' = 'icehockey_nhl'; 'Liiga (Finland)' = 'icehockey_liiga'; 'SHL (Sweden)' = 'icehockey_sweden_hockey_league'
-  'Bundesliga (Germany)' = 'handball_germany_bundesliga'; 'NFL' = 'americanfootball_nfl'; 'MLB' = 'baseball_mlb'
+  'Bundesliga (Germany)' = 'handball_germany_bundesliga'; 'MLB' = 'baseball_mlb'
 }
 # totals linija -> nase opcije [over, under] po sportu
 $TOT = @{
