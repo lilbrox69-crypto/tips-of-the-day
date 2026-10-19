@@ -275,6 +275,8 @@ $out = [ordered]@{
 }
 # NBA, NHL i NFL preko ESPN-a (besplatno, s kvotama DraftKingsa) - samo prikaz, ne ulaze u statistiku (Bilal 19.10.2026)
 try { & (Join-Path $root 'update_espn.ps1') } catch { Write-Host "ESPN (NBA/NHL/NFL) preskocen: $($_.Exception.Message)" }
+# boks i MMA preko The Odds API (samo kvote, 2 kredita dnevno, kes) - samo prikaz (Bilal 19.10.2026)
+try { & (Join-Path $root 'update_oddsonly.ps1') } catch { Write-Host "Boks/MMA preskoceni: $($_.Exception.Message)" }
 # API-Basketball (evropska kosarka) se ne produzava: od 26.10.2026 nema poziva za nju
 $BB_ON = $todayLocal.ToString('yyyy-MM-dd') -lt '2026-10-26'
 if ($BB_ON) {
@@ -284,7 +286,7 @@ if (-not $bbUsed) { try { & (Join-Path $root 'update_bb.ps1'); if (@((Get-Conten
 } else { Write-Host 'API-Basketball iskljucen (pretplata nije produzena) - kosarka samo NBA preko ESPN-a' }
 # NHL, hokej, rukomet, odbojka, NFL i MLB iskljuceni (26.9.2026) - ostaju fudbal i kosarka
 $sports = [ordered]@{}
-foreach ($f in @('espn.json') + @(if ($BB_ON) { 'bb.json' })) {
+foreach ($f in @('espn.json', 'oddsonly.json') + @(if ($BB_ON) { 'bb.json' })) {
   $p = Join-Path $root $f; if (-not (Test-Path $p)) { continue }
   $j = Get-Content -Raw -Encoding UTF8 $p | ConvertFrom-Json
   foreach ($prop in $j.PSObject.Properties) {
@@ -295,7 +297,7 @@ foreach ($f in @('espn.json') + @(if ($BB_ON) { 'bb.json' })) {
     } else { $sports[$prop.Name] = [ordered]@{ days = $days } }
   }
 }
-foreach ($k in @($sports.Keys)) { if ($k -notin 'basketball', 'hockey', 'nfl', 'mlb') { $sports.Remove($k) } }
+foreach ($k in @($sports.Keys)) { if ($k -notin 'basketball', 'hockey', 'nfl', 'mlb', 'boxing', 'mma') { $sports.Remove($k) } }
 $out.sports = $sports
 $json = $out | ConvertTo-Json -Depth 10
 [IO.File]::WriteAllText((Join-Path $root 'data.json'), $json, (New-Object System.Text.UTF8Encoding($false)))

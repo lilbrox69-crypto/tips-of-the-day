@@ -456,7 +456,13 @@ const MLB = [
   {k:'ov',  t:'Više runova od linije', s:'O', d:'Ukupno više runova od linije kladionice (linija piše uz kvotu).', h:270},
   {k:'un',  t:'Manje runova od linije', s:'U', d:'Ukupno manje runova od linije kladionice (linija piše uz kvotu).', h:175}
 ];
+const FIGHT = [
+  {k:'w1',  t:'Pobjeda borca 1', s:'1', d:'Pobjeđuje borac s lijeve strane (prvi naveden).', h:5},
+  {k:'w2',  t:'Pobjeda borca 2', s:'2', d:'Pobjeđuje borac s desne strane (drugi naveden).', h:215}
+];
 const IC = {
+  boxing:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M7 9.5V7a4.5 4.5 0 0 1 9 0v1.5a3 3 0 0 1 3 3v2.5a5 5 0 0 1-5 5H10a3 3 0 0 1-3-3z"/><path d="M7 12.5h5.5M12.5 9.5v6M8 19.5v2h7v-2"/></svg>',
+  mma:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 4h18v16H3z"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/></svg>',
   tennis:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9.5"/><path d="M4.2 6.5c3.8 2.2 3.8 8.8 0 11M19.8 6.5c-3.8 2.2-3.8 8.8 0 11"/></svg>',
   handball:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9.5"/><path d="M12 2.5c-2.5 3-2.5 16 0 19M12 2.5c2.5 3 2.5 16 0 19M3 9h18M3 15h18"/></svg>',
   volleyball:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9.5"/><path d="M12 12V2.5M12 12l8.3 4.7M12 12l-8.3 4.7M12 2.5c3 3 4 7 3.3 11M20.3 16.7c-4 1.1-8 .2-10.6-2.5M3.7 16.7c1-4 3.9-6.9 7.6-7.9"/></svg>',
@@ -472,6 +478,8 @@ const SPORTS = [
   {k:'hockey',     n:'Hokej',   markets:HOCKEY,   soon:'Večeras nema NHL utakmica s kvotama.'},
   {k:'nfl',        n:'Američki fudbal', markets:NFL, soon:'Danas nema NFL utakmica (igra se uglavnom četvrtkom, nedjeljom i ponedjeljkom).'},
   {k:'mlb',        n:'Bejzbol', markets:MLB, soon:'MLB sezona počinje krajem marta.'},
+  {k:'boxing',     n:'Boks',    markets:FIGHT, soon:'Danas nema borbi s kvotama.'},
+  {k:'mma',        n:'MMA',     markets:FIGHT, soon:'Danas nema borbi s kvotama.'},
 ];
 let MARKETS = FOOTBALL, DATA = null, SPORT = 'football';
 /* ---------- jezici / languages ---------- */
@@ -640,7 +648,7 @@ function mt(mk){
   const e = (M[SPORT] && M[SPORT][mk.k]) || M._[mk.k];
   return e ? {t: e[0], d: e[1]} : {t: mk.t, d: mk.d};
 }
-function sname(s){ return SPORT_TR[LANG] ? SPORT_TR[LANG][s.k] : s.n; }
+function sname(s){ return (SPORT_TR[LANG] && SPORT_TR[LANG][s.k]) || s.n; }
 function ssoon(s){ return SOON_TR[LANG] ? (SOON_TR[LANG][s.k] || L().noneLeagues) : (s.soon || L().noneLeagues); }
 const LEAGUE_TR = {
   en: {'Premier liga':'Premier League','Liga prvaka':'Champions League'},
@@ -1313,6 +1321,27 @@ for (const [k, D] of Object.entries(XL)) {
 
 for (const [k, v] of Object.entries(LINE_TR)) { const M = M_TR[k]; if (!M) continue;
   for (const sp of ['basketball', 'hockey', 'nfl', 'mlb']) { M[sp] = M[sp] || {}; M[sp].ov = [v[0], v[2]]; M[sp].un = [v[1], v[3]]; } }
+const FIGHT_TR = {
+  en:['Boxing','Fighter 1 wins','Fighter 2 wins','The fighter on the left (listed first) wins.','The fighter on the right (listed second) wins.'],
+  de:['Boxen','Sieg Kämpfer 1','Sieg Kämpfer 2','Der linke (zuerst genannte) Kämpfer gewinnt.','Der rechte (als zweiter genannte) Kämpfer gewinnt.'],
+  it:['Pugilato','Vince il lottatore 1','Vince il lottatore 2','Vince il lottatore a sinistra (indicato per primo).','Vince il lottatore a destra (indicato per secondo).'],
+  es:['Boxeo','Gana el luchador 1','Gana el luchador 2','Gana el luchador de la izquierda (el primero).','Gana el luchador de la derecha (el segundo).'],
+  fr:['Boxe','Victoire combattant 1','Victoire combattant 2','Le combattant de gauche (cité en premier) gagne.','Le combattant de droite (cité en second) gagne.'],
+  pt:['Boxe','Vitória do lutador 1','Vitória do lutador 2','Vence o lutador da esquerda (o primeiro).','Vence o lutador da direita (o segundo).'],
+  tr:['Boks','1. dövüşçü kazanır','2. dövüşçü kazanır','Soldaki (ilk yazılan) dövüşçü kazanır.','Sağdaki (ikinci yazılan) dövüşçü kazanır.'],
+  sq:['Boks','Fiton luftëtari 1','Fiton luftëtari 2','Fiton luftëtari në të majtë (i pari).','Fiton luftëtari në të djathtë (i dyti).'],
+  pl:['Boks','Wygrywa zawodnik 1','Wygrywa zawodnik 2','Wygrywa zawodnik po lewej (pierwszy).','Wygrywa zawodnik po prawej (drugi).'],
+  ro:['Box','Câștigă luptătorul 1','Câștigă luptătorul 2','Câștigă luptătorul din stânga (primul).','Câștigă luptătorul din dreapta (al doilea).'],
+  el:['Πυγμαχία','Νίκη μαχητή 1','Νίκη μαχητή 2','Κερδίζει ο μαχητής αριστερά (πρώτος).','Κερδίζει ο μαχητής δεξιά (δεύτερος).'],
+  ru:['Бокс','Победа бойца 1','Победа бойца 2','Побеждает боец слева (указан первым).','Побеждает боец справа (указан вторым).'],
+  nl:['Boksen','Winst vechter 1','Winst vechter 2','De vechter links (eerst genoemd) wint.','De vechter rechts (als tweede genoemd) wint.'],
+  ar:['ملاكمة','فوز المقاتل 1','فوز المقاتل 2','يفوز المقاتل على اليسار (الأول).','يفوز المقاتل على اليمين (الثاني).']
+};
+for (const [k, v] of Object.entries(FIGHT_TR)) {
+  if (SPORT_TR[k]) { SPORT_TR[k].boxing = v[0]; SPORT_TR[k].mma = 'MMA'; }
+  const M = M_TR[k]; if (!M) continue;
+  for (const sp of ['boxing', 'mma']) M[sp] = { w1: [v[1], v[3]], w2: [v[2], v[4]] };
+}
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let DAYS = [], TODAY = '', di = 0, mi = 0, syncing = false;
