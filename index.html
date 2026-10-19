@@ -1391,6 +1391,8 @@ function togglePanel(open){
   p.hidden = !open; b.setAttribute('aria-expanded', open);
 }
 function renderSports(){
+  // samo fudbal (kosarka nije produzena od 26.10.2026): bez dugmeta za izbor sporta
+  $('sportbtn').style.display = DATA && !(DATA.sports && DATA.sports.basketball) ? 'none' : '';
   $('sportpanel').innerHTML = '<h3>' + L().pick + '</h3><div class="spgrid">' + SPORTS.map(s =>
     `<button class="sp" type="button" id="sp-${s.k}" aria-pressed="${s.k === SPORT}">${IC[s.k]}<span>${sname(s)}</span>${hasData(s.k) ? '' : '<small>' + (s.k === 'tennis' || s.k === 'volleyball' ? L().soon : L().noGames) + '</small>'}</button>`).join('') + '</div>';
   SPORTS.forEach(s => { $('sp-' + s.k).onclick = () => { togglePanel(false); if (s.k !== SPORT) setSport(s.k); }; });

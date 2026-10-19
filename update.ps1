@@ -273,10 +273,14 @@ $out = [ordered]@{
   leagues = @($comps.Values)
   days = @($dayList)
 }
+# KOSARKA se ne produzava (Bilal 19.10.2026): od 26.10.2026 sajt je SAMO fudbal (nema poziva za kosarku, nema kosarke na stranici)
+$BB_ON = $todayLocal.ToString('yyyy-MM-dd') -lt '2026-10-26'
+if ($BB_ON) {
 try { & (Join-Path $root 'update_us.ps1') } catch { Write-Host "US sportovi preskoceni: $($_.Exception.Message)" }
 $bbCache = Join-Path $root 'cache\bb_today.json'; $bbUsed = $false
 if (Test-Path $bbCache) { try { $cb = Get-Content -Raw -Encoding UTF8 $bbCache | ConvertFrom-Json; if ($cb.basketball.days[0].date -eq ([System.TimeZoneInfo]::ConvertTimeFromUtc([datetime]::UtcNow, $tz).ToString('yyyy-MM-dd'))) { Copy-Item $bbCache (Join-Path $root 'bb.json') -Force; $bbUsed = $true; Write-Host 'API-Basketball: koristim jutarnje podatke' } } catch {} }
 if (-not $bbUsed) { try { & (Join-Path $root 'update_bb.ps1'); if (@((Get-Content -Raw -Encoding UTF8 (Join-Path $root 'bb.json') | ConvertFrom-Json).basketball.days[0].matches).Count) { Copy-Item (Join-Path $root 'bb.json') $bbCache -Force } } catch { Write-Host "API-Basketball preskocen: $($_.Exception.Message)" } }   # kosarka Pro (26.9.2026)
+} else { Write-Host 'Kosarka iskljucena (pretplata nije produzena) - samo fudbal' }
 # NHL, hokej, rukomet, odbojka, NFL i MLB iskljuceni (26.9.2026) - ostaju fudbal i kosarka
 $sports = [ordered]@{}
 foreach ($f in 'us.json','bb.json') {
@@ -290,7 +294,7 @@ foreach ($f in 'us.json','bb.json') {
     } else { $sports[$prop.Name] = [ordered]@{ days = $days } }
   }
 }
-foreach ($k in @($sports.Keys)) { if ($k -ne 'basketball') { $sports.Remove($k) } }
+foreach ($k in @($sports.Keys)) { if ($k -ne 'basketball' -or -not $BB_ON) { $sports.Remove($k) } }
 $out.sports = $sports
 $json = $out | ConvertTo-Json -Depth 10
 [IO.File]::WriteAllText((Join-Path $root 'data.json'), $json, (New-Object System.Text.UTF8Encoding($false)))

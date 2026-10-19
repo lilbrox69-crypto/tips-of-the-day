@@ -222,7 +222,8 @@ export default {
         out.f = g.res; if (g.ok) out.left = g.left;
         if (g.ok && g.left && g.left < MIN_LEFT) ctx.waitUntil(cache.put(new Request('https://totd-live.cache/pause'), new Response('1', { headers: { 'Cache-Control': 'max-age=3600' } })));
       }
-      const gb = await grab(`https://v1.basketball.api-sports.io/games?date=${d}&timezone=Europe/Sarajevo`, 'liveb2', arr => {
+      // kosarka se ne produzava: od 26.10.2026 nema poziva za kosarku (samo fudbal)
+      const gb = d >= '2026-10-26' ? { res: {} } : await grab(`https://v1.basketball.api-sports.io/games?date=${d}&timezone=Europe/Sarajevo`, 'liveb2', arr => {
         const o = {}; for (const x of arr) { const s = x.status.short; if (s === 'NS' || s === 'TBD') continue; o['bb' + x.id] = { s, m: x.status.timer, h: x.scores.home.total, a: x.scores.away.total }; } return o; }, 'be');
       out.b = gb.res; out.bl = gb.left;
     }

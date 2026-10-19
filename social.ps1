@@ -242,7 +242,7 @@ if ($data.track -and $data.track.n -ge 10) {
   Title $g 'NAŠI REZULTATI' 'Zadnjih 30 dana · svaki tip provjeren' $C.gold
   $boxes = @(,@('TIPOVI', $tr.hit, $tr.n))
   if ($tr.sports.football) { $boxes += ,@('FUDBAL', $tr.sports.football.hit, $tr.sports.football.n) }
-  if ($tr.sports.basketball) { $boxes += ,@('KOŠARKA', $tr.sports.basketball.hit, $tr.sports.basketball.n) }
+  if ($tr.sports.basketball -and $data.sports.basketball) { $boxes += ,@('KOŠARKA', $tr.sports.basketball.hit, $tr.sports.basketball.n) }
   if ($tr.ticket -and $tr.ticket.n) { $boxes += ,@('TIKET DANA', $tr.ticket.hit, $tr.ticket.n) }
   $y = 330; $sf = New-Object System.Drawing.StringFormat; $sf.Alignment = 'Far'
   foreach ($b in $boxes) {
