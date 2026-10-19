@@ -961,6 +961,7 @@ const RES = {
 function rsx(i){ return (RES[LANG] || RES.bs.map(loc))[i]; }
 let HIST = null, rsSel = null;
 const stIcon = r => r === 1 ? '✅' : r === 0 ? '❌' : '⏳';
+const PSTW = { bs:'odgođeno', en:'postponed', de:'verschoben', it:'rinviata', es:'aplazado', fr:'reporté', pt:'adiado', tr:'ertelendi', sq:'shtyrë', pl:'przełożony', ro:'amânat', el:'αναβλήθηκε', ru:'перенесён', nl:'uitgesteld', ar:'مؤجلة' };
 const dm = ds => { const [y, m, d] = ds.split('-').map(Number); return d + '.' + m + '.'; };
 function addDays(ds, n){ const [y, m, d] = ds.split('-').map(Number); const x = new Date(y, m - 1, d + n); return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); }
 async function renderResults(){
@@ -1011,8 +1012,8 @@ async function renderResults(){
 function renderResDay(d){
   const el = $('rsday'); if (!el) return;
   if (!d) { el.innerHTML = `<p class="rs-empty">${rsx(6)}</p>`; return; }
-  const row = x => `<div class="rs-row"><span class="st">${stIcon(x.r)}</span><span class="tt">${esc(x.h)} – ${esc(x.a)}</span>
-    <span class="rr">${x.sc ? esc(x.sc) : `<small>${rsx(5)}</small>`}${x.o ? `<small>${Number(x.o).toFixed(2)} · ${x.p}%</small>` : `<small>${x.p}%</small>`}</span>
+  const row = x => `<div class="rs-row"><span class="st">${x.v ? '➖' : stIcon(x.r)}</span><span class="tt">${esc(x.h)} – ${esc(x.a)}</span>
+    <span class="rr">${x.v ? `<small>${PSTW[LANG] || loc(PSTW.bs)} · 1.00</small>` : x.sc ? esc(x.sc) : `<small>${rsx(5)}</small>`}${x.o ? `<small>${Number(x.o).toFixed(2)} · ${x.p}%</small>` : `<small>${x.p}%</small>`}</span>
     <span class="mm">${esc(mtFor(x.s, x.m))}</span></div>`;
   let html = `<h3>${dm(d.date)}${d.date.slice(0, 4)}.</h3>`;
   if (d.t) html += `<div class="rs-tk"><div class="hd"><span>🎫 ${tkw(0)} ${stIcon(d.t.r)}</span><b>${Number(d.t.odd).toFixed(2)}</b></div>${d.t.legs.map(row).join('')}</div>`;

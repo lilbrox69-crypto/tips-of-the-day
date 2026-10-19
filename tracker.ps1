@@ -67,6 +67,7 @@ if (-not $picksLocked) {
 }
 # 2) provjera rezultata
 function Judge($sport, $mk, $r) {
+  if ($r.x) { return $null }   # odgodjeno/otkazano - ne ocjenjuje se
   $h = [int]$r.h; $a = [int]$r.a; $t = $h + $a
   switch ("$sport|$mk") {
     { $_ -in 'football|gg', 'hockey|gg' } { return ($h -gt 0 -and $a -gt 0) }
@@ -91,7 +92,8 @@ foreach ($p in $picks) {
   if ($p.hit -ne $null -or $p.date -ge $today) { continue }
   $r = $results[$p.key]
   $v = if ($r) { Judge $p.sport $p.mk $r } else { $null }
-  if ($v -ne $null) { $p.hit = [bool]$v }
+  if ($r -and $r.x) { $p.hit = 'void' }   # utakmica odgodjena/otkazana
+  elseif ($v -ne $null) { $p.hit = [bool]$v }
   # utakmica zavrsena, ali liga nikad ne posalje kornere/kartone -> ne moze se ocijeniti, ne prikazuje se kao "ceka se"
   elseif ($r -and $p.mk -in 'c8', 'y3' -and $hourLocal -ge 5) { $p.hit = 'void' }
   # rezultat nije stigao ni 2 dana poslije (odgodjeno, prekinuto i sl.)
@@ -144,9 +146,17 @@ elseif ($ticket.Count -ge 2) {
   [void]$tickets.Add([pscustomobject]$tk)
 }
 # provjera starih tiketa: prolazi samo ako su prosli svi tipovi
+# odgodjen/otkazan par = kvota 1.00 (kao kod kladionica): tiket se ocjenjuje po ostalim parovima, kvota se preracuna (odd0 = prvobitna)
+function IsVoidLeg($l) { $r = if ($l.key) { $results[[string]$l.key] } else { $null }; return [bool]($r -and $r.x) }
 foreach ($t in $tickets) {
   if ($t.hit -ne $null -or $t.date -ge $today) { continue }
-  $vals = @($t.legs | ForEach-Object { $r = if ($_.key) { $results[[string]$_.key] } else { $null }; if ($r) { Judge $_.sport $_.mk $r } else { $null } })
+  $liveLegs = @($t.legs | Where-Object { -not (IsVoidLeg $_) })
+  if ($liveLegs.Count -lt @($t.legs).Count) {
+    if (-not $t.odd0) { $t | Add-Member -NotePropertyName odd0 -NotePropertyValue $t.odd -Force }
+    $o = 1.0; foreach ($l in $liveLegs) { $o *= [double]$l.o }; $t.odd = [math]::Round($o, 2)
+    if (-not $liveLegs.Count) { $t.hit = 'void'; continue }
+  }
+  $vals = @($liveLegs | ForEach-Object { $r = if ($_.key) { $results[[string]$_.key] } else { $null }; if ($r) { Judge $_.sport $_.mk $r } else { $null } })
   if (@($vals | Where-Object { $_ -eq $false }).Count) { $t.hit = $false }
   elseif (@($vals | Where-Object { $_ -eq $true }).Count -eq $vals.Count) { $t.hit = $true }
   elseif (([datetime]::ParseExact($t.date, 'yyyy-MM-dd', $null)) -lt $todayD0.AddDays(-10)) { $t.hit = 'void' }
@@ -170,7 +180,7 @@ $track = [ordered]@{ days = 30; n = $win.Count; hit = @($win | Where-Object { $_
 $data | Add-Member -NotePropertyName track -NotePropertyValue $track -Force
 
 # 4) istorija za stranicu "Rezultati" (zadnjih 30 dana): history.json
-function ScoreOf($key) { $r = if ($key) { $results[[string]$key] } else { $null }; if ($r) { "$([int]$r.h)-$([int]$r.a)" } else { '' } }
+function ScoreOf($key) { $r = if ($key) { $results[[string]$key] } else { $null }; if ($r -and -not $r.x) { "$([int]$r.h)-$([int]$r.a)" } else { '' } }
 function HitVal($v) { if ($v -is [bool]) { return [int]$v } ; return $null }   # 1 proslo, 0 palo, null ceka
 $hdays = New-Object System.Collections.ArrayList
 for ($i = 0; $i -le 30; $i++) {
@@ -183,7 +193,8 @@ for ($i = 0; $i -le 30; $i++) {
   if ($tk) {
     $day.t = [ordered]@{ odd = $tk.odd; p = $tk.p; r = (HitVal $tk.hit); legs = @($tk.legs | ForEach-Object {
       $rr = if ($_.key) { $results[[string]$_.key] } else { $null }; $v = if ($rr) { Judge $_.sport $_.mk $rr } else { $null }
-      [ordered]@{ s = $_.sport; m = $_.mk; h = $_.home; a = $_.away; hl = $_.hl; al = $_.al; o = $_.o; p = $_.p; r = (HitVal $v); sc = (ScoreOf $_.key) } }) }
+      $lg = [ordered]@{ s = $_.sport; m = $_.mk; h = $_.home; a = $_.away; hl = $_.hl; al = $_.al; o = $_.o; p = $_.p; r = (HitVal $v); sc = (ScoreOf $_.key) }
+      if ($rr -and $rr.x) { $lg.v = 1; $lg.sc = '' }; $lg }) }
   }
   $day.k = @($dp | ForEach-Object { [ordered]@{ s = $_.sport; m = $_.mk; h = $_.home; a = $_.away; p = $_.p; r = (HitVal $_.hit); sc = (ScoreOf $_.key) } })
   [void]$hdays.Add($day)
