@@ -909,9 +909,27 @@ function liveJudge(sp, mk, x){
   const r = { gg: h > 0 && a > 0, o15: t >= 2, o25: t >= 3, u25: t <= 2, hs: h > 0, as: a > 0, w1: h > a, x: h === a, w2: a > h }[mk];
   return r === undefined ? null : (r ? 1 : 0);
 }
+/* NBA/NHL/NFL (ESPN): pobjednik na kraju, vise/manje od linije cim je sigurno */
+function espJudge(mk, x, ln){
+  const h = +x.h || 0, a = +x.a || 0, t = h + a, fin = x.s === 'FT', L = parseFloat(ln);
+  if (mk === 'ov' && L && t > L) return 1;
+  if (mk === 'un' && L && t > L) return 0;
+  if (!fin) return null;
+  const r = { w1: h > a, w2: a > h, ov: L ? t > L : undefined, un: L ? t < L : undefined }[mk];
+  return r === undefined ? null : (r ? 1 : 0);
+}
 function applyLive(){
-  if (!LIVE || LIVE.d !== TODAY) return;
-  document.querySelectorAll('[data-live]').forEach(el => {
+  if (!LIVE) return;
+  document.querySelectorAll('[data-live^="esp"]').forEach(el => {
+    const x = (LIVE.u || {})[el.dataset.live], b = el.querySelector('.lv'); if (!b) return;
+    if (!x) { b.textContent = ''; b.className = 'lv'; return; }
+    if (OFF.includes(x.s)) { b.textContent = lvx(2); b.className = 'lv'; return; }
+    const fin = x.s === 'FT', r = espJudge(el.dataset.mk, x, el.dataset.ln);
+    b.textContent = (r === 1 ? '✅ ' : r === 0 ? '❌ ' : '') + `${fin ? lvx(0) : esc(x.m)} ${x.h}:${x.a}`;
+    b.className = 'lv ' + (r === 1 ? 'ok' : r === 0 ? 'no' : fin ? '' : 'run');
+  });
+  if (LIVE.d !== TODAY) return;
+  document.querySelectorAll('[data-live]:not([data-live^="esp"])').forEach(el => {
     const id = el.dataset.live, sp = el.dataset.sp || (id.startsWith('bb') ? 'basketball' : 'football');
     const x = (sp === 'basketball' ? LIVE.b : LIVE.f)[id], b = el.querySelector('.lv'); if (!b) return;
     if (!x) { b.textContent = ''; b.className = 'lv'; return; }
@@ -1344,7 +1362,7 @@ function build(){
             <span class="rank">${i+1}</span>
             <span class="teams"><span class="tm">${crest(g.hl, g.home)}${esc(g.home)}</span><span class="vs">${L().vs}</span><span class="tm">${crest(g.al, g.away)}${esc(g.away)}</span></span>
             <span class="pctw"><span class="pct">${g.p[mk.k]}<i>%</i></span>${oddTag(g, mk.k)}</span>
-            <span class="meta" data-live="${esc(g.id)}" data-mk="${mk.k}">${esc(lg(g.league))} · ${g.time}<b class="lv"></b></span>
+            <span class="meta" data-live="${esc(g.id)}" data-mk="${mk.k}"${g.ln != null ? ` data-ln="${g.ln}"` : ''}>${esc(lg(g.league))} · ${g.time}<b class="lv"></b></span>
             <span class="bar"><b style="width:${g.p[mk.k]}%"></b></span>
             <span class="why">${trWhy(why(mk.k, g))}</span>
           </button>`).join('') : `<div class="empty">${L().none}</div>`}</div>

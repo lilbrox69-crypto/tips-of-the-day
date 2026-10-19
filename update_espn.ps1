@@ -7,8 +7,12 @@ $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $tz = [System.TimeZoneInfo]::FindSystemTimeZoneById('Central European Standard Time')
 $nowLoc = [System.TimeZoneInfo]::ConvertTimeFromUtc([datetime]::UtcNow, $tz)
 $dayLoc = $nowLoc.Date
-$fromUtc = [System.TimeZoneInfo]::ConvertTimeToUtc($dayLoc.AddHours(10), $tz)
-$toUtc = [System.TimeZoneInfo]::ConvertTimeToUtc($dayLoc.AddDays(1).AddHours(7), $tz)
+# nocno pokretanje (prije 05h): utakmice koje upravo traju pripadaju jucerasnjoj veceri - ostaju na stranici (rezultati uzivo)
+$anchor = if ($nowLoc.Hour -lt 5) { $dayLoc.AddDays(-1) } else { $dayLoc }
+$lastFile = Join-Path $root 'cache\espn_last.json'
+$last = @{}; if (Test-Path $lastFile) { try { (Get-Content -Raw -Encoding UTF8 $lastFile | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $last[$_.Name] = $_.Value } } catch {} }
+$fromUtc = [System.TimeZoneInfo]::ConvertTimeToUtc($anchor.AddHours(10), $tz)
+$toUtc = [System.TimeZoneInfo]::ConvertTimeToUtc($anchor.AddDays(1).AddHours(7), $tz)
 $inv = [Globalization.CultureInfo]::InvariantCulture
 
 function Erf([double]$x) {
@@ -72,7 +76,7 @@ foreach ($L in $LEAGUES) {
   }
   # 2) danasnje/vecerasnje utakmice s kvotama
   $evs = New-Object System.Collections.ArrayList
-  foreach ($d in @($dayLoc, $dayLoc.AddDays(1))) {
+  foreach ($d in @($anchor, $anchor.AddDays(1))) {
     $sb = Get-Espn "https://site.api.espn.com/apis/site/v2/sports/$($L.path)/scoreboard?dates=$($d.ToString('yyyyMMdd'))"
     if ($sb) { foreach ($e in $sb.events) { if (-not @($evs | Where-Object { $_.id -eq $e.id }).Count) { [void]$evs.Add($e) } } }
   }
@@ -80,7 +84,8 @@ foreach ($L in $LEAGUES) {
   foreach ($e in $evs) {
     $st = [datetime]::Parse($e.date, $inv, [Globalization.DateTimeStyles]::AdjustToUniversal)
     if ($st -lt $fromUtc -or $st -ge $toUtc) { continue }
-    if ($e.status.type.state -ne 'pre') { continue }
+    if ($e.status.type.state -ne 'pre') {   # vec pocela/zavrsila: ista kartica kao prije pocetka (iz kesa), da se vidi rezultat uzivo
+      $old = $last["esp$($e.id)"]; if ($old) { [void]$list.Add([pscustomobject]@{ utc = $st; m = $old }) }; continue }
     $c = $e.competitions[0]
     $hc = @($c.competitors | Where-Object { $_.homeAway -eq 'home' })[0]; $ac = @($c.competitors | Where-Object { $_.homeAway -eq 'away' })[0]
     $od = @($c.odds)[0]; if (-not $hc -or -not $ac -or -not $od) { continue }
@@ -124,5 +129,10 @@ foreach ($L in $LEAGUES) {
   $ms = @($list | Sort-Object utc | ForEach-Object { $_.m })
   Write-Host "  $($L.name): $($ms.Count) utakmica s kvotama"
   if ($ms.Count) { $out[$L.key] = [ordered]@{ days = @([ordered]@{ date = $dayLoc.ToString('yyyy-MM-dd'); matches = $ms }) } }
+  foreach ($m in $ms) { $last[[string]$m.id] = $m }
 }
+# kes kartica (za utakmice koje traju), samo zadnja 2 dana
+$keepL = [ordered]@{}; foreach ($k in $last.Keys) { $keepL[$k] = $last[$k] }
+if ($keepL.Count -gt 300) { $keepL = [ordered]@{}; foreach ($k in @($last.Keys | Select-Object -Last 300)) { $keepL[$k] = $last[$k] } }
+[IO.File]::WriteAllText($lastFile, ($keepL | ConvertTo-Json -Depth 8 -Compress), (New-Object System.Text.UTF8Encoding($false)))
 [IO.File]::WriteAllText((Join-Path $root 'espn.json'), ($out | ConvertTo-Json -Depth 8), (New-Object System.Text.UTF8Encoding($false)))
