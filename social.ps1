@@ -125,7 +125,7 @@ function Pct($x) { "$([int]$x.p)%" }
 function Line($x) { "⚽ $($x.home) – $($x.away) ($($x.time)) · $($x.mk) · $([int]$x.p)%" + $(if ($x.o) { " · kvota $(('{0:0.00}' -f [double]$x.o).Replace(',', '.'))" } else { '' }) }
 $TAG = ''   # zavrsni dio (link, pitanje, 18+) dodaje AddPost
 $posts = New-Object System.Collections.ArrayList; $n = 0
-$NM = $fb.Count + $bb.Count
+$NM = $fb.Count   # samo fudbal
 # pitanje na kraju objave -> komentari -> Facebook objavu pokaze vecem broju ljudi
 $Q = @{ results = 'Jesi li igrao jučerašnji tiket? Pohvali se u komentaru 👇'; ticket = 'Igraš li današnji tiket? Napiši "IGRAM" u komentar 👇'
         weekend = 'Igraš li tiket vikenda? Napiši "IGRAM" u komentar 👇'
@@ -198,13 +198,13 @@ if ($best.Count) {
 }
 
 # 4..) top 3 po opciji - svaka u svoje vrijeme, samo utakmice koje još nisu počele
+# FB objave SAMO FUDBAL (Bilal 19.10.2026) - NBA/NHL/NFL i kosarka se ne objavljuju
 $slots = @(
   @{ t='10:30'; s='football'; mks=@('gg');  title='OBA DAJU GOL'; hue=@(18,84,52); emo='⚽⚽' }
   @{ t='11:30'; s='football'; mks=@('o25'); title='VIŠE OD 2.5'; hue=@(92,40,20); emo='🔥' }
   @{ t='13:00'; s='football'; mks=@('w1','w2'); title='POBJEDE DANA'; hue=@(40,40,100); emo='🏆' }
   @{ t='14:30'; s='football'; mks=@('o15'); title='2+ GOLA'; hue=@(20,80,80); emo='🎯' }
   @{ t='15:30'; s='football'; mks=@('c8');  title='KORNERI 8+'; hue=@(70,70,20); emo='🚩' }
-  @{ t='16:30'; s='basketball'; mks=@('w1','w2','o160','o220'); title='KOŠARKA DANA'; hue=@(100,50,10); emo='🏀' }
   @{ t='18:30'; s='football'; mks=@('hs','as'); title='DAJE GOL'; hue=@(20,70,40); emo='⚽' }
 )
 foreach ($sl in $slots) {
@@ -242,7 +242,6 @@ if ($data.track -and $data.track.n -ge 10) {
   Title $g 'NAŠI REZULTATI' 'Zadnjih 30 dana · svaki tip provjeren' $C.gold
   $boxes = @(,@('TIPOVI', $tr.hit, $tr.n))
   if ($tr.sports.football) { $boxes += ,@('FUDBAL', $tr.sports.football.hit, $tr.sports.football.n) }
-  if ($tr.sports.basketball -and $data.sports.basketball) { $boxes += ,@('KOŠARKA', $tr.sports.basketball.hit, $tr.sports.basketball.n) }
   if ($tr.ticket -and $tr.ticket.n) { $boxes += ,@('TIKET DANA', $tr.ticket.hit, $tr.ticket.n) }
   $y = 330; $sf = New-Object System.Drawing.StringFormat; $sf.Alignment = 'Far'
   foreach ($b in $boxes) {
