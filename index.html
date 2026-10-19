@@ -1348,13 +1348,20 @@ function why(k, m){
   return `${line}<br>Forma: ${H} <span class="f">${h.form}</span> · ${A} <span class="f">${a.form}</span><br>Očekivani golovi ${m.xg[0]} – ${m.xg[1]}${hh}${ij}`;
 }
 
+/* suprotne opcije: utakmica ide samo na vjerovatniju stranu (nikad ista utakmica i za 1 i za 2, ni za vise i manje) */
+const OPP = {};   // svi parovi suprotnih opcija u svim sportovima
+[['w1','w2'], ['ov','un'], ['o25','u25'], ['o220','u220'], ['o160','u160'], ['o55','u55'], ['o45','u45'], ['o85','u85']].forEach(([x, y]) => { OPP[x] = y; OPP[y] = x; });
+function pickable(g, k){
+  if (g.p[k] == null) return false;
+  const o = OPP[k]; return !(o && g.p[o] != null && g.p[o] >= g.p[k]);
+}
 function build(){
   const days = $('days'); days.innerHTML = '';
   DAYS.forEach((day, d) => {
     const ds = document.createElement('section'); ds.className = 'dayslide';
     const row = document.createElement('div'); row.className = 'markets';
     MARKETS.forEach((mk, m) => {
-      const top = day.matches.filter(g => g.p[mk.k] != null).sort((x, y) => y.p[mk.k] - x.p[mk.k]).slice(0, 3);
+      const top = day.matches.filter(g => pickable(g, mk.k)).sort((x, y) => y.p[mk.k] - x.p[mk.k]).slice(0, 3);
       const s = document.createElement('article'); s.className = 'slide'; s.style.setProperty('--h', mk.h);
       s.innerHTML = `
         <div class="mhead"><h2 class="mname">${mt(mk).t}</h2><span class="mtag">${stag(mk)}</span></div>
@@ -1451,7 +1458,7 @@ function setSport(k){
   $('sporticon').innerHTML = IC[k]; $('sportname').textContent = sname(sp); $('pickl').textContent = L().pick;
   const src = DATA && DATA.sports && DATA.sports[k] ? DATA.sports[k].days : (k === 'football' && DATA ? DATA.days : []);
   DAYS = (src || []).filter(d => d.date === TODAY && d.matches.length);
-  MARKETS = sp.markets.filter(mk => !DAYS.length || DAYS.some(d => d.matches.some(g => g.p[mk.k] != null)));
+  MARKETS = sp.markets.filter(mk => !DAYS.length || DAYS.some(d => d.matches.some(g => pickable(g, mk.k))));
   const note = $('note'); note.hidden = true; showTrack(); renderTicket();
   const days = $('days'); days.scrollTop = 0;
   if (!DAYS.length){

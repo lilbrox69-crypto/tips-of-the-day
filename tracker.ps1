@@ -51,7 +51,9 @@ foreach ($sport in @(if ($picksLocked) { } else { 'football' })) {
   if (-not $ms.Count) { continue }
   $markets = @($ms | ForEach-Object { $_.p.PSObject.Properties.Name } | Sort-Object -Unique)
   foreach ($mk in $markets) {
-    $top = @($ms | Where-Object { $_.p.$mk -ne $null } | Sort-Object { - [int]$_.p.$mk } | Select-Object -First 3)
+    # isto kao stranica: suprotne opcije (1/2, vise/manje) - utakmica samo na vjerovatnijoj strani
+    $opp = @{ w1 = 'w2'; w2 = 'w1'; o25 = 'u25'; u25 = 'o25'; ov = 'un'; un = 'ov'; o220 = 'u220'; u220 = 'o220'; o160 = 'u160'; u160 = 'o160'; o55 = 'u55'; u55 = 'o55'; o45 = 'u45'; u45 = 'o45'; o85 = 'u85'; u85 = 'o85' }[$mk]
+    $top = @($ms | Where-Object { $_.p.$mk -ne $null -and -not ($opp -and $_.p.$opp -ne $null -and [int]$_.p.$opp -ge [int]$_.p.$mk) } | Sort-Object { - [int]$_.p.$mk } | Select-Object -First 3)
     foreach ($m in $top) {
       [void]$picks.Add([pscustomobject]@{ date = $today; sport = $sport; mk = $mk; key = "${sport}:$($m.id)"; home = $m.home; away = $m.away; p = [int]$m.p.$mk; hit = $null })
     }
