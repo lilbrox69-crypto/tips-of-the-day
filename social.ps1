@@ -134,7 +134,7 @@ function AddPost($t, $kind, $img, $text) {
   # 1. red = udica, 2. red = link (Facebook skrati tekst poslije 2-3 reda, link mora biti gore)
   $lines = ([string]$text).Split("`n"); $hook = $lines[0]; $body = (($lines | Select-Object -Skip 1) -join "`n").Trim()
   $cta = if ($kind -eq 'results') { '👉 Današnji tiket i svi tipovi: https://tipsoftheday.win' } else { '👉 Svi tipovi dana besplatno: https://tipsoftheday.win' }
-  $more = if ($NM -gt 20 -and $kind -notin 'results', 'stats') { "`n`n🔎 Danas smo analizirali $NM utakmica – ovdje su samo najbolji. Ostale opcije (golovi, korneri, kartoni, pobjede, košarka) čekaju te na stranici." } else { '' }
+  $more = if ($NM -gt 20 -and $kind -notin 'results', 'stats') { "`n`n🔎 Danas smo analizirali $NM utakmica – ovdje su samo najbolji. Ostale opcije (golovi, korneri, kartoni, pobjede) čekaju te na stranici." } else { '' }
   $q = if ($Q[$kind]) { $Q[$kind] } else { 'Koji od ova 3 bi ti stavio na tiket? 👇' }
   # u pola objava jasno kazemo da je sve besplatno (bez VIP grupa i placanja - za razliku od konkurencije)
   $free = if ($kind -in 'results', 'ticket', 'stats', 'evening', 'OBA DAJU GOL', 'KOŠARKA DANA', 'weekend') { "`n`n💯 Tips of the Day je POTPUNO BESPLATAN – bez registracije, bez VIP grupa, bez plaćanja. Samo uđi na https://tipsoftheday.win i sve je tu." } else { '' }
